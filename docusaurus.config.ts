@@ -54,7 +54,7 @@ const config: Config = {
       title: 'Anaphora',
       logo: {
         alt: 'Anaphora Logo',
-        src: 'img/logo.svg',
+        src: 'img/logo.png',
       },
       items: [
         {
