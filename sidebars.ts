@@ -2,7 +2,6 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
 
 const sidebars: SidebarsConfig = {
   docsSidebar: [
-    'intro',
     {
       type: 'category',
       label: 'Getting Started',
@@ -11,31 +10,91 @@ const sidebars: SidebarsConfig = {
         id: 'getting-started/index',
       },
       items: [
-        'getting-started/jobs',
-        'getting-started/general-settings',
-        'getting-started/basic-capture',
-        'getting-started/advanced-capture',
+        'getting-started/installation',
+        'getting-started/configuration',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Basic Examples',
+      link: {
+        type: 'doc',
+        id: 'basic-examples/index',
+      },
+      items: [
+        'basic-examples/kibana-dashboard-report',
+        'basic-examples/kibana-alert',
+        'basic-examples/conditional-report',
+        'basic-examples/grafana-dashboard-report',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Advanced Examples',
+      link: {
+        type: 'doc',
+        id: 'advanced-examples/index',
+      },
+      items: [
+        'advanced-examples/mixed-sources-report',
+        'advanced-examples/kibana-statistical-alert',
+        'advanced-examples/ai-news-collation',
+        'advanced-examples/branded-reports',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Jobs',
+      link: {
+        type: 'doc',
+        id: 'jobs/index',
+      },
+      items: [
+        'jobs/general',
+        'jobs/capture',
+        'jobs/composer',
+        'jobs/delivery',
       ],
     },
     {
       type: 'category',
       label: 'Delivery Interfaces',
-      items: ['delivery-interfaces/index'],
+      link: {
+        type: 'doc',
+        id: 'delivery-interfaces/index',
+      },
+      items: [
+        'delivery-interfaces/smtp',
+        'delivery-interfaces/mailgun',
+        'delivery-interfaces/slack',
+        'delivery-interfaces/webhook',
+      ],
     },
     {
       type: 'category',
-      label: 'Runs',
-      items: ['runs/index'],
+      label: 'Administration',
+      link: {
+        type: 'doc',
+        id: 'administration/index',
+      },
+      items: [
+        'administration/authentication',
+        'administration/spaces',
+        'administration/self-monitoring',
+        'administration/backup',
+      ],
     },
     {
       type: 'category',
-      label: 'Settings',
-      items: ['settings/index'],
-    },
-    {
-      type: 'category',
-      label: 'Data',
-      items: ['data/index'],
+      label: 'Data Retention',
+      link: {
+        type: 'doc',
+        id: 'data-retention/index',
+      },
+      items: [
+        'data-retention/runs',
+        'data-retention/reports',
+      ],
     },
   ],
 };

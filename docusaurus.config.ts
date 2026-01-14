@@ -67,6 +67,7 @@ const config: Config = {
       logo: {
         alt: 'Anaphora Logo',
         src: 'img/logo.png',
+        href: '/getting-started/',
       },
       items: [
         {
