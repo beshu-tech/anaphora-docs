@@ -3,8 +3,8 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Anaphora Docs',
-  tagline: 'Automated Kibana Reports & Alerts',
+  title: 'Anaphora Documentation',
+  tagline: 'Automated Kibana & Grafana Reports, Alerts, and Dashboard Scheduling',
   favicon: 'img/favicon.ico',
 
   future: {
@@ -22,6 +22,45 @@ const config: Config = {
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
+
+  // SEO: Add head tags for social sharing and SEO
+  headTags: [
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'keywords',
+        content: 'Kibana reports, Grafana reports, dashboard automation, scheduled reports, Elasticsearch alerts, PDF reports, Kibana PDF, automated reporting, observability reports',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'author',
+        content: 'Beshu Tech',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        property: 'og:site_name',
+        content: 'Anaphora Documentation',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'twitter:card',
+        content: 'summary_large_image',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'twitter:site',
+        content: '@beslogorodsky',
+      },
+    },
+  ],
 
   i18n: {
     defaultLocale: 'en',
@@ -58,7 +97,23 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/anaphora-social-card.jpg',
+    // Social card image for link previews (og:image, twitter:image)
+    // Note: For production, convert this SVG to PNG (1200x630px) for best social platform compatibility
+    image: 'img/anaphora-social-card.svg',
+    metadata: [
+      {
+        name: 'description',
+        content: 'Anaphora automates Kibana and Grafana report generation. Schedule PDF reports, create conditional alerts, and deliver dashboards via email, Slack, or webhooks.',
+      },
+      {
+        property: 'og:description',
+        content: 'Automate Kibana & Grafana reports. Schedule PDF dashboards, create conditional alerts, deliver via email, Slack, or webhooks.',
+      },
+      {
+        name: 'robots',
+        content: 'index, follow',
+      },
+    ],
     colorMode: {
       respectPrefersColorScheme: true,
     },

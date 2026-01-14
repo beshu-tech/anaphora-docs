@@ -1,8 +1,10 @@
 ---
 sidebar_position: 2
+description: Configure Anaphora connections to Kibana and Grafana. Environment variables, credentials setup, and initial configuration guide.
+keywords: [Anaphora configuration, Kibana connection, Grafana connection, environment variables, setup guide]
 ---
 
-# Configuration
+# Configuration Guide
 
 Configure Anaphora for your environment and requirements.
 

@@ -1,8 +1,10 @@
 ---
 sidebar_position: 8
+description: Anaphora release notes and changelog. New features, enhancements, bug fixes, and security updates for Kibana/Grafana report automation.
+keywords: [Anaphora changelog, release notes, new features, updates, version history]
 ---
 
-# Changelog
+# Changelog - Anaphora Release Notes
 
 All notable changes to Anaphora are documented here.
 

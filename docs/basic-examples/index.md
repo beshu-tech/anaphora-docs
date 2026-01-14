@@ -1,8 +1,10 @@
 ---
 sidebar_position: 2
+description: Step-by-step Anaphora tutorials for Kibana PDF reports, Grafana dashboard scheduling, and conditional alerts. Practical examples with complete configurations.
+keywords: [Kibana PDF report, Grafana scheduled report, dashboard alert, Elasticsearch report, tutorial]
 ---
 
-# Basic Examples
+# Basic Examples - Kibana & Grafana Report Tutorials
 
 Learn Anaphora through practical examples. Each example walks you through creating a complete job from start to finish.
 

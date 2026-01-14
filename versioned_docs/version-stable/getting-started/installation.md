@@ -1,8 +1,10 @@
 ---
 sidebar_position: 1
+description: Install Anaphora with Docker or Docker Compose. Quick setup guide for automated Kibana and Grafana report generation.
+keywords: [Anaphora installation, Docker setup, Kibana reporting tool, Grafana reporting tool, automated reports installation]
 ---
 
-# Installation
+# Installation Guide
 
 Get Anaphora up and running in your environment.
 

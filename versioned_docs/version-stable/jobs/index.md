@@ -1,8 +1,10 @@
 ---
 sidebar_position: 4
+description: Configure Anaphora jobs for automated report generation. Learn about capture, composer, delivery settings and conditional alerts.
+keywords: [Anaphora jobs, report scheduling, capture configuration, delivery settings, conditional alerts]
 ---
 
-# Jobs
+# Jobs - Automated Report Configuration
 
 A **job** is the core building block in Anaphora. It represents a scheduled task that captures data, composes reports, and delivers them to recipients.
 

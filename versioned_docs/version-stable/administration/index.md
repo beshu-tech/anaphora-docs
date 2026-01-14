@@ -1,8 +1,10 @@
 ---
 sidebar_position: 6
+description: Anaphora administration guide - configure authentication (LDAP, SAML, SSO), manage multi-tenant spaces, monitor system health, and backup data.
+keywords: [Anaphora admin, LDAP authentication, SAML SSO, multi-tenant reporting, system monitoring, backup]
 ---
 
-# Administration
+# Administration - Security, Multi-Tenancy & Operations
 
 Manage Anaphora's security, multi-tenancy, monitoring, and backups.
 

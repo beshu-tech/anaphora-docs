@@ -1,8 +1,10 @@
 ---
 sidebar_position: 7
+description: Manage Anaphora data retention - configure storage policies for report history, captured data, and audit logs. Optimize storage usage.
+keywords: [data retention, report storage, audit logs, retention policy, storage management]
 ---
 
-# Data Retention
+# Data Retention - Report History & Storage Management
 
 Anaphora stores captured data and generated reports for reference and auditing purposes. This section covers how data is stored, managed, and retained.
 

@@ -1,8 +1,10 @@
 ---
 sidebar_position: 5
+description: Configure Anaphora delivery channels - send reports via SMTP email, Mailgun, Slack, or webhooks. Multi-channel report distribution setup.
+keywords: [email reports, Slack reports, webhook delivery, SMTP configuration, Mailgun integration, report distribution]
 ---
 
-# Delivery Interfaces
+# Delivery Interfaces - Email, Slack & Webhook Configuration
 
 Delivery Interfaces define how reports reach your recipients. Configure them globally in Settings, then select per-job.
 

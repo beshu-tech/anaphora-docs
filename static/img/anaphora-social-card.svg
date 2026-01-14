@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="accent-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg-gradient)"/>
+
+  <!-- Accent line -->
+  <rect x="0" y="0" width="1200" height="6" fill="url(#accent-gradient)"/>
+
+  <!-- Grid pattern for tech feel -->
+  <g opacity="0.05">
+    <path d="M0 50 L1200 50 M0 100 L1200 100 M0 150 L1200 150 M0 200 L1200 200 M0 250 L1200 250 M0 300 L1200 300 M0 350 L1200 350 M0 400 L1200 400 M0 450 L1200 450 M0 500 L1200 500 M0 550 L1200 550 M0 600 L1200 600" stroke="#ffffff" stroke-width="1"/>
+    <path d="M50 0 L50 630 M100 0 L100 630 M150 0 L150 630 M200 0 L200 630 M250 0 L250 630 M300 0 L300 630 M350 0 L350 630 M400 0 L400 630 M450 0 L450 630 M500 0 L500 630 M550 0 L550 630 M600 0 L600 630 M650 0 L650 630 M700 0 L700 630 M750 0 L750 630 M800 0 L800 630 M850 0 L850 630 M900 0 L900 630 M950 0 L950 630 M1000 0 L1000 630 M1050 0 L1050 630 M1100 0 L1100 630 M1150 0 L1150 630" stroke="#ffffff" stroke-width="1"/>
+  </g>
+
+  <!-- Logo placeholder circle -->
+  <circle cx="600" cy="200" r="80" fill="#00d4ff" opacity="0.2"/>
+  <circle cx="600" cy="200" r="60" fill="#00d4ff" opacity="0.4"/>
+  <text x="600" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#ffffff">A</text>
+
+  <!-- Title -->
+  <text x="600" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#ffffff">Anaphora</text>
+
+  <!-- Tagline -->
+  <text x="600" y="400" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#a0aec0">Automated Kibana &amp; Grafana Reports</text>
+
+  <!-- Feature pills -->
+  <g font-family="Arial, sans-serif" font-size="18" fill="#00d4ff">
+    <rect x="200" y="460" width="180" height="40" rx="20" fill="#00d4ff" opacity="0.15"/>
+    <text x="290" y="486" text-anchor="middle">PDF Reports</text>
+
+    <rect x="420" y="460" width="180" height="40" rx="20" fill="#00d4ff" opacity="0.15"/>
+    <text x="510" y="486" text-anchor="middle">Scheduled Alerts</text>
+
+    <rect x="640" y="460" width="180" height="40" rx="20" fill="#00d4ff" opacity="0.15"/>
+    <text x="730" y="486" text-anchor="middle">Multi-Channel</text>
+
+    <rect x="860" y="460" width="140" height="40" rx="20" fill="#00d4ff" opacity="0.15"/>
+    <text x="930" y="486" text-anchor="middle">Enterprise</text>
+  </g>
+
+  <!-- URL -->
+  <text x="600" y="580" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#718096">docs.anaphora.it</text>
+</svg>

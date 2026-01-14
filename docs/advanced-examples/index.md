@@ -1,8 +1,10 @@
 ---
 sidebar_position: 3
+description: Advanced Anaphora examples - multi-source reports, statistical alerts, AI-powered news collation, and branded PDF reports for enterprise use.
+keywords: [advanced Kibana reports, multi-source dashboards, statistical alerts, branded reports, AI report generation]
 ---
 
-# Advanced Examples
+# Advanced Examples - Enterprise Reporting Scenarios
 
 Complex reporting scenarios demonstrating Anaphora's full capabilities.
 
