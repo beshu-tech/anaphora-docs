@@ -98,8 +98,7 @@ const config: Config = {
 
   themeConfig: {
     // Social card image for link previews (og:image, twitter:image)
-    // Note: For production, convert this SVG to PNG (1200x630px) for best social platform compatibility
-    image: 'img/anaphora-social-card.svg',
+    image: 'img/anaphora-social-card.png',
     metadata: [
       {
         name: 'description',
