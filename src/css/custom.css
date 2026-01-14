@@ -1,7 +1,7 @@
 /**
  * Anaphora Documentation Theme
  * Brand colors extracted from https://anaphora.it/
- * Light/dark mode aware
+ * Uses Infima CSS variables for safe light/dark mode support
  */
 
 /* Import Roboto font */
@@ -9,7 +9,7 @@
 
 /* ===== LIGHT MODE (default) ===== */
 :root {
-  /* Primary: Blue (readable in light mode) */
+  /* Primary color palette */
   --ifm-color-primary: #054f94;
   --ifm-color-primary-dark: #044785;
   --ifm-color-primary-darker: #04437e;
@@ -17,11 +17,6 @@
   --ifm-color-primary-light: #0657a3;
   --ifm-color-primary-lighter: #065baa;
   --ifm-color-primary-lightest: #0767c0;
-
-  /* Brand colors */
-  --anaphora-navy: #001529;
-  --anaphora-purple: #5f01ad;
-  --anaphora-blue: #054f94;
 
   /* Typography */
   --ifm-font-family-base: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -32,18 +27,9 @@
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(5, 79, 148, 0.1);
 
-  /* Navbar - light background */
-  --ifm-navbar-background-color: #ffffff;
-  --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 21, 41, 0.1);
-
-  /* Footer - light mode uses lighter background */
-  --ifm-footer-background-color: #f8f9fa;
-  --ifm-footer-color: #001529;
-  --ifm-footer-link-color: #054f94;
-
   /* Links */
-  --ifm-link-color: #054f94;
-  --ifm-link-hover-color: #5f01ad;
+  --ifm-link-color: var(--ifm-color-primary);
+  --ifm-link-hover-color: var(--ifm-color-primary-dark);
 
   /* Buttons */
   --ifm-button-border-radius: 4px;
@@ -62,193 +48,61 @@
 
   /* Code highlighting */
   --docusaurus-highlighted-code-line-bg: rgba(77, 163, 255, 0.2);
-
-  /* Links */
-  --ifm-link-color: #4da3ff;
-  --ifm-link-hover-color: #9b4dff;
-
-  /* Footer - dark mode uses dark navy */
-  --ifm-footer-background-color: #001529;
-  --ifm-footer-color: #ffffff;
-  --ifm-footer-link-color: #4da3ff;
 }
 
 /* ===== NAVBAR ===== */
-.navbar {
-  border-bottom: 1px solid rgba(0, 21, 41, 0.1);
+/* Logo styling to match anaphora.it */
+.navbar__brand {
+  display: flex;
+  align-items: center;
 }
 
-[data-theme='dark'] .navbar {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.navbar__logo {
+  background-color: var(--ifm-color-emphasis-200);
+  border-radius: 50%;
+  padding: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar__logo img {
+  height: 2rem;
+  width: 2rem;
 }
 
 .navbar__title {
-  font-weight: 500;
-  color: #001529;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-left: 0.5rem;
 }
 
-[data-theme='dark'] .navbar__title {
-  color: #ffffff;
-}
-
-/* ===== VERSION BADGE (Pre-release banner) ===== */
-/* Light mode: light background with dark text */
+/* ===== VERSION BADGE ===== */
 .theme-doc-version-badge {
-  background-color: #e8f4fd;
-  color: #054f94;
-  border: 1px solid #054f94;
-}
-
-/* Dark mode: dark background with light text */
-[data-theme='dark'] .theme-doc-version-badge {
-  background-color: rgba(77, 163, 255, 0.2);
-  color: #4da3ff;
-  border: 1px solid #4da3ff;
-}
-
-/* Version banner (unreleased warning) */
-.theme-doc-version-banner {
-  background-color: #fff8e6;
-  border-left-color: #f0ad4e;
-}
-
-[data-theme='dark'] .theme-doc-version-banner {
-  background-color: rgba(240, 173, 78, 0.15);
+  background-color: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-primary);
+  border: 1px solid var(--ifm-color-primary);
 }
 
 /* ===== SIDEBAR ===== */
 .menu__link--active:not(.menu__link--sublist) {
-  background-color: rgba(5, 79, 148, 0.1);
-}
-
-[data-theme='dark'] .menu__link--active:not(.menu__link--sublist) {
-  background-color: rgba(77, 163, 255, 0.15);
-}
-
-/* ===== FOOTER ===== */
-/* Light mode footer */
-.footer--dark {
-  --ifm-footer-background-color: #f8f9fa;
-  --ifm-footer-color: #001529;
-  --ifm-footer-title-color: #001529;
-  --ifm-footer-link-color: #054f94;
-  background-color: #f8f9fa;
-  color: #001529;
-}
-
-.footer--dark .footer__title {
-  color: #001529;
-}
-
-.footer--dark .footer__link-item {
-  color: #054f94;
-}
-
-.footer--dark .footer__link-item:hover {
-  color: #5f01ad;
-}
-
-.footer--dark .footer__copyright {
-  color: #444;
-}
-
-/* Dark mode footer */
-[data-theme='dark'] .footer--dark {
-  --ifm-footer-background-color: #001529;
-  --ifm-footer-color: #ffffff;
-  --ifm-footer-title-color: #ffffff;
-  --ifm-footer-link-color: #4da3ff;
-  background-color: #001529;
-  color: #ffffff;
-}
-
-[data-theme='dark'] .footer--dark .footer__title {
-  color: #ffffff;
-}
-
-[data-theme='dark'] .footer--dark .footer__link-item {
-  color: #a0c4e8;
-}
-
-[data-theme='dark'] .footer--dark .footer__link-item:hover {
-  color: #4da3ff;
-}
-
-[data-theme='dark'] .footer--dark .footer__copyright {
-  color: #a0c4e8;
-}
-
-/* ===== BUTTONS ===== */
-.button--primary {
-  background-color: #054f94;
-  border-color: #054f94;
-  color: #ffffff;
-}
-
-.button--primary:hover {
-  background-color: #044785;
-  border-color: #044785;
-  color: #ffffff;
-}
-
-[data-theme='dark'] .button--primary {
-  background-color: #4da3ff;
-  border-color: #4da3ff;
-  color: #001529;
-}
-
-[data-theme='dark'] .button--primary:hover {
-  background-color: #6cb5ff;
-  border-color: #6cb5ff;
-  color: #001529;
+  background-color: var(--ifm-color-primary-lightest);
+  background-color: color-mix(in srgb, var(--ifm-color-primary) 10%, transparent);
 }
 
 /* ===== TABLE OF CONTENTS ===== */
 .table-of-contents__link--active {
-  color: #054f94;
+  color: var(--ifm-color-primary);
   font-weight: 500;
-}
-
-[data-theme='dark'] .table-of-contents__link--active {
-  color: #4da3ff;
 }
 
 /* ===== ADMONITIONS ===== */
 .alert--info {
-  --ifm-alert-background-color: rgba(5, 79, 148, 0.1);
-  --ifm-alert-border-color: #054f94;
-}
-
-[data-theme='dark'] .alert--info {
-  --ifm-alert-background-color: rgba(77, 163, 255, 0.1);
-  --ifm-alert-border-color: #4da3ff;
+  --ifm-alert-background-color: color-mix(in srgb, var(--ifm-color-primary) 10%, transparent);
+  --ifm-alert-border-color: var(--ifm-color-primary);
 }
 
 /* ===== CODE BLOCKS ===== */
 .prism-code {
   border-radius: 6px;
-}
-
-/* ===== HERO (if used) ===== */
-.hero {
-  background: linear-gradient(135deg, #001529 0%, #054f94 100%);
-}
-
-.hero__title {
-  color: #ffffff;
-}
-
-.hero__subtitle {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* ===== DROPDOWN (version selector) ===== */
-.dropdown__menu {
-  background-color: #ffffff;
-  border: 1px solid rgba(0, 21, 41, 0.1);
-}
-
-[data-theme='dark'] .dropdown__menu {
-  background-color: #1b1b1d;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
