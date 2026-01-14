@@ -96,6 +96,7 @@ const sidebars: SidebarsConfig = {
         'data-retention/reports',
       ],
     },
+    'changelog',
   ],
 };
 

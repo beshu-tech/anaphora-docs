@@ -93,6 +93,7 @@
         "data-retention/runs",
         "data-retention/reports"
       ]
-    }
+    },
+    "changelog"
   ]
 }
