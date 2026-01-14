@@ -36,6 +36,18 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           editUrl: 'https://github.com/beshu-tech/anaphora-docs/tree/main/',
           routeBasePath: '/',
+          lastVersion: 'stable',
+          versions: {
+            current: {
+              label: 'Pre-release',
+              path: 'pre-release',
+              banner: 'unreleased',
+            },
+            stable: {
+              label: 'Stable',
+              path: '',
+            },
+          },
         },
         blog: false, // Disable blog
         theme: {
@@ -62,6 +74,11 @@ const config: Config = {
           sidebarId: 'docsSidebar',
           position: 'left',
           label: 'Documentation',
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+          dropdownActiveClassDisabled: true,
         },
         {
           href: 'https://github.com/beshu-tech/anaphora-docs',
