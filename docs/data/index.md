@@ -1,11 +1,16 @@
 ---
 sidebar_position: 1
+
+
 ---
 
+![](images/runs.png)
+
 # Data
+![](images/reports.png)
 
 The Data section provides access to stored captures, templates, and report history.
-
+![alt text](index/images)
 :::note Coming Soon
 This section is under development. Check back for detailed documentation on:
 - Stored captures
@@ -13,7 +18,7 @@ This section is under development. Check back for detailed documentation on:
 - Data retention policies
 - Export functionality
 :::
-
+![alt text](reports.png)
 ## Overview
 
 Anaphora stores captured data and generated reports for reference and auditing purposes.
