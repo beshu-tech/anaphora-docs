@@ -1,5 +1,7 @@
 ---
 sidebar_position: 3
+description: Use AI to aggregate, summarize, and deliver curated content from multiple sources with Anaphora.
+keywords: [AI summarization, news aggregation, content curation, LLM reports, Anaphora AI]
 ---
 
 # AI News Collation

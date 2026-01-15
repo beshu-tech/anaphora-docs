@@ -1,5 +1,7 @@
 ---
 sidebar_position: 4
+description: Capture and deliver scheduled Grafana dashboard reports with Anaphora for infrastructure monitoring.
+keywords: [Grafana report, dashboard capture, infrastructure monitoring, scheduled report, Anaphora Grafana]
 ---
 
 # Grafana Dashboard Report

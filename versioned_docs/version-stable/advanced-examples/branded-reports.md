@@ -1,5 +1,7 @@
 ---
 sidebar_position: 4
+description: Create professional branded reports with custom logos, colors, and templates for external stakeholders.
+keywords: [branded reports, custom templates, professional PDF, white-label reports, Anaphora branding]
 ---
 
 # Branded Reports

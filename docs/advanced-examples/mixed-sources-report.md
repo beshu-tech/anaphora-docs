@@ -1,5 +1,7 @@
 ---
 sidebar_position: 1
+description: Combine data from multiple sources like Kibana and Grafana into a single unified report using Anaphora.
+keywords: [multi-source report, combined dashboard, Kibana Grafana, unified report, Anaphora advanced]
 ---
 
 # Mixed Sources Report

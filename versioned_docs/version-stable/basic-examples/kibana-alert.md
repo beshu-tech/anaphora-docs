@@ -1,5 +1,7 @@
 ---
 sidebar_position: 2
+description: Create conditional Kibana alerts with Slack notifications when error thresholds are exceeded using Anaphora.
+keywords: [Kibana alert, conditional notification, Slack alert, error threshold, Anaphora alerting]
 ---
 
 # Kibana Alert

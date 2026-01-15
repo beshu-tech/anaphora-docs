@@ -35,7 +35,7 @@ The documentation has been restructured for better navigation and discoverabilit
 
 ---
 
-## [1.0.0] - 2024-XX-XX
+## [1.0.0] - 2024-12-01
 
 ### 🚀 New Feature: Kibana dashboard capture
 

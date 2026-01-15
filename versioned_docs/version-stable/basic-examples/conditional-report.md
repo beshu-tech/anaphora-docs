@@ -1,5 +1,7 @@
 ---
 sidebar_position: 3
+description: Build reports that only send when specific conditions are met using Anaphora's conditional execution and break actions.
+keywords: [conditional report, Anaphora conditions, break action, threshold report, smart reporting]
 ---
 
 # Conditional Report

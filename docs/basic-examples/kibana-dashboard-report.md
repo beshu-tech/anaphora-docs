@@ -1,5 +1,7 @@
 ---
 sidebar_position: 1
+description: Step-by-step tutorial to create a scheduled Kibana dashboard PDF report with email delivery in Anaphora.
+keywords: [Kibana report tutorial, scheduled dashboard, PDF email, Anaphora example, dashboard automation]
 ---
 
 # Kibana Dashboard Report

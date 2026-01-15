@@ -1,5 +1,7 @@
 ---
 sidebar_position: 2
+description: Create sophisticated Kibana alerts based on statistical analysis and trend detection with Anaphora.
+keywords: [statistical alert, trend detection, Kibana analytics, anomaly detection, Anaphora statistics]
 ---
 
 # Kibana Statistical Alert
