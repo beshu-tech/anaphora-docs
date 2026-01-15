@@ -87,6 +87,24 @@ Back in Anaphora:
    - **Metadata XML**: Upload/paste the IdP metadata file
 3. Click **Save**
 
+### Signing Certificate
+
+The **Certificate** field contains the IdP's signing certificate for validating SAML assertions. This is the X.509 certificate found in your IdP's SAML metadata as `<ds:X509Certificate>`.
+
+**Keycloak:** The metadata URL is:
+```
+https://<keycloak-host>/realms/<your-realm>/protocol/saml/descriptor
+```
+
+The certificate is a long Base64-encoded string, for example:
+```
+MIICizCCAfQCCQCET8tKaMc0BMjANBgkqh...g=
+```
+
+:::tip
+When using **Metadata URL**, the certificate is automatically extracted. Manual entry is only needed when configuring without metadata.
+:::
+
 ### Step 4: Map Attributes
 
 Configure how IdP claims map to Anaphora user fields.
