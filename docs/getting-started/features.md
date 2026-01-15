@@ -8,6 +8,10 @@ keywords: [Anaphora features, free edition, pro license, enterprise edition, act
 
 Choose the edition that fits your needs. All editions include the **full reporting engine** — higher tiers unlock team features and integrations.
 
+:::info 🚀 Ready to try PRO or Enterprise?
+**[Get a free trial key →](https://portal.anaphora.it)** — No credit card required. Instant activation.
+:::
+
 ## 🆓 Free Edition
 
 **Perfect for evaluation and personal projects**
@@ -116,11 +120,23 @@ docker run -p 3000:3000 \
 - ♾️ **Perpetual Licenses** — keys don't expire
 - 🔄 **Transferable** — move between deployments
 
-## Get Started
+## Get Your Trial Key
 
-1. [Install Anaphora](./installation) — runs in Free mode by default
-2. Create up to 2 jobs to evaluate
-3. [Contact Beshu Tech](https://beshu.tech) for PRO or Enterprise keys
+:::tip 🎁 Try PRO or Enterprise Free
+**[Request a trial activation key →](https://portal.anaphora.it)**
+
+- Instant delivery — no waiting
+- Full access to all features
+- No credit card required
+:::
+
+## Need Help?
+
+:::note 💬 Join the Community
+**[Visit the Anaphora Forum →](https://forum.anaphora.it)**
+
+Ask questions, share your workflows, and connect with other users and the Anaphora team.
+:::
 
 ## Next Steps
 

@@ -116,6 +116,16 @@ A "share-nothing" container that isolates jobs, delivery interfaces, AI provider
 - **Session management** with admin visibility and forced logout
 - **Self-monitoring** with health API for external monitoring systems
 
+## Get Started Now
+
+:::tip 🚀 Try PRO or Enterprise Features
+**[Get a free trial key →](https://portal.anaphora.it)** — Instant activation, no credit card required.
+:::
+
+:::note 💬 Questions? Join the Community
+**[Visit the Anaphora Forum →](https://forum.anaphora.it)** — Get help from the team and other users.
+:::
+
 ## Next Steps
 
 - [Installation](./getting-started/installation) - Get Anaphora running

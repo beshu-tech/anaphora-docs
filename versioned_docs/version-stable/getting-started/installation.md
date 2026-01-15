@@ -63,8 +63,14 @@ volumes:
   anaphora-data:
 ```
 
-:::note Activation Key
-The `ACTIVATION_KEY` environment variable unlocks PRO or Enterprise features. See [Features & Editions](./features) for details on what's included in each edition.
+:::tip 🎁 Get a Free Trial Key
+The `ACTIVATION_KEY` unlocks PRO or Enterprise features. **[Request your free trial key →](https://portal.anaphora.it)** — instant activation, no credit card required.
+:::
+
+## Need Help?
+
+:::note 💬 Join the Community
+Having trouble? **[Ask on the Anaphora Forum →](https://forum.anaphora.it)** — Get help from the team and other users.
 :::
 
 ## Next Steps
