@@ -1,55 +1,55 @@
 ---
 sidebar_position: 2
-description: Configure Anaphora connections to Kibana and Grafana. Environment variables, credentials setup, and initial configuration guide.
-keywords: [Anaphora configuration, Kibana connection, Grafana connection, environment variables, setup guide]
+description: Configure Anaphora with environment variables for production deployments. PUBLIC_URL, admin credentials, and license setup.
+keywords: [Anaphora configuration, environment variables, PUBLIC_URL, setup guide, production deployment]
 ---
 
 # Configuration Guide
 
 Configure Anaphora for your environment and requirements.
 
-## Initial Setup
-
-On first launch, Anaphora will guide you through initial configuration:
-
-1. Set admin credentials
-2. Configure license (if applicable)
-3. Set up your first connection to Kibana or Grafana
-
 ## Environment Variables
 
-Anaphora can be configured via environment variables:
+Anaphora is configured via environment variables:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `ANAPHORA_PORT` | HTTP port | `8080` |
-| `ANAPHORA_DATA_DIR` | Data storage path | `/data` |
-| `ANAPHORA_LICENSE_KEY` | License key | - |
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `PUBLIC_URL` | External URL where Anaphora is accessible | Yes (production) |
+| `ADMIN_USERNAME` | Initial admin username | No (default: `admin`) |
+| `ADMIN_PASSWORD` | Initial admin password | No (prompted on first login) |
+| `ACTIVATION_KEY` | PRO/Enterprise activation key | No |
+| `ANAPHORA_DATA_DIR` | Data storage path | No (default: `/data`) |
 
-## Connection Setup
+### PUBLIC_URL
 
-Connections are configured within job capture settings, where you select the connector type and provide the target URL.
+The `PUBLIC_URL` environment variable defines the external URL where Anaphora is accessible. This is **required for production deployments** and used for:
 
-![Navigate action showing connector selection and URL configuration](images/advanced-capture-flow.png)
+- SSO callback URLs (SAML, OIDC)
+- Links in email notifications
+- Webhook response URLs
 
-### Adding a Kibana Connection
+```bash
+# Example: Production deployment
+PUBLIC_URL=https://anaphora.company.com
 
-1. Create a new Job or edit an existing one
-2. Go to the **Capture** tab
-3. Select **Kibana** as the connector type
-4. Enter your Kibana dashboard URL
-5. Configure authentication if required
-6. Use **Test capture** to verify the connection
+# Example: Local development (optional)
+PUBLIC_URL=http://localhost:3000
+```
 
-### Adding a Grafana Connection
+:::warning Required for SSO
+If you're using SAML or OIDC authentication, `PUBLIC_URL` must be set correctly. The callback URLs registered with your identity provider must match this value.
+:::
 
-1. Create a new Job or edit an existing one
-2. Go to the **Capture** tab
-3. Select **Grafana** as the connector type
-4. Enter your Grafana dashboard URL
-5. Configure authentication (API key or login credentials)
-6. Use **Test capture** to verify the connection
+## Initial Setup
+
+On first launch:
+
+1. Navigate to `PUBLIC_URL` in your browser
+2. Log in with admin credentials (set via environment variables or prompted)
+3. Configure your license if using PRO/Enterprise features
+4. Create your first job
 
 ## Next Steps
 
-- [Basic Examples](../basic-examples/) - See Anaphora in action
+- [Features & Editions](./features) - Compare Free, PRO, and Enterprise
+- [Basic Examples](../basic-examples/) - Create your first report job
