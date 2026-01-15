@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Reports
 
-![](images/reports.png)
+![Reports gallery showing generated report thumbnails with timestamps and durations](images/reports.png)
 
 The Reports section provides access to all generated report documents and their delivery history.
 

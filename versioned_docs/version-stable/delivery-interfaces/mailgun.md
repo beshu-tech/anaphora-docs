@@ -6,6 +6,8 @@ sidebar_position: 2
 
 Send reports via the Mailgun email API.
 
+![Mailgun delivery interface configuration showing sender email, sender name, and API key fields](images/mailgun.png)
+
 ## Why Mailgun?
 
 - No SMTP server to manage

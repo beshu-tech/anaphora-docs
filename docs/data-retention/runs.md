@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Runs
 
-![](images/runs.png)
+![Runs page showing job execution history with job name, type, timestamp, duration, status, and attempts columns](images/runs.png)
 
 The Runs section shows the execution history of your jobs, including successful captures, failures, and delivery status.
 

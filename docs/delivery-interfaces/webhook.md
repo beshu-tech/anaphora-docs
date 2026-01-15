@@ -5,7 +5,7 @@ sidebar_position: 4
 # WebHook
 
 Send reports to custom HTTP endpoints for integration with any system.
-![](images/webhook.png)
+![Webhook delivery interface configuration showing URL, HTTP method, headers, and JSON body options](images/webhook.png)
 
 ## Use Cases
 

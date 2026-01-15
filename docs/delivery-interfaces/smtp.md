@@ -6,7 +6,7 @@ sidebar_position: 1
 
 Send reports via your own SMTP email server. Supports SSL, STARTLS, plain
 
-![](images/smtp.png)
+![SMTP delivery interface configuration showing host, port, credentials, SSL settings, and certificate options](images/smtp.png)
 
 ## Configuration
 
