@@ -1,5 +1,7 @@
 ---
 sidebar_position: 3
+description: Monitor Anaphora health, performance, and job metrics. Configure alerts, access logs, and integrate with Prometheus.
+keywords: [self monitoring, health check, Prometheus, metrics, job monitoring, performance, Anaphora monitoring]
 ---
 
 # Self Monitoring

@@ -1,5 +1,7 @@
 ---
 sidebar_position: 2
+description: Configure Mailgun API integration for reliable email delivery with built-in analytics and better deliverability.
+keywords: [Mailgun integration, email API, transactional email, Anaphora Mailgun, email delivery]
 ---
 
 # Mailgun

@@ -1,5 +1,7 @@
 ---
 sidebar_position: 3
+description: Configure Slack webhook integration to deliver Anaphora reports directly to Slack channels with rich formatting.
+keywords: [Slack integration, webhook delivery, Slack notifications, report delivery, Anaphora Slack]
 ---
 
 # Slack

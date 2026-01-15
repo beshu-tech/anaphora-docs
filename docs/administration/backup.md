@@ -1,5 +1,7 @@
 ---
 sidebar_position: 4
+description: Back up Anaphora configuration, jobs, and reports. Schedule automatic backups and restore from backup files.
+keywords: [Anaphora backup, configuration backup, disaster recovery, data protection, scheduled backup]
 ---
 
 # Backup

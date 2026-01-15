@@ -1,5 +1,7 @@
 ---
 sidebar_position: 4
+description: Configure webhook delivery to send Anaphora reports to custom HTTP endpoints. Integrate with any system via JSON payloads.
+keywords: [webhook integration, HTTP delivery, API integration, custom notifications, automation, Anaphora webhook]
 ---
 
 # WebHook
@@ -33,7 +35,7 @@ Anaphora sends a JSON payload:
 {
   "job_name": "Daily Report",
   "job_id": "abc123",
-  "timestamp": "2024-01-15T09:00:00Z",
+  "timestamp": "2026-01-15T09:00:00Z",
   "status": "success",
   "report_url": "https://anaphora.example.com/reports/xyz",
   "variables": {

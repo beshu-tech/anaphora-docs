@@ -1,5 +1,7 @@
 ---
 sidebar_position: 2
+description: View and debug job execution history in Anaphora. Track run statuses, identify failures, and review captured content.
+keywords: [job runs, execution history, run status, debugging, job monitoring, Anaphora runs]
 ---
 
 # Runs

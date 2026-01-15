@@ -1,5 +1,7 @@
 ---
 sidebar_position: 1
+description: Configure SMTP email delivery for Anaphora reports. Supports SSL, STARTTLS, and common providers like Gmail and Office 365.
+keywords: [SMTP configuration, email delivery, SSL email, Gmail SMTP, Office 365 SMTP, Anaphora email]
 ---
 
 # SMTP

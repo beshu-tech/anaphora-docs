@@ -1,5 +1,7 @@
 ---
 sidebar_position: 3
+description: Access and manage generated reports in Anaphora. Browse report history, configure retention, and download captured data.
+keywords: [reports, report storage, report retention, PDF reports, captured data, Anaphora reports]
 ---
 
 # Reports
