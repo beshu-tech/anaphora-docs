@@ -14,6 +14,9 @@ const config: Config = {
   // Enable Mermaid diagrams
   markdown: {
     mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: 'throw',
+    },
   },
   themes: ['@docusaurus/theme-mermaid'],
 
@@ -27,7 +30,6 @@ const config: Config = {
   trailingSlash: false,
 
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
 
   // SEO: Add head tags for social sharing and SEO
   headTags: [
