@@ -139,6 +139,22 @@ const config: Config = {
           label: 'Documentation',
         },
         {
+          href: 'https://forum.anaphora.it',
+          label: 'Forum',
+          position: 'left',
+        },
+        {
+          href: 'https://portal.anaphora.it',
+          label: '🎁 Free Trial',
+          position: 'right',
+          className: 'navbar-trial-link',
+        },
+        {
+          href: 'https://anaphora.it/contact/',
+          label: 'Get a License',
+          position: 'right',
+        },
+        {
           type: 'docsVersionDropdown',
           position: 'right',
           dropdownActiveClassDisabled: true,
@@ -160,6 +176,14 @@ const config: Config = {
               label: 'Getting Started',
               to: '/getting-started/',
             },
+            {
+              label: 'Features & Editions',
+              to: '/getting-started/features',
+            },
+            {
+              label: 'Basic Examples',
+              to: '/basic-examples/',
+            },
           ],
         },
         {
@@ -170,17 +194,29 @@ const config: Config = {
               href: 'https://anaphora.it',
             },
             {
-              label: 'Beshu Tech',
-              href: 'https://beshu.tech',
+              label: 'Free Trial Key',
+              href: 'https://portal.anaphora.it',
+            },
+            {
+              label: 'Get a License',
+              href: 'https://anaphora.it/contact/',
             },
           ],
         },
         {
-          title: 'More',
+          title: 'Community',
           items: [
+            {
+              label: 'Forum',
+              href: 'https://forum.anaphora.it',
+            },
             {
               label: 'GitHub',
               href: 'https://github.com/beshu-tech/anaphora-docs',
+            },
+            {
+              label: 'Beshu Tech',
+              href: 'https://beshu.tech',
             },
           ],
         },

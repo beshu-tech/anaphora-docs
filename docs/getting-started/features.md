@@ -110,9 +110,12 @@ docker run -p 3000:3000 \
 
 **Option 2: Admin UI**
 
-1. Go to **Settings** → **License**
-2. Enter your activation key
-3. Click **Activate**
+1. Go to **Settings** → **System** → **Activation Key**
+2. Click on Load another
+3. Enter your activation key
+4. Click **Activate**
+
+![](images/activationkey.png)
 
 ### Key Benefits
 

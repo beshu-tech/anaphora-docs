@@ -101,3 +101,27 @@
 .prism-code {
   border-radius: 6px;
 }
+
+/* ===== NAVBAR CTA BUTTONS ===== */
+.navbar-trial-link {
+  background-color: #10b981;
+  color: white !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-trial-link:hover {
+  background-color: #059669;
+  color: white !important;
+  text-decoration: none;
+}
+
+[data-theme='dark'] .navbar-trial-link {
+  background-color: #10b981;
+}
+
+[data-theme='dark'] .navbar-trial-link:hover {
+  background-color: #34d399;
+}
