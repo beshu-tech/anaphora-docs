@@ -119,6 +119,7 @@ A "share-nothing" container that isolates jobs, delivery interfaces, AI provider
 ## Next Steps
 
 - [Installation](./getting-started/installation) - Get Anaphora running
+- [Features & Editions](./getting-started/features) - Compare Free, PRO, and Enterprise
 - [Configuration](./getting-started/configuration) - Set up connections and preferences
 - [Basic Examples](./basic-examples/) - Create your first report job
 - [Jobs](./jobs/) - Deep dive into job configuration

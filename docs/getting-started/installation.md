@@ -14,45 +14,61 @@ Get Anaphora up and running in your environment.
 - Or: Java 17+ runtime environment
 - Network access to your Kibana/Grafana instances
 
-## Docker Installation (Recommended)
+## Quick Start with Docker
 
 The fastest way to get started is using Docker:
 
 ```bash
-docker pull beshutech/anaphora:latest
-docker run -d -p 8080:8080 beshutech/anaphora:latest
+docker run -p 3000:3000 \
+  -e PUBLIC_URL=http://localhost:3000 \
+  -e ADMIN_USERNAME=admin \
+  -e ADMIN_PASSWORD=admin \
+  -d beshu-tech/anaphora
 ```
+
+Then open [http://localhost:3000](http://localhost:3000) in your browser and log in with `admin` / `admin`.
+
+### Environment Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `PUBLIC_URL` | External URL where Anaphora is accessible | `http://anaphora.example.com:3000` |
+| `ADMIN_USERNAME` | Initial admin username | `admin` |
+| `ADMIN_PASSWORD` | Initial admin password | `your-secure-password` |
+
+:::tip Production Deployment
+For production, use a strong password and set `PUBLIC_URL` to your actual external URL (this is used for callback URLs in SSO configurations).
+:::
 
 ### Docker Compose
 
-For production deployments, use Docker Compose:
+For production deployments, use Docker Compose with persistent storage:
 
 ```yaml
 version: '3.8'
 services:
   anaphora:
-    image: beshutech/anaphora:latest
+    image: beshu-tech/anaphora
     ports:
-      - "8080:8080"
+      - "3000:3000"
     volumes:
       - anaphora-data:/data
     environment:
-      - ANAPHORA_LICENSE_KEY=${LICENSE_KEY}
+      - PUBLIC_URL=https://anaphora.example.com
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - ACTIVATION_KEY=${ACTIVATION_KEY}
 
 volumes:
   anaphora-data:
 ```
 
-## Accessing the UI
-
-Once running, access Anaphora at:
-
-```
-http://localhost:8080
-```
-
-Default credentials will be displayed in the console on first startup.
+:::note Activation Key
+The `ACTIVATION_KEY` environment variable unlocks PRO or Enterprise features. See [Features & Editions](./features) for details on what's included in each edition.
+:::
 
 ## Next Steps
 
+- [Features & Editions](./features) - Compare Free, PRO, and Enterprise editions
 - [Configuration](./configuration) - Configure Anaphora settings
+- [Basic Examples](../basic-examples/) - Create your first report job
