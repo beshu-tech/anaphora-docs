@@ -5,7 +5,7 @@ keywords: [local authentication, user management, password policy, built-in user
 ---
 
 # Local Authentication
-
+![](images/local.png)
 Default authentication using Anaphora's built-in user database. Ideal for small teams, testing environments, or deployments without enterprise identity providers.
 
 ## Overview
@@ -35,8 +35,22 @@ Local authentication provides:
 | Email | User email address | Yes |
 | Display Name | Friendly name shown in UI | No |
 | Password | Initial password | Yes |
+| System Role | Access level for system settings | Yes |
 | Roles | Assigned permissions | Yes |
 | Spaces | Space memberships | No |
+
+### System Role
+
+The **System Role** controls access to system-wide settings:
+
+| Role | Description |
+|------|-------------|
+| **user** | Normal user, cannot access system settings |
+| **system** | Can access and modify system settings |
+
+:::note
+System settings include authentication configuration, AI providers, backup settings, and other global options. Most users should have the `user` role.
+:::
 
 ### Editing Users
 
