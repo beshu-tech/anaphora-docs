@@ -32,18 +32,29 @@ The enabling technology is a **headless Chrome-based connector** that does what 
 
 Anaphora processes each job run through four pipeline stages:
 
-```
-┌────────────────┐    ┌────────────────┐    ┌────────────────┐    ┌────────────────┐
-│   Scheduler    │    │    Capture     │    │    Compose     │    │    Deliver     │
-│    & Runner    │ -> │                │ -> │                │ -> │   & Archive    │
-│                │    │ Headless       │    │ Report         │    │                │
-│ Triggers jobs  │    │ browser        │    │ builder        │    │ Push to        │
-│ on schedule    │    │ connector      │    │ (PDF)          │    │ destinations   │
-└────────────────┘    └────────────────┘    └────────────────┘    └────────────────┘
-        │                     │                     │                     │
-        ▼                     ▼                     ▼                     ▼
-   Retry/suspend         Authenticate          Named snapshots      Webhook/Email
-   rules applied         Navigate & capture    + content blocks     S3/Slack
+```mermaid
+flowchart LR
+    subgraph scheduler["Scheduler & Runner"]
+        s1[Triggers jobs on schedule]
+        s2[Retry/suspend rules]
+    end
+
+    subgraph capture["Capture"]
+        c1[Headless browser connector]
+        c2[Authenticate & navigate]
+    end
+
+    subgraph compose["Compose"]
+        comp1[Report builder - PDF]
+        comp2[Snapshots + content blocks]
+    end
+
+    subgraph deliver["Deliver & Archive"]
+        d1[Push to destinations]
+        d2[Webhook/Email/S3/Slack]
+    end
+
+    scheduler --> capture --> compose --> deliver
 ```
 
 ## Core Concepts

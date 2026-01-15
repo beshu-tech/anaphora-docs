@@ -12,22 +12,25 @@ The Composer tab is where captured content becomes a professional report. Using 
 
 After capture, the Composer assembles your content into a deliverable format:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Report Page                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  [Logo]     Company Dashboard Report                │    │
-│  │             Generated: {{date}}                     │    │
-│  └─────────────────────────────────────────────────────┘    │
-│  ┌──────────────────────┐  ┌──────────────────────┐        │
-│  │   $dashboard_a       │  │   $dashboard_b       │        │
-│  │   (Snapshot)         │  │   (Snapshot)         │        │
-│  └──────────────────────┘  └──────────────────────┘        │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  AI Analysis: {{$ai_summary}}                       │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                         Page 1 of 2                         │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+block-beta
+    columns 1
+    block:page["Report Page"]
+        columns 1
+        block:header["Header"]
+            columns 3
+            logo["Logo"]
+            title["Company Dashboard Report"]
+            date["Generated: date"]
+        end
+        block:content
+            columns 2
+            snap1["$dashboard_a (Snapshot)"]
+            snap2["$dashboard_b (Snapshot)"]
+        end
+        ai["AI Analysis: $ai_summary"]
+        footer["Page 1 of 2"]
+    end
 ```
 
 ## Block Types

@@ -105,12 +105,11 @@ Advanced mode enables multi-step browser automation for complex scenarios.
 
 ### Workflow Structure
 
-```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│  Navigate   │ -> │ Authenticate│ -> │  Interact   │ -> │   Capture   │
-│  to URL     │    │  (if needed)│    │  (click,    │    │  (snapshot  │
-│             │    │             │    │   type)     │    │   to var)   │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+```mermaid
+flowchart LR
+    A["Navigate to URL"] --> B["Authenticate (if needed)"]
+    B --> C["Interact (click, type)"]
+    C --> D["Capture (snapshot to var)"]
 ```
 
 ### Browser Actions

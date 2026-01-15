@@ -26,18 +26,28 @@ Anaphora uses a **Spaces** concept to manage multi-tenancy and permissions effec
 
 Spaces act as isolated containers with complete separation:
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                      Anaphora                           │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │  Space A    │  │  Space B    │  │  Space C    │     │
-│  │             │  │             │  │             │     │
-│  │  - Jobs     │  │  - Jobs     │  │  - Jobs     │     │
-│  │  - Reports  │  │  - Reports  │  │  - Reports  │     │
-│  │  - Delivery │  │  - Delivery │  │  - Delivery │     │
-│  │  - Users    │  │  - Users    │  │  - Users    │     │
-│  └─────────────┘  └─────────────┘  └─────────────┘     │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph anaphora["Anaphora"]
+        subgraph spaceA["Space A"]
+            a1["Jobs"]
+            a2["Reports"]
+            a3["Delivery"]
+            a4["Users"]
+        end
+        subgraph spaceB["Space B"]
+            b1["Jobs"]
+            b2["Reports"]
+            b3["Delivery"]
+            b4["Users"]
+        end
+        subgraph spaceC["Space C"]
+            c1["Jobs"]
+            c2["Reports"]
+            c3["Delivery"]
+            c4["Users"]
+        end
+    end
 ```
 
 - **Complete isolation** - Jobs, Delivery Interfaces, AI Providers, and reports cannot be shared between spaces

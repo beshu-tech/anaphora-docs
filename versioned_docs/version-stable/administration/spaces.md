@@ -18,23 +18,33 @@ A Space is an isolated container that includes:
 - AI provider configurations
 - User assignments and permissions
 
+```mermaid
+flowchart TB
+    subgraph anaphora["Anaphora"]
+        subgraph spaceA["Space A (Team Alpha)"]
+            a1["15 Jobs"]
+            a2["3 Delivery Interfaces"]
+            a3["5 Users"]
+            a4["AI Provider"]
+        end
+        subgraph spaceB["Space B (Team Beta)"]
+            b1["8 Jobs"]
+            b2["2 Delivery Interfaces"]
+            b3["3 Users"]
+            b4["AI Provider"]
+        end
+        subgraph spaceC["Space C (Clients)"]
+            c1["50 Jobs"]
+            c2["5 Delivery Interfaces"]
+            c3["10 Users"]
+            c4["No AI"]
+        end
+    end
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        Anaphora                              │
-│                                                              │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
-│  │    Space A      │  │    Space B      │  │   Space C   │ │
-│  │   (Team Alpha)  │  │   (Team Beta)   │  │  (Clients)  │ │
-│  │                 │  │                 │  │             │ │
-│  │ • 15 Jobs       │  │ • 8 Jobs        │  │ • 50 Jobs   │ │
-│  │ • 3 Delivery IF │  │ • 2 Delivery IF │  │ • 5 Del IF  │ │
-│  │ • 5 Users       │  │ • 3 Users       │  │ • 10 Users  │ │
-│  │ • AI Provider   │  │ • AI Provider   │  │ • None      │ │
-│  └─────────────────┘  └─────────────────┘  └─────────────┘ │
-│                                                              │
-│  Users can belong to multiple Spaces with different roles    │
-└─────────────────────────────────────────────────────────────┘
-```
+
+:::info
+Users can belong to multiple Spaces with different roles.
+:::
 
 ## Share-Nothing Architecture
 

@@ -17,25 +17,19 @@ AI Providers add intelligence to your reports:
 - **Natural Language** — Generate human-readable insights
 - **Contextual Alerts** — AI-enhanced notification content
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        Anaphora                              │
-│                                                              │
-│  ┌─────────────────┐       ┌─────────────────────────────┐  │
-│  │   Job Run       │       │      AI Providers           │  │
-│  │                 │       │                             │  │
-│  │ Captured data   │──────>│  ┌─────────────────────┐   │  │
-│  │ + context       │       │  │ OpenAI-Compatible   │   │  │
-│  │                 │<──────│  │ API Endpoint        │   │  │
-│  │ Analysis result │       │  └─────────────────────┘   │  │
-│  └─────────────────┘       │                             │  │
-│                            │  Examples:                  │  │
-│                            │  • DeepSeek                 │  │
-│                            │  • vLLM (Qwen, Llama, etc.) │  │
-│                            │  • OpenAI                   │  │
-│                            │  • Azure OpenAI             │  │
-│                            └─────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph anaphora["Anaphora"]
+        job["Job Run<br/>Captured data + context"]
+    end
+
+    subgraph providers["AI Providers"]
+        api["OpenAI-Compatible API"]
+        examples["DeepSeek | vLLM | OpenAI | Azure"]
+    end
+
+    job -- "Send data" --> api
+    api -- "Analysis result" --> job
 ```
 
 ## OpenAI-Compatible API

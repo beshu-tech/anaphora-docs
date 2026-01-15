@@ -12,13 +12,18 @@ The Delivery tab configures where and how reports are sent. Anaphora supports mu
 
 After composition, the report is delivered via your configured interfaces:
 
-```
-┌──────────────┐    ┌─────────────────────────────────────────┐
-│   Composed   │    │          Delivery Channels              │
-│    Report    │ -> │  ┌───────┐ ┌───────┐ ┌────┐ ┌─────┐   │
-│              │    │  │ Email │ │ Slack │ │ S3 │ │ Hook│   │
-│    (PDF)     │    │  └───────┘ └───────┘ └────┘ └─────┘   │
-└──────────────┘    └─────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    report["Composed Report (PDF)"]
+
+    subgraph channels["Delivery Channels"]
+        email["Email"]
+        slack["Slack"]
+        s3["S3"]
+        webhook["Webhook"]
+    end
+
+    report --> channels
 ```
 
 ## Delivery Interfaces

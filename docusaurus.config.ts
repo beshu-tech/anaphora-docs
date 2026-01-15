@@ -11,6 +11,12 @@ const config: Config = {
     v4: true,
   },
 
+  // Enable Mermaid diagrams
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
+
   // Production URL
   url: 'https://docs.anaphora.it',
   baseUrl: '/',

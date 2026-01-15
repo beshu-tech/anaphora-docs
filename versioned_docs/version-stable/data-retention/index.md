@@ -33,15 +33,16 @@ Anaphora includes automatic housekeeping to manage storage usage over time.
 
 Configure rules to automatically delete old data:
 
+```mermaid
+flowchart LR
+    d1["Day 1"] --> d15["Day 15"] --> d30["Day 30"] --> d31["Day 31"]
+    d31 --> deleted["Deleted"]
+
+    style d31 fill:#ff6b6b
+    style deleted fill:#ff6b6b
 ```
-Example: Keep only the last 30 days of reports
-┌──────────────────────────────────────────────────┐
-│  Day 1    Day 15    Day 30    Day 31 (deleted)  │
-│    ●────────●────────●────────✗                 │
-│                       ↑                          │
-│              Retention window                    │
-└──────────────────────────────────────────────────┘
-```
+
+*Example: Keep only the last 30 days of reports*
 
 ### Configuration Options
 
@@ -80,13 +81,14 @@ Monitor storage usage through:
 
 ## Data Lifecycle
 
-```
-┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
-│ Capture │ -> │  Store  │ -> │ Archive │ -> │ Delete  │
-│         │    │         │    │         │    │         │
-│ Fresh   │    │ Active  │    │ Aged    │    │ Expired │
-│ data    │    │ access  │    │ storage │    │ cleanup │
-└─────────┘    └─────────┘    └─────────┘    └─────────┘
+```mermaid
+flowchart LR
+    capture["Capture<br/><small>Fresh data</small>"]
+    store["Store<br/><small>Active access</small>"]
+    archive["Archive<br/><small>Aged storage</small>"]
+    delete["Delete<br/><small>Expired cleanup</small>"]
+
+    capture --> store --> archive --> delete
 ```
 
 1. **Capture** - New data is captured and stored

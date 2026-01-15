@@ -51,14 +51,23 @@ Toggle **Advanced** to use CRON expressions for precise scheduling:
 
 ### Why Throttling Matters
 
-```
-Without throttling:                  With throttling (3 hours):
-┌─────────────────────────┐          ┌─────────────────────────┐
-│ Run 1: Error → Notify   │          │ Run 1: Error → Notify   │
-│ Run 2: Error → Notify   │          │ Run 2: Error → Suppressed│
-│ Run 3: Error → Notify   │          │ Run 3: Error → Suppressed│
-│ ...100 emails/day       │          │ ...8 emails/day max     │
-└─────────────────────────┘          └─────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph without["Without Throttling"]
+        direction TB
+        w1["Run 1: Error → Notify"]
+        w2["Run 2: Error → Notify"]
+        w3["Run 3: Error → Notify"]
+        w4["...100 emails/day"]
+    end
+
+    subgraph with["With Throttling (3 hours)"]
+        direction TB
+        t1["Run 1: Error → Notify"]
+        t2["Run 2: Error → Suppressed"]
+        t3["Run 3: Error → Suppressed"]
+        t4["...8 emails/day max"]
+    end
 ```
 
 ### Example Configuration

@@ -66,15 +66,20 @@ You can configure multiple interfaces of the same type:
 
 ## Delivery Flow
 
-```
-┌──────────┐    ┌──────────────────────────────────────┐
-│  Report  │    │         Delivery Interfaces          │
-│ Generated│ -> │  ┌───────┐ ┌───────┐ ┌───────────┐  │
-│          │    │  │ Email │ │ Slack │ │  Webhook  │  │
-│          │    │  └───┬───┘ └───┬───┘ └─────┬─────┘  │
-└──────────┘    └──────┼─────────┼───────────┼────────┘
-                       ▼         ▼           ▼
-                   Recipients  Channels   Endpoints
+```mermaid
+flowchart LR
+    report["Report Generated"]
+
+    subgraph interfaces["Delivery Interfaces"]
+        email["Email"]
+        slack["Slack"]
+        webhook["Webhook"]
+    end
+
+    report --> interfaces
+    email --> recipients["Recipients"]
+    slack --> channels["Channels"]
+    webhook --> endpoints["Endpoints"]
 ```
 
 ## Next Steps
