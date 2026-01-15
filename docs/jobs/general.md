@@ -52,22 +52,28 @@ Toggle **Advanced** to use CRON expressions for precise scheduling:
 ### Why Throttling Matters
 
 ```mermaid
-flowchart TB
-    subgraph without["Without Throttling"]
-        direction TB
-        w1["Run 1: Error → Notify"]
-        w2["Run 2: Error → Notify"]
-        w3["Run 3: Error → Notify"]
-        w4["...100 emails/day"]
+flowchart TD
+    subgraph without["❌ Without Throttling"]
+        w1["Run 1: Error"]
+        w1 -->|"Notify"| wn1["📧 Email sent"]
+        w2["Run 2: Error"]
+        w2 -->|"Notify"| wn2["📧 Email sent"]
+        w3["Run 3: Error"]
+        w3 -->|"Notify"| wn3["📧 Email sent"]
+        wn3 --> wr["...100 emails/day"]
     end
 
-    subgraph with["With Throttling (3 hours)"]
-        direction TB
-        t1["Run 1: Error → Notify"]
-        t2["Run 2: Error → Suppressed"]
-        t3["Run 3: Error → Suppressed"]
-        t4["...8 emails/day max"]
+    subgraph with["✅ With Throttling (3 hours)"]
+        t1["Run 1: Error"]
+        t1 -->|"Notify"| tn1["📧 Email sent"]
+        t2["Run 2: Error"]
+        t2 -->|"Suppressed"| ts2["🔇 Skipped"]
+        t3["Run 3: Error"]
+        t3 -->|"Suppressed"| ts3["🔇 Skipped"]
+        ts3 --> tr["Max 8 emails/day"]
     end
+
+    without ~~~ with
 ```
 
 ### Example Configuration
