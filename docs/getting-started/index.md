@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
 description: Get started with Anaphora - automated Kibana and Grafana report generation. Install, configure, and create your first scheduled dashboard report.
-keywords: [Anaphora setup, Kibana reports installation, Grafana reports setup, automated reporting, dashboard scheduling, AI reports]
+keywords: [Anaphora setup, Kibana reports installation, Grafana reports setup, automated reporting, dashboard scheduling, AI reports, headless browser]
 ---
 
 # Getting Started with Anaphora
@@ -10,40 +10,70 @@ Welcome to Anaphora! This guide will help you install and configure Anaphora for
 
 ## What is Anaphora?
 
-**Anaphora** is a powerful automation and reporting tool designed to streamline the capture, analysis, and delivery of data from web-based dashboards. Unlike simple screenshot tools, Anaphora provides programmable workflows that can navigate, interact with, and extract data from complex web applications.
+**Anaphora** is a self-hostable reporting and alerting automation system that turns authenticated dashboards and web applications into:
 
-### Core Capabilities
+- **Snapshots** — Page or panel captures from Kibana, Grafana, or any web UI
+- **Reports** — PDFs assembled from snapshots with text, images, and custom layouts
+- **Deliveries** — Email, webhook, Slack, or S3 archiving
+- **Alerts** — High-frequency jobs that notify only on relevant findings (with throttling)
 
-| Capability | Description |
-|------------|-------------|
-| **Capture** | Screenshots, data extraction, and interaction with Kibana, Grafana, or any web page |
-| **Compose** | Build branded reports with visual snapshots and AI-generated summaries |
-| **Deliver** | Send reports via email, Slack, webhooks, or export as PDF |
-| **Automate** | Schedule jobs with conditional logic, variables, and control flow |
+### The Key Principle
 
-### Key Features
+> **If a human can reach it in a browser, Anaphora can automate it.**
 
-- **Headless Browser Automation** - Navigate, click, type, and interact with any web application
-- **AI-Powered Analysis** - Pass captured snapshots to AI models for intelligent summaries (DeepSeek API compatible)
-- **Visual Report Designer** - Brand your reports with custom colors, backgrounds, padding, and layouts
-- **Multi-Tenant Spaces** - Isolated workspaces with role-based access control (RBAC)
-- **Enterprise Security** - LDAP, SAML, and OpenID Connect authentication
+The enabling technology is a **headless Chrome-based connector** that does what a human does:
+- Navigate to URLs
+- Authenticate (including complex SSO flows)
+- Click, type, and submit forms
+- Reach desired view states
+- Capture snapshots deterministically
 
-## How It Works
+## System Architecture
+
+Anaphora processes each job run through four pipeline stages:
 
 ```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Capture   │ -> │   Analyze   │ -> │   Compose   │ -> │   Deliver   │
-│             │    │             │    │             │    │             │
-│ Screenshots │    │ AI Insights │    │ Brand &     │    │ Email/Slack │
-│ Data Values │    │ Conditions  │    │ Format      │    │ Webhook/PDF │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+┌────────────────┐    ┌────────────────┐    ┌────────────────┐    ┌────────────────┐
+│   Scheduler    │    │    Capture     │    │    Compose     │    │    Deliver     │
+│    & Runner    │ -> │                │ -> │                │ -> │   & Archive    │
+│                │    │ Headless       │    │ Report         │    │                │
+│ Triggers jobs  │    │ browser        │    │ builder        │    │ Push to        │
+│ on schedule    │    │ connector      │    │ (PDF)          │    │ destinations   │
+└────────────────┘    └────────────────┘    └────────────────┘    └────────────────┘
+        │                     │                     │                     │
+        ▼                     ▼                     ▼                     ▼
+   Retry/suspend         Authenticate          Named snapshots      Webhook/Email
+   rules applied         Navigate & capture    + content blocks     S3/Slack
 ```
 
-1. **Capture**: A scheduled job uses a headless browser to navigate to your dashboard, interact with it, and capture screenshots or extract specific values
-2. **Analyze**: Apply conditional logic or pass captures to AI for intelligent analysis
-3. **Compose**: Combine captures and AI summaries into a branded, professional report
-4. **Deliver**: Send the final report to recipients via your configured delivery channels
+## Core Concepts
+
+### Job
+The main configuration unit — a periodic execution that captures, composes, and delivers reports. Configured across four tabs: General, Capture, Composer, and Delivery.
+
+### Run
+One execution of a job. Logged with timestamps, success/failure status, error details, and produced artifacts.
+
+### Snapshot
+A captured representation of a web view — either whole page or per-visualization (for Kibana dashboards).
+
+### Report
+A rendered PDF assembled from snapshots, text blocks, layout elements, and branding.
+
+### Delivery Interface
+A reusable destination configuration (webhook, SMTP, Mailgun, S3) that can be shared across jobs.
+
+### Space
+A "share-nothing" container that isolates jobs, delivery interfaces, AI providers, and artifacts for multi-tenant deployments.
+
+## Supported Connectors
+
+| Connector | Status | Description |
+|-----------|--------|-------------|
+| **Kibana** | Available | Dashboards, Canvas, Discover with auto-detection |
+| **Grafana** | Available | Dashboards and panels via API |
+| **Generic Web** | Available | Any authenticated web application |
+| **Metabase** | Coming Soon | Metabase dashboards and questions |
 
 ## Quick Start
 
@@ -57,19 +87,34 @@ Welcome to Anaphora! This guide will help you install and configure Anaphora for
 - Daily Kibana dashboard snapshots for stakeholders
 - Weekly metric summaries from Grafana
 - Monthly trend reports combining multiple data sources
+- S3 archiving for historical compliance records
 
 ### Intelligent Alerts
-- Notify when error rates exceed thresholds
-- Alert when document counts drop below minimum
+- High-frequency jobs (every 5-10 minutes) with notification throttling
+- Conditional notifications only when thresholds are exceeded
 - AI-analyzed anomaly detection with contextual summaries
+
+### Multi-Source Reports
+- Combine captures from multiple dashboards in one report
+- Advanced capture workflows for complex navigation paths
+- Multi-step browser automation for authenticated applications
 
 ### Compliance & Auditing
 - Automated evidence capture for compliance requirements
-- Historical record of dashboard states
+- Historical archive via S3 ("what did this dashboard look like on date X?")
 - Audit trails with timestamps and delivery confirmations
+
+## Security Features
+
+- **Encryption at rest** for internal database
+- **Enterprise authentication** via LDAP, SAML, OpenID Connect
+- **Role-based access control** with Space isolation
+- **Session management** with admin visibility and forced logout
+- **Self-monitoring** with health API for external monitoring systems
 
 ## Next Steps
 
 - [Installation](./getting-started/installation) - Get Anaphora running
 - [Configuration](./getting-started/configuration) - Set up connections and preferences
 - [Basic Examples](./basic-examples/) - Create your first report job
+- [Jobs](./jobs/) - Deep dive into job configuration
