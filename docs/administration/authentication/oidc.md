@@ -235,6 +235,33 @@ Default: `user_info_endpoint`
 | `access_token` | Extracts profile information directly from the access token. |
 | `id_token` | Extracts profile information directly from the ID token. |
 
+### Extra Configuration
+
+The **Extra Configuration** field accepts a YAML object with two optional sections:
+
+| Section | Description |
+|---------|-------------|
+| `issuerAdditionalParameters` | Customize OIDC issuer discovery behavior |
+| `clientAdditionalParameters` | Customize OIDC client configuration |
+
+```yaml
+issuerAdditionalParameters:
+  metadata:
+    jwks_uri: https://example.com/.well-known/jwks.json
+
+clientAdditionalParameters:
+  metadata:
+    default_max_age: 0
+```
+
+See the documentation for available options:
+- [Issuer parameters](https://github.com/panva/openid-client/tree/v5.x/docs#new-issuermetadata)
+- [Client parameters](https://github.com/panva/openid-client/tree/v5.x/docs#client)
+
+:::caution
+Use extra configuration options with caution. Incorrect settings may break OIDC authentication.
+:::
+
 ### Token Settings
 
 | Setting | Description | Default |
