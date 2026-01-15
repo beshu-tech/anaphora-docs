@@ -5,7 +5,7 @@ keywords: [local authentication, user management, password policy, built-in user
 ---
 
 # Local Authentication
-
+![](images/local.png)
 Default authentication using Anaphora's built-in user database. Ideal for small teams, testing environments, or deployments without enterprise identity providers.
 
 ## Overview

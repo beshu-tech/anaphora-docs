@@ -7,7 +7,7 @@ keywords: [SAML, SSO, Single Sign-On, Okta, Azure AD, OneLogin, identity provide
 # SAML / Single Sign-On
 
 Integrate with SAML 2.0 identity providers for enterprise single sign-on. Users authenticate through your corporate IdP and are automatically provisioned in Anaphora.
-
+![](images/saml.png)
 ## Overview
 
 SAML SSO provides:

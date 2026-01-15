@@ -7,7 +7,7 @@ keywords: [LDAP, Active Directory, AD, directory integration, enterprise authent
 # LDAP / Active Directory
 
 Connect to your enterprise directory for centralized user management. Supports Microsoft Active Directory, OpenLDAP, and other LDAP-compliant directories.
-
+![](images/ldap.png)
 ## Overview
 
 LDAP integration provides:
