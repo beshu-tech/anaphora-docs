@@ -8,6 +8,7 @@ keywords: [OpenID Connect, OIDC, OAuth, Google login, Auth0, Keycloak, OAuth 2.0
 
 Integrate with OAuth 2.0 / OpenID Connect providers for modern authentication. OIDC provides a simpler setup than SAML while offering similar enterprise features.
 
+![](images/oidc.png)
 ## Overview
 
 OIDC integration provides:
@@ -91,6 +92,26 @@ Create an OAuth/OIDC application in your identity provider.
 
 3. Click **Save**
 
+### Callback URL
+
+The **Callback URL** is where the IdP redirects users after authentication.
+
+Default: `https://<anaphora-external-url>/auth/login-oidc/callback`
+
+Register this URL in your IdP's allowed redirect URIs:
+
+| Provider | Setting Location |
+|----------|------------------|
+| **Google** | Authorized redirect URIs |
+| **Auth0** | Allowed Callback URLs |
+| **Keycloak** | Client Settings → Valid Redirect URIs |
+| **Okta** | Sign-in redirect URIs |
+| **Azure AD** | Redirect URIs |
+
+:::tip Keycloak
+In Keycloak, go to **Clients** → your client → **Settings** → **Valid Redirect URIs** and add the callback URL.
+:::
+
 ### Step 3: Configure Scopes
 
 Request appropriate scopes based on what information you need:
@@ -145,7 +166,20 @@ Groups Claim: groups
 
 Map IdP groups to Anaphora roles.
 
-### Configuration
+### Groups Parameter
+
+The **Groups Parameter** specifies which claim contains group/role information. Default: `groups`
+
+:::warning Important: Add Roles to ID Token
+You must configure your IdP to include roles/groups in the ID token.
+
+**Keycloak setup:**
+1. Go to **Client Scopes** → **profile**
+2. Select **Mappers** → **Add mapper** → **From predefined...**
+3. Add the **groups** mapping
+:::
+
+### Role Mapping
 
 1. Go to **Settings** > **Authentication** > **OIDC** > **Role Mapping**
 2. Add mappings:
