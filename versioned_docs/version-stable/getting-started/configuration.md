@@ -28,23 +28,27 @@ Anaphora can be configured via environment variables:
 
 ## Connection Setup
 
+Connections are configured within job capture settings, where you select the connector type and provide the target URL.
+
+![Navigate action showing connector selection and URL configuration](images/advanced-capture-flow.png)
+
 ### Adding a Kibana Connection
 
-1. Navigate to **Settings** > **Connections**
-2. Click **Add Connection**
-3. Select **Kibana** as the type
-4. Enter your Kibana URL and credentials
-5. Test the connection
-6. Save
+1. Create a new Job or edit an existing one
+2. Go to the **Capture** tab
+3. Select **Kibana** as the connector type
+4. Enter your Kibana dashboard URL
+5. Configure authentication if required
+6. Use **Test capture** to verify the connection
 
 ### Adding a Grafana Connection
 
-1. Navigate to **Settings** > **Connections**
-2. Click **Add Connection**
-3. Select **Grafana** as the type
-4. Enter your Grafana URL and API key
-5. Test the connection
-6. Save
+1. Create a new Job or edit an existing one
+2. Go to the **Capture** tab
+3. Select **Grafana** as the connector type
+4. Enter your Grafana dashboard URL
+5. Configure authentication (API key or login credentials)
+6. Use **Test capture** to verify the connection
 
 ## Next Steps
 

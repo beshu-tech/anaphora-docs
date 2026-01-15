@@ -47,11 +47,15 @@ flowchart TB
 ### Job
 The main configuration unit — a periodic execution that captures, composes, and delivers reports. Configured across four tabs: General, Capture, Composer, and Delivery.
 
+![Job configuration showing the General tab with name, description, and timing settings](images/capture-tab.png)
+
 ### Run
 One execution of a job. Logged with timestamps, success/failure status, error details, and produced artifacts.
 
 ### Snapshot
 A captured representation of a web view — either whole page or per-visualization (for Kibana dashboards).
+
+![Basic Capture tab showing connector, URL, authentication, and snapshot settings](images/advanced-capture-panel.png)
 
 ### Report
 A rendered PDF assembled from snapshots, text blocks, layout elements, and branding.
@@ -94,6 +98,10 @@ A "share-nothing" container that isolates jobs, delivery interfaces, AI provider
 - Combine captures from multiple dashboards in one report
 - Advanced capture workflows for complex navigation paths
 - Multi-step browser automation for authenticated applications
+
+![Advanced capture mode with available browser actions](images/actions-dropdown.png)
+
+*Advanced mode provides a full suite of browser automation actions for complex workflows.*
 
 ### Compliance & Auditing
 - Automated evidence capture for compliance requirements
