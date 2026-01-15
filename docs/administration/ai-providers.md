@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
-description: Configure AI providers in Anaphora for intelligent report analysis and content generation - OpenAI-compatible APIs, DeepSeek, vLLM, and more.
-keywords: [AI providers, OpenAI API, DeepSeek, vLLM, LLM integration, AI analysis, intelligent reports]
+description: Configure AI providers in Anaphora for intelligent report analysis - GPT-5.2, Claude 4.5, Grok 4, DeepSeek V3, Qwen3, Llama 4, and self-hosted options.
+keywords: [AI providers, GPT-5, Claude 4.5, Grok 4, DeepSeek V3, Qwen3, Llama 4, vLLM, LLM integration, AI analysis]
 ---
 
 # AI Providers
@@ -25,7 +25,7 @@ flowchart LR
 
     subgraph providers["AI Providers"]
         api["OpenAI-Compatible API"]
-        examples["DeepSeek | vLLM | OpenAI | Azure"]
+        examples["OpenAI | Claude | Grok | DeepSeek | vLLM"]
     end
 
     job -- "Send data" --> api
@@ -38,9 +38,11 @@ Anaphora works with any provider implementing the OpenAI API specification. This
 
 | Provider | Description | Self-Hosted |
 |----------|-------------|-------------|
-| **OpenAI** | GPT-4, GPT-3.5-turbo models | No |
+| **OpenAI** | GPT-5.2, GPT-5.1 models | No |
+| **Anthropic** | Claude Opus 4.5, Sonnet 4.5, Haiku 4.5 | No |
+| **xAI** | Grok 4, Grok 3 models | No |
 | **Azure OpenAI** | Microsoft-hosted OpenAI models | No |
-| **DeepSeek** | Cost-effective reasoning models | No |
+| **DeepSeek** | DeepSeek-V3.2, cost-effective reasoning | No |
 | **vLLM** | Self-hosted open-source models | Yes |
 | **Ollama** | Local model runner | Yes |
 | **LM Studio** | Desktop model runner | Yes |
@@ -55,10 +57,10 @@ Anaphora works with any provider implementing the OpenAI API specification. This
 
 | Field | Description | Example |
 |-------|-------------|---------|
-| **Name** | Identifier for this provider | `Production GPT-4` |
+| **Name** | Identifier for this provider | `Production GPT-5` |
 | **API Endpoint** | OpenAI-compatible base URL | `https://api.openai.com/v1` |
 | **API Key** | Authentication token | `sk-...` (stored encrypted) |
-| **Default Model** | Model to use if not specified | `gpt-4-turbo` |
+| **Default Model** | Model to use if not specified | `gpt-5.2` |
 
 4. Test the connection
 5. Save
@@ -68,20 +70,25 @@ Anaphora works with any provider implementing the OpenAI API specification. This
 Configure multiple providers for different use cases:
 
 ```
-Provider: DeepSeek-Reasoner
+Provider: DeepSeek-V3
 ├── Endpoint: https://api.deepseek.com/v1
-├── Model: deepseek-reasoner
+├── Model: deepseek-v3.2
 └── Use for: Complex analysis, reasoning tasks
 
 Provider: vLLM-Qwen
 ├── Endpoint: http://vllm.internal:8000/v1
-├── Model: Qwen2.5-72B-Instruct
+├── Model: Qwen3-32B-Instruct
 └── Use for: High-volume processing, cost control
 
-Provider: OpenAI-GPT4
+Provider: OpenAI-GPT5
 ├── Endpoint: https://api.openai.com/v1
-├── Model: gpt-4-turbo
+├── Model: gpt-5.2
 └── Use for: Critical reports, best quality
+
+Provider: Anthropic-Claude
+├── Endpoint: https://api.anthropic.com/v1
+├── Model: claude-sonnet-4.5
+└── Use for: Coding analysis, agentic tasks
 ```
 
 ### Multiple Models per Provider
@@ -90,27 +97,30 @@ Each provider can expose multiple models:
 
 | Provider | Available Models |
 |----------|-----------------|
-| OpenAI | `gpt-4-turbo`, `gpt-4`, `gpt-3.5-turbo` |
-| DeepSeek | `deepseek-chat`, `deepseek-reasoner` |
-| vLLM | Depends on deployed models |
+| OpenAI | `gpt-5.2`, `gpt-5.2-codex`, `gpt-5.1` |
+| Anthropic | `claude-opus-4.5`, `claude-sonnet-4.5`, `claude-haiku-4.5` |
+| xAI | `grok-4`, `grok-4-heavy`, `grok-3`, `grok-3-mini` |
+| DeepSeek | `deepseek-v3.2`, `deepseek-r1` |
+| vLLM | Depends on deployed models (Qwen3, Llama 4, etc.) |
 
 ## Provider Types
 
 ### DeepSeek
 
-Cost-effective models with strong reasoning capabilities.
+Cost-effective models with strong reasoning capabilities. DeepSeek-V3.2 integrates thinking directly into tool-use.
 
 **Configuration:**
 ```
 Name: DeepSeek
 Endpoint: https://api.deepseek.com/v1
 API Key: sk-xxxxx
-Default Model: deepseek-chat
+Default Model: deepseek-v3.2
 ```
 
 **Available Models:**
-- `deepseek-chat` — General purpose, fast responses
-- `deepseek-reasoner` — Enhanced reasoning, complex analysis
+- `deepseek-v3.2` — Latest flagship, thinking + tool-use integration
+- `deepseek-v3.1` — Hybrid model combining V3 and R1 strengths
+- `deepseek-r1` — Advanced reasoning, complex analysis
 
 ### vLLM (Self-Hosted)
 
@@ -121,14 +131,15 @@ Run open-source models on your infrastructure for data privacy and cost control.
 Name: vLLM Internal
 Endpoint: http://vllm-server.internal:8000/v1
 API Key: (optional, depends on deployment)
-Default Model: Qwen2.5-72B-Instruct
+Default Model: Qwen3-32B-Instruct
 ```
 
 **Popular Models for vLLM:**
-- `Qwen2.5-72B-Instruct` — Strong general purpose
-- `Llama-3.1-70B-Instruct` — Meta's open model
-- `Mistral-Large` — Efficient reasoning
-- `Mixtral-8x22B` — Mixture of experts
+- `Qwen3-32B-Instruct` — Strong general purpose, 128K context
+- `Qwen3-235B-A22B` — Massive MoE model (22B active params)
+- `Llama-4-Maverick` — Meta's multimodal MoE (17B active, 400B total)
+- `Llama-4-Scout` — 10M context window (17B active, 109B total)
+- `Qwen3-Coder-480B` — State-of-the-art coding (35B active)
 
 **Benefits:**
 - Complete data privacy — data never leaves your infrastructure
@@ -138,15 +149,55 @@ Default Model: Qwen2.5-72B-Instruct
 
 ### OpenAI
 
-Direct integration with OpenAI's API.
+Direct integration with OpenAI's API. GPT-5.2 is the current flagship with Instant, Thinking, and Pro variants.
 
 **Configuration:**
 ```
 Name: OpenAI
 Endpoint: https://api.openai.com/v1
 API Key: sk-proj-xxxxx
-Default Model: gpt-4-turbo
+Default Model: gpt-5.2
 ```
+
+**Available Models:**
+- `gpt-5.2` — Latest flagship, best for coding and agentic tasks
+- `gpt-5.2-codex` — Optimized for agentic coding workflows
+- `gpt-5.1` — Previous generation (Instant and Thinking variants)
+
+### Anthropic Claude
+
+State-of-the-art models for coding, agents, and complex reasoning. Claude 4.5 series offers excellent cost-performance.
+
+**Configuration:**
+```
+Name: Anthropic
+Endpoint: https://api.anthropic.com/v1
+API Key: sk-ant-xxxxx
+Default Model: claude-sonnet-4.5
+```
+
+**Available Models:**
+- `claude-opus-4.5` — Flagship, long-horizon autonomous tasks ($5/$25 per M tokens)
+- `claude-sonnet-4.5` — Best balance of quality and cost ($3/$15 per M tokens)
+- `claude-haiku-4.5` — Fast and efficient ($1/$5 per M tokens)
+
+### xAI Grok
+
+Strong reasoning models with real-time knowledge. Grok 4 is the latest flagship with 1M token context.
+
+**Configuration:**
+```
+Name: xAI Grok
+Endpoint: https://api.x.ai/v1
+API Key: xai-xxxxx
+Default Model: grok-4
+```
+
+**Available Models:**
+- `grok-4` — Latest flagship, strong reasoning and tool use
+- `grok-4-heavy` — Maximum capability variant
+- `grok-3` — Previous generation, good cost-performance balance
+- `grok-3-mini` — Fast responses, lower cost
 
 ### Azure OpenAI
 
@@ -157,7 +208,7 @@ Enterprise deployment through Microsoft Azure.
 Name: Azure OpenAI
 Endpoint: https://your-resource.openai.azure.com
 API Key: xxxxx
-Default Model: gpt-4 (deployment name)
+Default Model: gpt-5 (deployment name)
 ```
 
 ## Space-Level Configuration
@@ -166,10 +217,10 @@ AI Providers are configured per Space for isolation:
 
 | Space | AI Provider | Use Case |
 |-------|-------------|----------|
-| Production | OpenAI GPT-4 | Critical reports, highest quality |
-| Development | vLLM Internal | Testing, iteration |
-| Client-Acme | DeepSeek | Cost-effective analysis |
-| Client-Beta | None | No AI features |
+| Production | OpenAI GPT-5.2 | Critical reports, highest quality |
+| Development | vLLM Qwen3 | Testing, iteration |
+| Client-Acme | DeepSeek V3.2 | Cost-effective analysis |
+| Client-Beta | Claude Sonnet 4.5 | Balanced quality and cost |
 
 ### Provider Inheritance
 
@@ -226,9 +277,10 @@ Output: "⚠️ Anomaly detected: Error rate spiked to 4.2% between
 
 | Use Case | Recommended Provider |
 |----------|---------------------|
-| **Security-sensitive data** | Self-hosted vLLM |
-| **Cost-sensitive high volume** | DeepSeek or vLLM |
-| **Best quality analysis** | OpenAI GPT-4 |
+| **Security-sensitive data** | Self-hosted vLLM (Qwen3, Llama 4) |
+| **Cost-sensitive high volume** | DeepSeek V3.2 or vLLM |
+| **Best quality analysis** | OpenAI GPT-5.2 or Claude Opus 4.5 |
+| **Coding and agentic tasks** | Claude Sonnet 4.5 or GPT-5.2-Codex |
 | **Compliance requirements** | Azure OpenAI or self-hosted |
 
 ### Prompt Engineering
@@ -242,10 +294,10 @@ For consistent results:
 
 ### Cost Management
 
-- Use appropriate models for each task (don't use GPT-4 for simple summaries)
+- Use appropriate models for each task (don't use Opus 4.5 for simple summaries — use Haiku 4.5)
 - Set token limits for responses
 - Monitor usage through provider dashboards
-- Consider self-hosted options for high-volume use cases
+- Consider self-hosted options for high-volume use cases (Qwen3, Llama 4)
 
 ### Reliability
 
