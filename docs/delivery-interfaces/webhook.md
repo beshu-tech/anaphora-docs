@@ -5,6 +5,7 @@ sidebar_position: 4
 # WebHook
 
 Send reports to custom HTTP endpoints for integration with any system.
+![](images/webhook.png)
 
 ## Use Cases
 

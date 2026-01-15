@@ -1,10 +1,10 @@
 ---
 sidebar_position: 5
-description: Configure Anaphora delivery channels - send reports via SMTP email, Mailgun, Slack, or webhooks. PDF export and multi-channel distribution.
-keywords: [email reports, Slack reports, webhook delivery, SMTP configuration, Mailgun integration, PDF export, report distribution]
+description: Configure Anaphora delivery channels - send reports via SMTP email, Mailgun, Slack, webhooks, or S3 archiving. PDF export and multi-channel distribution.
+keywords: [email reports, Slack reports, webhook delivery, SMTP configuration, Mailgun integration, S3 archiving, PDF export, report distribution]
 ---
 
-# Delivery Interfaces - Email, Slack & Webhook Configuration
+# Delivery Interfaces - Email, Slack, S3 & Webhook
 
 Delivery Interfaces define how reports reach your recipients. Once a report is generated, Anaphora handles distribution through multiple channels simultaneously.
 
@@ -15,6 +15,7 @@ Delivery Interfaces define how reports reach your recipients. Once a report is g
 | [SMTP](./delivery-interfaces/smtp) | Direct email via SMTP server | Corporate email systems |
 | [Mailgun](./delivery-interfaces/mailgun) | Email via Mailgun API | High-volume delivery |
 | [Slack](./delivery-interfaces/slack) | Slack workspace integration | Team notifications |
+| [S3](./delivery-interfaces/s3) | S3-compatible object storage | Archiving & compliance |
 | [WebHook](./delivery-interfaces/webhook) | Custom HTTP endpoints | Integrations & automation |
 
 ## Output Formats
@@ -73,12 +74,14 @@ flowchart LR
     subgraph interfaces["Delivery Interfaces"]
         email["Email"]
         slack["Slack"]
+        s3["S3"]
         webhook["Webhook"]
     end
 
     report --> interfaces
     email --> recipients["Recipients"]
     slack --> channels["Channels"]
+    s3 --> bucket["S3 Bucket"]
     webhook --> endpoints["Endpoints"]
 ```
 
@@ -87,4 +90,5 @@ flowchart LR
 - [SMTP](./delivery-interfaces/smtp) - Configure direct email delivery
 - [Mailgun](./delivery-interfaces/mailgun) - Set up Mailgun API integration
 - [Slack](./delivery-interfaces/slack) - Connect Slack workspaces
+- [S3](./delivery-interfaces/s3) - Archive reports to S3 storage
 - [WebHook](./delivery-interfaces/webhook) - Configure custom endpoints
