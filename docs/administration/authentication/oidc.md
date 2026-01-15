@@ -114,7 +114,9 @@ In Keycloak, go to **Clients** → your client → **Settings** → **Valid Redi
 
 ### Step 3: Configure Scopes
 
-Request appropriate scopes based on what information you need:
+Request appropriate scopes based on what information you need.
+
+Default: `openid`, `profile`, `email`
 
 | Scope | Data Returned |
 |-------|---------------|
@@ -123,7 +125,9 @@ Request appropriate scopes based on what information you need:
 | `profile` | Name, picture, etc. |
 | `groups` | Group memberships (provider-specific) |
 
-**Recommended scopes:** `openid email profile`
+:::caution Custom Scopes
+Be careful with custom scopes. Adding non-existing scopes may cause authentication errors, such as redirect loops back to the login URL after authorization.
+:::
 
 ## Claim Mapping
 
@@ -207,6 +211,29 @@ Then map in Anaphora:
 - Mapping: `admin` → Admin, `editor` → Editor
 
 ## Advanced Settings
+
+### Auth Method
+
+The **Auth Method** specifies how credentials are sent to the token endpoint.
+
+Default: `client_secret_basic`
+
+| Method | Description |
+|--------|-------------|
+| `client_secret_basic` | Client ID and secret sent in Authorization header (URL-encoded). Standard method for most providers. |
+| `client_secret_post` | Client ID and secret sent in request body (not encoded). Use when your provider cannot decode encoded values (e.g., LemonLDAP). |
+
+### User Info Source
+
+Configure where Anaphora obtains user profile information.
+
+Default: `user_info_endpoint`
+
+| Source | Description |
+|--------|-------------|
+| `user_info_endpoint` | Makes an additional call to the userInfo endpoint for the most up-to-date profile data. |
+| `access_token` | Extracts profile information directly from the access token. |
+| `id_token` | Extracts profile information directly from the ID token. |
 
 ### Token Settings
 
