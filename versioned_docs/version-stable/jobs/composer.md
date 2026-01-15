@@ -13,23 +13,14 @@ The Composer tab is where captured content becomes a professional report. Using 
 After capture, the Composer assembles your content into a deliverable format:
 
 ```mermaid
-block-beta
-    columns 1
-    block:page["Report Page"]
-        columns 1
-        block:header["Header"]
-            columns 3
-            logo["Logo"]
-            title["Company Dashboard Report"]
-            date["Generated: date"]
-        end
-        block:content
-            columns 2
-            snap1["$dashboard_a (Snapshot)"]
-            snap2["$dashboard_b (Snapshot)"]
-        end
-        ai["AI Analysis: $ai_summary"]
-        footer["Page 1 of 2"]
+flowchart TB
+    subgraph page["Report Page"]
+        header["**Header**<br/>Logo | Title | Date"]
+        snapshots["**Snapshots**<br/>$dashboard_a | $dashboard_b"]
+        ai["**AI Analysis**<br/>$ai_summary"]
+        footer["**Footer**<br/>Page 1 of 2"]
+
+        header --> snapshots --> ai --> footer
     end
 ```
 
