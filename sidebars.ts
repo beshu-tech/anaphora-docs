@@ -67,6 +67,7 @@ const sidebars: SidebarsConfig = {
         'delivery-interfaces/smtp',
         'delivery-interfaces/mailgun',
         'delivery-interfaces/slack',
+        'delivery-interfaces/s3',
         'delivery-interfaces/webhook',
       ],
     },
@@ -78,8 +79,22 @@ const sidebars: SidebarsConfig = {
         id: 'administration/index',
       },
       items: [
-        'administration/authentication',
+        {
+          type: 'category',
+          label: 'Authentication',
+          link: {
+            type: 'doc',
+            id: 'administration/authentication/index',
+          },
+          items: [
+            'administration/authentication/local',
+            'administration/authentication/ldap',
+            'administration/authentication/saml',
+            'administration/authentication/oidc',
+          ],
+        },
         'administration/spaces',
+        'administration/ai-providers',
         'administration/self-monitoring',
         'administration/backup',
       ],

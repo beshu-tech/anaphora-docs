@@ -12,11 +12,11 @@ Manage Anaphora's security, multi-tenancy, monitoring, and backups. This section
 
 | Topic | Description |
 |-------|-------------|
-| [Authentication](./administration/authentication) | User authentication and access control |
-| [Spaces](./administration/spaces) | Multi-tenant workspace management |
-| [AI Providers](./administration/ai-providers) | Configure AI for intelligent analysis |
-| [Self Monitoring](./administration/self-monitoring) | System health and metrics |
-| [Backup](./administration/backup) | Data backup and recovery |
+| [Authentication](/administration/authentication/) | User authentication and access control |
+| [Spaces](/administration/spaces) | Multi-tenant workspace management |
+| [AI Providers](/administration/ai-providers) | Configure AI for intelligent analysis |
+| [Self Monitoring](/administration/self-monitoring) | System health and metrics |
+| [Backup](/administration/backup) | Data backup and recovery |
 
 ## Spaces: Multi-Tenant Isolation
 
@@ -89,10 +89,10 @@ Anaphora supports enterprise-standard authentication:
 
 | Method | Description |
 |--------|-------------|
-| **Local** | Built-in username/password authentication |
-| **LDAP** | Active Directory and other LDAP directories |
-| **SAML** | SSO with Okta, Azure AD, OneLogin, etc. |
-| **OpenID Connect** | OAuth 2.0 based authentication |
+| [Local](/administration/authentication/local) | Built-in username/password authentication |
+| [LDAP](/administration/authentication/ldap) | Active Directory and other LDAP directories |
+| [SAML](/administration/authentication/saml) | SSO with Okta, Azure AD, OneLogin, etc. |
+| [OIDC](/administration/authentication/oidc) | OAuth 2.0 / OpenID Connect providers |
 
 ### Session Management
 
@@ -136,8 +136,8 @@ Protect your Anaphora configuration and data:
 
 ## Next Steps
 
-- [Authentication](./administration/authentication) - Configure identity providers
-- [Spaces](./administration/spaces) - Set up multi-tenant workspaces
-- [AI Providers](./administration/ai-providers) - Configure AI for intelligent analysis
-- [Self Monitoring](./administration/self-monitoring) - Monitor system health
-- [Backup](./administration/backup) - Configure backup and recovery
+- [Authentication](/administration/authentication/) - Configure identity providers
+- [Spaces](/administration/spaces) - Set up multi-tenant workspaces
+- [AI Providers](/administration/ai-providers) - Configure AI for intelligent analysis
+- [Self Monitoring](/administration/self-monitoring) - Monitor system health
+- [Backup](/administration/backup) - Configure backup and recovery
