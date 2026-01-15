@@ -7,7 +7,7 @@ keywords: [SAML, SSO, Single Sign-On, Okta, Azure AD, OneLogin, identity provide
 # SAML / Single Sign-On
 
 Integrate with SAML 2.0 identity providers for enterprise single sign-on. Users authenticate through your corporate IdP and are automatically provisioned in Anaphora.
-
+![](images/saml.png)
 ## Overview
 
 SAML SSO provides:
@@ -142,7 +142,20 @@ Source attribute: user.groups
 
 Map IdP groups to Anaphora roles for automatic permission assignment.
 
-### Configuration
+### Groups Attribute Configuration
+
+The **Groups Parameter** setting specifies which SAML attribute contains group/role information. Default: `Role`
+
+:::warning Important: Single Role Attribute
+You must enable **Single Role Attribute** (also called *Single Role Attribute Mapping* or *Roles as Claims* depending on your IdP) in your identity provider. Without this, group claims may not be sent correctly.
+
+**Keycloak setup:**
+1. Go to **Client Scopes** → **role_list**
+2. Select **Mappers** → **role_list**
+3. Enable **Single Role Attribute**
+:::
+
+### Role Mapping
 
 1. Go to **Settings** > **Authentication** > **SAML** > **Role Mapping**
 2. Add group mappings:

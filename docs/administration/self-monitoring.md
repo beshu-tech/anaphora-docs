@@ -5,7 +5,7 @@ sidebar_position: 3
 # Self Monitoring
 
 Monitor Anaphora's health, performance, and operational metrics.
-
+![](images/self-monitoring.png)
 ## Dashboard
 
 Access the monitoring dashboard at **Settings** > **Monitoring**.
