@@ -187,6 +187,31 @@ Map groups to Space memberships:
 | Require Encrypted Assertions | Require assertion encryption | Disabled |
 | Allow IdP-Initiated SSO | Allow login initiated from IdP | Enabled |
 
+### Extra Configuration
+
+The **Extra Configuration** field accepts a YAML object with additional SAML strategy options. Use this to override or extend the default SAML configuration.
+
+```yaml
+wantAssertionsSigned: true
+allowCreate: true
+```
+
+Common options:
+
+| Option | Description |
+|--------|-------------|
+| `wantAssertionsSigned` | Require signed assertions |
+| `allowCreate` | Allow IdP to create new identifiers |
+| `forceAuthn` | Force re-authentication on each request |
+| `passReqToCallback` | Pass request to verify callback |
+| `disableRequestedAuthnContext` | Skip authentication context |
+
+See the full list of available options in the [node-saml documentation](https://github.com/node-saml/node-saml/blob/4.x/README.md#config-parameter-details).
+
+:::caution
+Use extra configuration options with caution. Incorrect settings may break SAML authentication.
+:::
+
 ### Session Settings
 
 | Setting | Description |
