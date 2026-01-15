@@ -33,26 +33,11 @@ The enabling technology is a **headless Chrome-based connector** that does what 
 Anaphora processes each job run through four pipeline stages:
 
 ```mermaid
-flowchart LR
-    subgraph scheduler["Scheduler & Runner"]
-        s1[Triggers jobs on schedule]
-        s2[Retry/suspend rules]
-    end
-
-    subgraph capture["Capture"]
-        c1[Headless browser connector]
-        c2[Authenticate & navigate]
-    end
-
-    subgraph compose["Compose"]
-        comp1[Report builder - PDF]
-        comp2[Snapshots + content blocks]
-    end
-
-    subgraph deliver["Deliver & Archive"]
-        d1[Push to destinations]
-        d2[Webhook/Email/S3/Slack]
-    end
+flowchart TB
+    scheduler["**Scheduler & Runner**<br/>Triggers jobs on schedule<br/>Retry/suspend rules"]
+    capture["**Capture**<br/>Headless browser connector<br/>Authenticate & navigate"]
+    compose["**Compose**<br/>Report builder (PDF)<br/>Snapshots + content blocks"]
+    deliver["**Deliver & Archive**<br/>Webhook / Email / S3 / Slack"]
 
     scheduler --> capture --> compose --> deliver
 ```
