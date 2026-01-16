@@ -58,6 +58,7 @@ features and integrations.
 - ✅ **LDAP / Active Directory** — enterprise directory auth
 - ✅ **SAML SSO** — Okta, Azure AD, OneLogin, etc.
 - ✅ **OpenID Connect** — Google, Auth0, Keycloak, etc.
+- ✅ **Branding** — Customization of login screen
 
 :::
 
@@ -91,6 +92,7 @@ features and integrations.
 | Job Templates           |    ✅    |      ✅      |       ✅       |
 | Advanced Job Templates  |    ❌    |      ✅      |       ✅       |
 | Spaces (Multi-tenancy)  |    ❌    |      ✅      |       ✅       |
+| Branding                |    ❌    |      ❌      |       ✅       |
 |                         |         |             |               |
 | **Authentication**      |         |             |               |
 | Local Users             |    ✅    |      ✅      |       ✅       |
