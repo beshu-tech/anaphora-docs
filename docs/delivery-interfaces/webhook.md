@@ -1,7 +1,7 @@
 ---
 sidebar_position: 4
 description: Configure webhook delivery to send Anaphora reports to custom HTTP endpoints. Integrate with any system via JSON payloads.
-keywords: [webhook integration, HTTP delivery, API integration, custom notifications, automation, Anaphora webhook]
+keywords: [ webhook integration, HTTP delivery, API integration, custom notifications, automation, Anaphora webhook ]
 ---
 
 # WebHook
@@ -19,37 +19,46 @@ Send reports to custom HTTP endpoints for integration with any system.
 
 ## Configuration
 
-| Field | Description | Required |
-|-------|-------------|----------|
-| Name | Interface identifier | Yes |
-| URL | Endpoint URL | Yes |
-| Method | HTTP method (POST/PUT) | Yes |
-| Headers | Custom headers | No |
-| Authentication | Basic/Bearer/None | No |
+| Field     | Description             | Required |
+|-----------|-------------------------|----------|
+| Name      | Interface identifier    | Yes      |
+| URL       | Endpoint URL            | Yes      |
+| Method    | HTTP method (POST/PUT)  | Yes      |
+| Headers   | Custom headers          | No       |
+| Body type | JSON, form-data         | Yes      |
+| JSON Body | Custom payload template | No       |
+| Form Data | Key-value pairs         | No       |
 
 ## Payload Format
 
-Anaphora sends a JSON payload:
+### JSON Template
+
+Define a JSON structure that works with your endpoint. Use the ```$MESSAGE``` variable as placeholder for the report
+content. This variable will be replaced with the custom text that you define in the job's delivery settings.
+
+Example:
 
 ```json
 {
-  "job_name": "Daily Report",
-  "job_id": "abc123",
-  "timestamp": "2026-01-15T09:00:00Z",
-  "status": "success",
-  "report_url": "https://anaphora.example.com/reports/xyz",
-  "variables": {
-    "error_count": 42,
-    "alert_triggered": true
-  },
-  "attachments": [
-    {
-      "type": "pdf",
-      "url": "https://anaphora.example.com/files/report.pdf"
-    }
-  ]
+  "title": "Anaphora Report",
+  "content": "$MESSAGE"
 }
 ```
+
+### Form Data
+
+Send key-value pairs as form data. Use the ```$MESSAGE``` variable for the report content.
+
+Example:
+
+```
+report_title=Anaphora Report
+report_content=$MESSAGE
+```
+
+### JSON in Job Delivery
+
+In this case the entire body is defined in the job's delivery settings.
 
 ## Custom Headers
 
@@ -60,26 +69,3 @@ Authorization: Bearer your-token
 X-Custom-Header: value
 Content-Type: application/json
 ```
-
-## Authentication Options
-
-| Type | Configuration |
-|------|---------------|
-| None | No authentication |
-| Basic | Username and password |
-| Bearer | Token in Authorization header |
-| Custom | Via custom headers |
-
-## Testing
-
-1. Use a tool like [webhook.site](https://webhook.site) for testing
-2. Configure the test URL in Anaphora
-3. Send a test payload
-4. Verify the payload structure meets your needs
-
-## Error Handling
-
-Anaphora retries failed webhook deliveries:
-- 3 retry attempts
-- Exponential backoff
-- Failures logged in job history

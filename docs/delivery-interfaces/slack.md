@@ -1,20 +1,12 @@
 ---
 sidebar_position: 3
 description: Configure Slack webhook integration to deliver Anaphora reports directly to Slack channels with rich formatting.
-keywords: [Slack integration, webhook delivery, Slack notifications, report delivery, Anaphora Slack]
+keywords: [ Slack integration, webhook delivery, Slack notifications, report delivery, Anaphora Slack ]
 ---
 
 # Slack
 
-Deliver reports directly to Slack channels.
-
-## Configuration
-
-| Field | Description | Required |
-|-------|-------------|----------|
-| Name | Interface identifier | Yes |
-| Webhook URL | Slack Incoming Webhook | Yes |
-| Default Channel | Fallback channel | No |
+Deliver reports directly to Slack channels. Use the webhook delivery interface to send Slack messages.
 
 ## Setup Steps
 
@@ -35,27 +27,16 @@ Deliver reports directly to Slack channels.
 
 ### 3. Configure in Anaphora
 
-1. Go to **Settings** > **Delivery Interfaces**
-2. Add new **Slack** interface
+1. Go to **Delivery Interfaces**
+2. Add new **Webhook** interface
 3. Paste the Webhook URL
-4. Test and save
-
-## Message Formatting
-
-Reports sent to Slack include:
-- Report title as header
-- Thumbnail preview (if image)
-- Download link for full PDF
-- Key metrics (if extracted)
-
-## Multiple Channels
-
-Create separate interfaces for different channels, or override the channel per-job.
-
-## Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Webhook invalid | Regenerate webhook URL |
-| Channel not found | Verify channel exists and bot has access |
-| Message too large | Reduce captured content size |
+4. Add the ```Authorization``` header with value ```Bearer xoxb-your-slack-bot-token```
+5. Set the method to **POST** and body type to **JSON**
+6. Add the JSON body:
+```json
+{
+  "channel": "#your-channel",
+  "text": "$MESSAGE"
+}
+```
+7. Test and save

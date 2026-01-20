@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
 description: Configure Mailgun API integration for reliable email delivery with built-in analytics and better deliverability.
-keywords: [Mailgun integration, email API, transactional email, Anaphora Mailgun, email delivery]
+keywords: [ Mailgun integration, email API, transactional email, Anaphora Mailgun, email delivery ]
 ---
 
 # Mailgun
@@ -14,18 +14,17 @@ Send reports via the Mailgun email API.
 
 - No SMTP server to manage
 - Better deliverability tracking
-- Built-in analytics
+- Easy setup
 - Higher sending limits
 
 ## Configuration
 
-| Field | Description | Required |
-|-------|-------------|----------|
-| Name | Interface identifier | Yes |
-| API Key | Mailgun API key | Yes |
-| Domain | Your Mailgun domain | Yes |
-| From Address | Sender email | Yes |
-| Region | US or EU | Yes |
+| Field           | Description                                                             | Required |
+|-----------------|-------------------------------------------------------------------------|----------|
+| Name            | Interface identifier                                                    | Yes      |
+| Sender email    | Use your MailGun domain with any name e.g. myname@my-mailgun-domain.com | Yes      |
+| Sender name     | Use any name that should be displayed as sender                         | No       |
+| Mailgun API key | API authentication                                                      | Yes      |
 
 ## Setup Steps
 
@@ -34,20 +33,12 @@ Send reports via the Mailgun email API.
 1. Log in to Mailgun
 2. Navigate to **Settings** > **API Keys**
 3. Copy your Private API Key
-4. Note your sending domain
-
-### 2. Configure in Anaphora
-
-1. Go to **Settings** > **Delivery Interfaces**
-2. Add new **Mailgun** interface
-3. Enter API key and domain
-4. Select region (US or EU)
-5. Set from address
-6. Test and save
+4. Note your Mailgun sender domain (to use in sender email)
 
 ## Domain Verification
 
 Ensure your Mailgun domain is verified for best deliverability:
+
 - Add DNS records as instructed by Mailgun
 - Verify SPF and DKIM are configured
 
