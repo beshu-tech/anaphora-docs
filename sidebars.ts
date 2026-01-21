@@ -38,9 +38,8 @@ const sidebars: SidebarsConfig = {
       },
       items: [
         'advanced-examples/mixed-sources-report',
-        'advanced-examples/kibana-statistical-alert',
+        'advanced-examples/kibana-anomaly-alert',
         'advanced-examples/ai-news-collation',
-        'advanced-examples/branded-reports',
       ],
     },
     {

@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
 description: Combine data from multiple sources like Kibana and Grafana into a single unified report using Anaphora.
-keywords: [multi-source report, combined dashboard, Kibana Grafana, unified report, Anaphora advanced]
+keywords: [ multi-source report, combined dashboard, Kibana Grafana, unified report, Anaphora advanced ]
 ---
 
 # Mixed Sources Report
@@ -11,6 +11,7 @@ Create reports that combine data from multiple sources into a single deliverable
 ## Goal
 
 Generate a weekly executive report combining:
+
 - Kibana: Application metrics dashboard
 - Grafana: Infrastructure health
 - Web page: Service status page
@@ -25,42 +26,47 @@ Generate a weekly executive report combining:
 
 ### 1. Create a New Job
 
-Name it: "Weekly Executive Summary"
+1. Navigate to **Jobs**
+2. Click **Create New Job**
 
-### 2. Configure Advanced Capture
+### 2. Configure General Settings
 
-Build a multi-source workflow:
+- **Frequency**: Weekly on Mondays at 8:00 AM
 
-```
-# Source 1: Kibana Application Metrics
-Navigate → Kibana dashboard URL
-Wait for visible → .dashboard-container
-Capture snapshot → $appMetrics
+### 3. Set Up Advanced Capture
 
-# Source 2: Grafana Infrastructure
-Navigate → Grafana dashboard URL
-Wait for visible → .react-grid-layout
-Capture snapshot → $infraMetrics
+1. Enable **Advanced** mode to build a multi-capture workflow
+2. Edit the preexisting **Navigate**-action:
+	- Select **Kibana** as the connector
+	- Enter your Kibana dashboard URL:
+		 ```
+		 https://kibana.example.com/app/dashboards#/view/application-metrics
+		 ```
+	- Choose authentication method: **ReadonlyREST** and add credentials
+	- Ensure **Take Snapshot** is checked
+3. Add a second **Navigate** action:
+	- Select **Grafana** as the connector
+	- Enter your Grafana dashboard URL:
+		 ```
+		 https://grafana.example.com/d/xyz789/infrastructure-health?orgId=1
+		 ```
+	- Set **Authentication** to `Grafana` and add credentials
+	- Ensure **Take Snapshot** is checked
+4. Add a third **Navigate** action:
+	- Select **Web Page** as the connector
+	- Enter your service status page URL:
+		 ```
+		 https://status.example.com
+		 ```
+	- No authentication needed
+	- Ensure **Take Snapshot** is checked
 
-# Source 3: Status Page
-Navigate → https://status.example.com
-Capture snapshot → $statusPage
-```
+### 4. Configure Composition
 
-### 3. Configure Composition
+1. Add all three captured snapshots to the report
+2. Arrange them in the desired order
+3. Add headers and explanatory text as needed
 
-Arrange the three captures in your report template:
-1. Header with date and title
-2. Application metrics section
-3. Infrastructure metrics section
-4. Status page summary
+### 4. Configure Delivery
 
-### 4. Deliver
-
-Send the combined report to your executive team.
-
-## Tips
-
-- Use consistent time ranges across sources
-- Consider adding summary text between sections
-- Test each source individually before combining
+- Add delivery interface and configure recipients
