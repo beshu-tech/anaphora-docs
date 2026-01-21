@@ -1,16 +1,16 @@
 ---
 sidebar_position: 2
 description: Create sophisticated Kibana alerts based on statistical analysis and trend detection with Anaphora.
-keywords: [statistical alert, trend detection, Kibana analytics, anomaly detection, Anaphora statistics]
+keywords: [ statistical alert, trend detection, Kibana analytics, anomaly detection, Anaphora statistics ]
 ---
 
 # Kibana Anomaly Alert
 
-Create alerts based on statistical analysis and trend detection.
+Create alerts based on deviation from previous data.
 
 ## Goal
 
-Alert when metrics deviate significantly from their normal baseline.
+Alert when metrics deviate significantly from the previous time window.
 
 ## Use Cases
 
@@ -22,44 +22,46 @@ Alert when metrics deviate significantly from their normal baseline.
 
 ### 1. Create the Job
 
-Name it: "Response Time Anomaly Alert"
+1. Navigate to **Jobs**
+2. Click **Create New Job**
 
-### 2. Configure Advanced Capture
+### 2. Configure General Settings
 
-```
-# Capture current value
-Navigate → Kibana dashboard with avg response time
-Capture value → [data-test-subj="avgResponseTime"] → $current
+- **Frequency**: Every 15 minutes
+- **Max Notify Frequency**: 3 hours
 
-# Capture baseline (you might get this from a saved search)
-Navigate → Kibana baseline metrics
-Capture value → [data-test-subj="baselineAvg"] → $baseline
+### 3. Configure Advanced Capture
 
-# Calculate deviation
-Calculate → (($current - $baseline) / $baseline) * 100 → $deviation
+1. Enable **Advanced** mode
+2. In the preexisting **Navigate**-action:
+	 - select **Kibana** as the connector
+	 - Enter your Kibana dashboard URL:
+		 ```
+		 https://kibana.example.com/app/discover#/view/your-view-id
+		 ```
+	 - Choose authentication method: **ReadonlyREST** and add credentials
+   - Set time range to 30 minutes to 15 minutes ago
+3. Add a **Capture value** action to extract the metric to monitor:
+	 - Set the **variable name** to something like `previous_value`
+   - Set **capture template** to `Kibana discover hits`
+   - Set **Variable type** to `Number`
+4. Add another **Navigate** action to get the current value:
+	 - Select **Kibana** as the connector
+	 - Enter your Kibana dashboard URL:
+		 ```
+		 https://kibana.example.com/app/discover#/view/your-view-id
+		 ```
+	 - Ensure time range is set to last 15 minutes
+5. Add another **Capture value** action to extract the current metric:
+	 - Set the **variable name** to something like `current_value`
+	 - Set **capture template** to `Kibana discover hits`
+   - Set **Variable type** to `Number`
+6. Add a **Calculate** action to compute the percentage change:
+	 - Set **Operation** to `Percentage Change`
 
-# Alert if deviation exceeds threshold
-Conditional block → $deviation > 50:
-  ├── Capture snapshot → Full dashboard
-  └── Continue to delivery
-Break
-```
+### 4. Configure Delivery
 
-### 3. Configure Delivery
-
-- **Channel**: Slack or PagerDuty webhook
-- **Message**: `Response time anomaly: {{$current}}ms ({{$deviation}}% above baseline)`
-
-### 4. Set Throttling
-
-Set appropriate throttling to avoid alert fatigue during prolonged incidents.
-
-## Advanced: Rolling Averages
-
-For more sophisticated analysis, consider:
-- Capturing multiple time periods
-- Calculating standard deviation
-- Using percentile-based thresholds
+- Add delivery interface and configure recipients
 
 ## Next Steps
 
