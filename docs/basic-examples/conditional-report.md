@@ -1,137 +1,70 @@
 ---
 sidebar_position: 3
 description: Create intelligent alerts that trigger when conditions are met, with AI-powered root cause analysis and detailed PDF reports.
-keywords: [Anaphora alerts, conditional alerting, AI root cause analysis, multi-system monitoring, intelligent notifications]
+keywords: [ Anaphora alerts, conditional alerting, AI root cause analysis, multi-system monitoring, intelligent notifications ]
 ---
 
-# Intelligent Alerting
+# Conditional Report
 
-Create alerts that monitor your systems and notify you only when specific conditions are met — with AI-powered analysis to help identify root causes.
+Create reports that will only be built and delivered when specific conditions are met.
 
-## The Alerting Concept
+## Goal
 
-In Anaphora, **an alert is a conditional report**. Instead of sending notifications blindly, Anaphora:
+In this example, we will check the Kibana discover page for error logs. Then we will capture a snapshot of a dashboard.
+The report with the captured dashboard will only be delivered if the number of errors exceeds a defined threshold.
 
-1. **Captures** data from one or more systems (dashboards, metrics, logs)
-2. **Evaluates** conditions based on extracted values
-3. **Analyzes** the situation using AI (optional)
-4. **Delivers** a detailed PDF with context, not just a notification
+## Steps
 
-The result: operators receive actionable intelligence, not just "something is wrong."
+### 1. Create a new job
 
-## Why PDF Alerts?
+1. Navigate to **Jobs**
+2. Click **Create New Job**
 
-Traditional alerting tools send a message: *"Error rate exceeded 5%"*
+### 2. Configure General Settings
 
-Anaphora sends a **complete situation report**:
-- Screenshots of affected dashboards at the moment of the issue
-- Extracted metrics and values that triggered the alert
-- AI-generated analysis suggesting possible root causes
-- Historical context from multiple data sources
+- **Frequency**: Every hour
+- **Max Notify Frequency**: 12 hours
 
-## Use Cases
+### 3. Set Up Capture
 
-| Scenario | What Anaphora Captures | AI Analysis |
-|----------|------------------------|-------------|
-| Error spike | Error dashboard + log samples | "Error pattern suggests database connection timeout" |
-| Performance degradation | APM metrics + infrastructure stats | "CPU spike correlates with deployment at 14:32" |
-| Security anomaly | Auth logs + network traffic | "Unusual login pattern from new geographic region" |
-| Business threshold | Revenue dashboard + inventory | "Sales drop coincides with payment gateway errors" |
+1. Enable **Advanced** mode to build a conditional workflow
+2. In the preexisting **Navigate**-action:
+	- select **Kibana** as the connector
+	- Enter your Kibana discover URL:
+		```
+		https://kibana.example.com/app/discover#/view/your-view-id
+		```
+	- Choose authentication method: **ReadonlyREST** and add credentials
+3. Add a **Capture value** action to extract the number of error logs:
+	- Set the **variable name** to something like `error_count`
+	- Set **capture template** to `Kibana discover hits`
+	- Set **Variable type** to `Number`
+4. Add a **Conditional block** to check if the error count is smaller than the threshold:
+	- Choose **Variable**: `error_count`
+	- Set **Condition operation** to `Lesser than`
+	- Set **Condition value** to `100`
+5. Inside the conditional block, add a **Break** action to stop execution if the condition is met (i.e., error count is
+	 below threshold)
+6. Add another **Navigate** action
+	- Select **Kibana** as the connector
+	- Enter your Kibana dashboard URL:
+		```
+		https://kibana.example.com/app/dashboards#/view/your-dashboard-id
+		```
+	- Ensure that **Take Snapshot** is checked and set the configuration properly
 
-## Example: Multi-System Alert
+### 4. Compose the Report
 
-Monitor your stack and get intelligent alerts when things go wrong.
+1. Add the captured snapshot
+2. If desired, add a text block with the `{{error_count}}` variable to show the number of errors
+3. Add headers and other text as needed
 
-### 1. Create the Alert Job
+### 5. Set Up Delivery
 
-1. Navigate to **Jobs** > **Create New Job**
-2. Name it: "Infrastructure Health Alert"
-3. Set frequency: Every 5 minutes (`*/5 * * * *`)
-4. Set throttling: 1 hour (avoid notification fatigue)
-
-### 2. Configure Multi-System Capture
-
-Toggle **Advanced** mode and build a workflow that checks multiple sources:
-
-```
-Navigate → Grafana infrastructure dashboard
-Capture value → CPU usage element → $cpuUsage
-Capture value → Error rate element → $errorRate
-Capture snapshot → Dashboard overview
-
-Navigate → Kibana error logs
-Capture value → Error count (last 5 min) → $recentErrors
-Capture snapshot → Error log view
-
-Conditional block → $cpuUsage > 80 OR $errorRate > 5 OR $recentErrors > 100:
-  ├── AI Analysis → "Analyze these metrics and screenshots..."
-  └── (Continue to Compose/Deliver)
-Break → (If all conditions are healthy, stop here)
-```
-
-### 3. Add AI Analysis
-
-In the capture workflow, add an **AI Analysis** action:
-
-```
-Prompt: "Analyze the captured dashboards and metrics:
-- CPU: {{$cpuUsage}}%
-- Error rate: {{$errorRate}}%
-- Recent errors: {{$recentErrors}}
-
-Based on the visual data and these metrics, identify:
-1. The most likely root cause
-2. Which systems are affected
-3. Recommended immediate actions"
-```
-
-The AI examines both the **screenshots** and the **extracted values** to provide contextual analysis.
-
-### 4. Compose the Alert Report
-
-Design a PDF that gives operators everything they need:
-
-- **Header**: Alert timestamp and severity
-- **AI Summary**: Root cause analysis and recommendations
-- **Dashboard Screenshots**: Visual state at time of alert
-- **Raw Metrics**: Extracted values that triggered the alert
-- **Context**: Links to relevant dashboards for further investigation
-
-### 5. Configure Delivery
-
-Send alerts to the right people:
-- **Email**: On-call team with PDF attachment
-- **Slack**: Alert channel with summary and PDF link
-- **Webhook**: Integrate with PagerDuty, Opsgenie, or custom systems
-
-## How It Works
-
-```mermaid
-flowchart LR
-    capture["Capture<br/>Multi-system data"]
-    condition["Evaluate<br/>Check thresholds"]
-    ai["AI Analysis<br/>Root cause reasoning"]
-    compose["Compose<br/>Build PDF report"]
-    deliver["Deliver<br/>Notify operators"]
-
-    capture --> condition
-    condition -->|"Thresholds exceeded"| ai
-    condition -->|"All healthy"| stop["Stop<br/>No notification"]
-    ai --> compose --> deliver
-```
-
-The **Break** action stops execution when conditions are healthy. No alert fatigue — only actionable notifications.
-
-## Best Practices
-
-- **Combine sources**: Capture from multiple systems for complete context
-- **Use throttling**: Prevent notification storms during ongoing incidents
-- **Include raw data**: AI analysis is helpful, but operators need the numbers too
-- **Set clear thresholds**: Start conservative, tune based on real incidents
-- **Test the workflow**: Use the Test button to verify conditions trigger correctly
+1. Select **Email** as delivery interface (needs to be configured first in **Delivery Interfaces**)
+2. Add recipient email addresses
 
 ## Next Steps
 
 - [Grafana Dashboard Report](./grafana-dashboard-report) - Add Grafana to your monitoring
 - [AI Analysis](../advanced-examples/ai-news-collation) - More AI-powered workflows
-- [Notification Throttling](../jobs/general#notification-throttling) - Control alert frequency

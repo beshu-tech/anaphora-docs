@@ -40,19 +40,25 @@ Even if errors persist every 5 minutes, you'll only get one notification in 3 ho
 
 1. Select **Kibana** as the connector
 2. Enter your Kibana discover URL:
-	  ```
-		https://kibana.example.com/app/discover#/view/your-view-id
-		```
+	 ```
+	 https://kibana.example.com/app/discover#/view/your-view-id
+	 ```
 3. Choose authentication method: **ReadonlyREST** and add credentials
 4. Check **Deliver report only if conditions are met**
 5. Set Hits to be greater than `100`
 
-### 4. Configure Delivery
+### 4. Compose the Alert Report
+
+1. Add a text block
+2. Edit the text and include `{{kibanaDiscoverHits}}` to show the number of errors
+3. Add headers and other text as needed
+
+### 5. Configure Delivery
 
 1. Select a delivery interface
 2. Modify the body: `Alert: {{kibanaDiscoverHits}} errors in the last hour`
 
-### 5. Test and Save
+### 6. Test and Save
 
 1. **Test** the job to verify the workflow
 2. Check that conditions evaluate correctly
