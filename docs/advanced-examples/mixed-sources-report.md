@@ -64,7 +64,3 @@ Send the combined report to your executive team.
 - Use consistent time ranges across sources
 - Consider adding summary text between sections
 - Test each source individually before combining
-
-## Next Steps
-
-- [Kibana Statistical Alert](./kibana-statistical-alert) - Advanced alerting

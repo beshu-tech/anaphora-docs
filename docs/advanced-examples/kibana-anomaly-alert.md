@@ -4,7 +4,7 @@ description: Create sophisticated Kibana alerts based on statistical analysis an
 keywords: [statistical alert, trend detection, Kibana analytics, anomaly detection, Anaphora statistics]
 ---
 
-# Kibana Statistical Alert
+# Kibana Anomaly Alert
 
 Create alerts based on statistical analysis and trend detection.
 

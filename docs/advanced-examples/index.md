@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 description: Advanced Anaphora examples - multi-source reports, statistical alerts, AI-powered news collation, and branded PDF reports for enterprise use.
-keywords: [advanced Kibana reports, multi-source dashboards, statistical alerts, branded reports, AI report generation]
+keywords: [ advanced Kibana reports, multi-source dashboards, statistical alerts, branded reports, AI report generation ]
 ---
 
 # Advanced Examples - Enterprise Reporting Scenarios
@@ -10,12 +10,12 @@ Complex reporting scenarios demonstrating Anaphora's full capabilities.
 
 ## Available Examples
 
-| Example | Description |
-|---------|-------------|
+| Example                                                          | Description                                         |
+|------------------------------------------------------------------|-----------------------------------------------------|
 | [Mixed Sources Report](./advanced-examples/mixed-sources-report) | Combine data from multiple Kibana/Grafana instances |
-| [Kibana Statistical Alert](./advanced-examples/kibana-statistical-alert) | Alerts based on statistical analysis |
-| [AI News Collation](./advanced-examples/ai-news-collation) | Aggregate and summarize content with AI |
-| [Branded Reports](./advanced-examples/branded-reports) | Professional reports with custom branding |
+| [Kibana Anomaly Alert](./advanced-examples/kibana-anomaly-alert) | Alerts based on anomaly analysis                    |
+| [AI News Collation](./advanced-examples/ai-news-collation)       | Aggregate and summarize content with AI             |
+| [Branded Reports](./advanced-examples/branded-reports)           | Professional reports with custom branding           |
 
 ## Prerequisites
 

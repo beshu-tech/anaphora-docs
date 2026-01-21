@@ -40,9 +40,9 @@ Even if errors persist every 5 minutes, you'll only get one notification in 3 ho
 
 1. Select **Kibana** as the connector
 2. Enter your Kibana discover URL:
-	 	```
-		 https://kibana.example.com/app/discover#/view/your-view-id
-		 ```
+	  ```
+		https://kibana.example.com/app/discover#/view/your-view-id
+		```
 3. Choose authentication method: **ReadonlyREST** and add credentials
 4. Check **Deliver report only if conditions are met**
 5. Set Hits to be greater than `100`
@@ -66,3 +66,5 @@ You'll receive alerts only when error count exceeds your threshold, with at most
 
 - [Conditional Report](./conditional-report) - Need to also take a dashboard screenshot when the condition is met? See
 	how to use actions for conditional reports.
+- [Kibana Anomaly Alert](../advanced-examples/kibana-anomaly-alert.md) - Need to compare current events to previous
+	events for anomaly detection? See this example for triggering alerts when events deviate from normal patterns.
