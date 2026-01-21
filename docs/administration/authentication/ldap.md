@@ -1,13 +1,15 @@
 ---
 sidebar_position: 2
 description: Configure LDAP and Active Directory authentication for Anaphora enterprise deployments.
-keywords: [LDAP, Active Directory, AD, directory integration, enterprise authentication]
+keywords: [ LDAP, Active Directory, AD, directory integration, enterprise authentication ]
 ---
 
 # LDAP / Active Directory
 
-Connect to your enterprise directory for centralized user management. Supports Microsoft Active Directory, OpenLDAP, and other LDAP-compliant directories.
+Connect to your enterprise directory for centralized user management. Supports Microsoft Active Directory, OpenLDAP, and
+other LDAP-compliant directories.
 ![](images/ldap.png)
+
 ## Overview
 
 LDAP integration provides:
@@ -19,85 +21,40 @@ LDAP integration provides:
 
 ## Configuration
 
-Navigate to **Settings** > **Authentication** > **LDAP** to configure.
+Navigate to **Settings** > **System Settings** > **Auth** > **LDAP** to configure.
 
-### Connection Settings
+| Field               | Description                    | Example                                | Required |
+|---------------------|--------------------------------|----------------------------------------|----------|
+| URL                 | LDAP server address            | `ldap://ldap.forumsys.com:389`         | Yes      |
+| Bind DN             | Service account for binding    | `cn=read-only-admin,dc=example,dc=com` | Yes      |
+| Bind credentials    | Service account password       | (stored securely)                      | Yes      |
+| Search base         | Base DN for user search        | `dc=example,dc=com`                    | Yes      |
+| Search filter       | LDAP filter for user lookup    | `uid={{username}}`                     | Yes      |
+| Group search base   | Base DN for group search       | `ou=groups,dc=example,dc=com`          | No	      |
+| Group search filter | LDAP filter for groups         | `(member={{cn}})`                      | No       |
+| Group name property | Attribute for group name       | `cn`                                   | No       |
+| Reject unauthorized | Enforce TLS certificate checks | `false` (unchecked)                    | No       |
+| CA                  | Certificate authority          | base64-encoded PEM                     | No       |
+| Key                 | Client private key             | base64-encoded PEM                     | No       |
+| Certificate         | Client certificate             | base64-encoded PEM                     | No       |
 
-| Field | Description | Example |
-|-------|-------------|---------|
-| Server URL | LDAP server address | `ldaps://ldap.company.com:636` |
-| Base DN | Search base for users | `dc=company,dc=com` |
-| Bind DN | Service account for queries | `cn=anaphora,ou=service,dc=company,dc=com` |
-| Bind Password | Service account password | (stored encrypted) |
-| Connection Timeout | Max connection wait time | `10` seconds |
-| Read Timeout | Max response wait time | `30` seconds |
+### Group to Role Mapping
 
-### User Search Settings
+Use the group search to retrieve LDAP groups and map them to Anaphora roles.
+In the **group search filter**, use `{{<attribute>}}` placeholders to reference attributes from the login user.
+Use the **Group name property** to specify which attribute will be used as the mapped role name.
 
-| Field | Description | Example |
-|-------|-------------|---------|
-| User Base DN | Where to search for users | `ou=users,dc=company,dc=com` |
-| User Filter | LDAP query for users | `(&(objectClass=user)(sAMAccountName={0}))` |
-| Username Attribute | Attribute for login | `sAMAccountName` |
+### SSL/TLS Configuration
 
-### Group Settings (Optional)
+For secure connections use LDAPS (port 636):
 
-| Field | Description | Example |
-|-------|-------------|---------|
-| Group Base DN | Where to search for groups | `ou=groups,dc=company,dc=com` |
-| Group Filter | Query for user's groups | `(&(objectClass=group)(member={0}))` |
-| Group Name Attribute | Attribute for group name | `cn` |
+| Protocol | Port | Security                      |
+|----------|------|-------------------------------|
+| LDAP     | 389  | Unencrypted (not recommended) |
+| LDAPS    | 636  | SSL/TLS encrypted             |
+| StartTLS | 389  | Upgraded to TLS               |
 
-## Attribute Mapping
-
-Map LDAP attributes to Anaphora user properties:
-
-| Anaphora Field | Active Directory | OpenLDAP |
-|----------------|------------------|----------|
-| Username | `sAMAccountName` | `uid` |
-| Email | `mail` | `mail` |
-| Display Name | `displayName` | `cn` |
-| Groups | `memberOf` | `memberOf` |
-
-### Mapping Configuration
-
-```
-Username Attribute: sAMAccountName
-Email Attribute: mail
-Display Name Attribute: displayName
-Group Membership Attribute: memberOf
-```
-
-## Group-Based Roles
-
-Map LDAP groups to Anaphora roles for automatic permission assignment.
-
-### Example Mappings
-
-```
-LDAP Group: CN=Anaphora-Admins,OU=Groups,DC=company,DC=com
-  → Anaphora Role: Admin
-
-LDAP Group: CN=Anaphora-Editors,OU=Groups,DC=company,DC=com
-  → Anaphora Role: Editor
-
-LDAP Group: CN=Anaphora-Viewers,OU=Groups,DC=company,DC=com
-  → Anaphora Role: Viewer
-```
-
-### Space Membership
-
-Map groups to Space access:
-
-```
-LDAP Group: CN=Team-Alpha,OU=Teams,DC=company,DC=com
-  → Space: Alpha Team Reports
-  → Role: Editor
-
-LDAP Group: CN=Team-Beta,OU=Teams,DC=company,DC=com
-  → Space: Beta Team Reports
-  → Role: Viewer
-```
+Provide CA, Key, and Certificate fields for TLS client authentication if required by your LDAP server.
 
 ## Active Directory Specifics
 
@@ -110,60 +67,12 @@ Create a dedicated service account for Anaphora:
 3. Grant "Read all user information" permission
 4. No need for admin privileges
 
-### Common User Filters
-
-| Scenario | Filter |
-|----------|--------|
-| All users | `(&(objectClass=user)(sAMAccountName={0}))` |
-| Enabled users only | `(&(objectClass=user)(sAMAccountName={0})(!(userAccountControl:1.2.840.113556.1.4.803:=2)))` |
-| Specific OU | `(&(objectClass=user)(sAMAccountName={0})(memberOf=CN=Anaphora-Users,OU=Groups,DC=company,DC=com))` |
-
-### SSL/TLS Configuration
-
-Always use LDAPS (port 636) for secure connections:
-
-| Protocol | Port | Security |
-|----------|------|----------|
-| LDAP | 389 | Unencrypted (not recommended) |
-| LDAPS | 636 | SSL/TLS encrypted |
-| StartTLS | 389 | Upgraded to TLS |
-
-## Testing
-
-### Test Connection
-
-1. Click **Test Connection** to verify server connectivity
-2. Verify "Connection successful" message
-3. Check bind credentials are working
-
-### Test User Search
-
-1. Enter a known username
-2. Click **Test User Search**
-3. Verify user attributes are returned correctly
-
-### Test Authentication
-
-1. Enter test username and password
-2. Click **Test Login**
-3. Verify authentication succeeds and groups are retrieved
-
-## Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Connection refused | Check server URL and port, verify firewall rules |
-| Bind failed | Verify bind DN and password, check account is not locked |
-| User not found | Check base DN and user filter, verify user exists |
-| Groups not mapped | Verify group filter and group DN, check membership attribute |
-| SSL certificate error | Import CA certificate or use trusted certificate |
-
 ### Debug Mode
 
 Enable LDAP debug logging:
 
-1. Go to **Settings** > **System** > **Logging**
-2. Set LDAP log level to DEBUG
+1. Go to **Settings** > **System Settings** > **General** > **General**
+2. Set **Log Level** to `debug`
 3. Reproduce the issue
 4. Review logs for detailed LDAP communication
 
