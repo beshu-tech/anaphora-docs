@@ -18,21 +18,19 @@ Send a daily PDF report of a Kibana dashboard to your team every morning at 9 AM
 
 1. Navigate to **Jobs** in the sidebar
 2. Click **Create New Job**
-3. Enter a name: "Daily Dashboard Report"
 
 ### 2. Configure General Settings
 
 - **Frequency**: Daily at 9:00 AM (or use CRON: `0 9 * * *`)
-- **Description**: "Morning dashboard snapshot for the team"
 
 ### 3. Set Up Capture
 
 1. Select **Kibana** as the connector
 2. Enter your dashboard URL:
-   ```
-   https://your-kibana.example.com/app/dashboards#/view/abc123
-   ```
-3. Choose authentication method: **ReadonlyREST**
+	 ```
+	 https://your-kibana.example.com/app/dashboards#/view/abc123
+	 ```
+3. Choose authentication method: **ReadonlyREST** and add credentials
 4. Set time range: "Last 24 hours"
 
 ### 4. Configure Composition
@@ -45,7 +43,6 @@ Send a daily PDF report of a Kibana dashboard to your team every morning at 9 AM
 
 1. Select **Email** as delivery interface (needs to be configured first in **Delivery Interfaces**)
 2. Add recipient email addresses
-3. Set subject line: `Daily Dashboard Report`
 
 ### 6. Test and Save
 
