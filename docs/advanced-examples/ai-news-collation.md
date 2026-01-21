@@ -66,7 +66,3 @@ Send to subscribers via email with a clean, readable format.
 - Filter out duplicates across sources
 - Set appropriate content length limits
 - Include source attribution
-
-## Next Steps
-
-- [Branded Reports](./branded-reports) - Professional report styling
