@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
 description: Step-by-step Anaphora tutorials for Kibana PDF reports, Grafana dashboard scheduling, and conditional alerts. Practical examples with complete configurations.
-keywords: [Kibana PDF report, Grafana scheduled report, dashboard alert, Elasticsearch report, tutorial]
+keywords: [ Kibana PDF report, Grafana scheduled report, dashboard alert, Elasticsearch report, tutorial ]
 ---
 
 # Basic Examples - Kibana & Grafana Report Tutorials
@@ -10,12 +10,12 @@ Learn Anaphora through practical examples. Each example walks you through creati
 
 ## Available Examples
 
-| Example | Description |
-|---------|-------------|
-| [Kibana Dashboard Report](./basic-examples/kibana-dashboard-report) | Schedule a daily PDF report of your Kibana dashboard |
-| [Kibana Alert](./basic-examples/kibana-alert) | Send notifications when conditions are met |
-| [Conditional Report](./basic-examples/conditional-report) | Reports that only send when criteria match |
-| [Grafana Dashboard Report](./basic-examples/grafana-dashboard-report) | Capture and deliver Grafana dashboards |
+| Example                                                                 | Description                                          |
+|-------------------------------------------------------------------------|------------------------------------------------------|
+| [Kibana Dashboard Report](./basic-examples/kibana-dashboard-report)     | Schedule a daily PDF report of your Kibana dashboard |
+| [Kibana Alert](./basic-examples/kibana-alert)                           | Send notifications when conditions are met           |
+| [Kibana Conditional Report](./basic-examples/kibana-conditional-report) | Reports that only send when criteria match           |
+| [Grafana Dashboard Report](./basic-examples/grafana-dashboard-report)   | Capture and deliver Grafana dashboards               |
 
 ## Prerequisites
 

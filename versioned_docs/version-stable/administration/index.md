@@ -1,138 +1,28 @@
 ---
 sidebar_position: 6
 description: Anaphora administration guide - configure authentication (LDAP, SAML, SSO), manage multi-tenant spaces, monitor system health, and backup data.
-keywords: [Anaphora admin, LDAP authentication, SAML SSO, multi-tenant reporting, system monitoring, backup, RBAC]
+keywords: [ Anaphora admin, LDAP authentication, SAML SSO, multi-tenant reporting, system monitoring, backup, RBAC ]
 ---
 
 # Administration - Security, Multi-Tenancy & Operations
 
-Manage Anaphora's security, multi-tenancy, monitoring, and backups. This section covers enterprise features for managing users, permissions, and system health.
+Manage Anaphora's security, multi-tenancy, monitoring, and backups. This section covers enterprise features for managing
+users, permissions, and system health.
 
 ## Topics
 
-| Topic | Description |
-|-------|-------------|
-| [Authentication](/administration/authentication/) | User authentication and access control |
-| [Spaces](/administration/spaces) | Multi-tenant workspace management |
-| [AI Providers](/administration/ai-providers) | Configure AI for intelligent analysis |
-| [Self Monitoring](/administration/self-monitoring) | System health and metrics |
-| [Backup](/administration/backup) | Data backup and recovery |
+| Topic                                              | Description                            |
+|----------------------------------------------------|----------------------------------------|
+| [Authentication](/administration/authentication/)  | User authentication and access control |
+| [Spaces](/administration/spaces)                   | Multi-tenant workspace management      |
+| [AI Providers](/administration/ai-providers)       | Configure AI for intelligent analysis  |
+| [Self Monitoring](/administration/self-monitoring) | System health and metrics              |
+| [Backup](/administration/backup)                   | Data backup and recovery               |
 
-## Spaces: Multi-Tenant Isolation
+## System User
 
-Anaphora uses a **Spaces** concept to manage multi-tenancy and permissions effectively.
-
-### Shared-Nothing Architecture
-
-Spaces act as isolated containers with complete separation:
-
-```mermaid
-flowchart TB
-    subgraph anaphora["Anaphora"]
-        subgraph spaceA["Space A"]
-            a1["Jobs"]
-            a2["Reports"]
-            a3["Delivery"]
-            a4["Users"]
-        end
-        subgraph spaceB["Space B"]
-            b1["Jobs"]
-            b2["Reports"]
-            b3["Delivery"]
-            b4["Users"]
-        end
-        subgraph spaceC["Space C"]
-            c1["Jobs"]
-            c2["Reports"]
-            c3["Delivery"]
-            c4["Users"]
-        end
-    end
-```
-
-- **Complete isolation** - Jobs, Delivery Interfaces, AI Providers, and reports cannot be shared between spaces
-- **Copy support** - Items can be copied between spaces when needed
-- **Independent configuration** - Each space has its own settings and retention policies
-
-### Use Cases for Spaces
-
-| Scenario | Implementation |
-|----------|----------------|
-| **Team separation** | Each team gets their own space with dedicated jobs |
-| **Client isolation** | MSPs create separate spaces per client |
-| **Environment separation** | Dev, staging, and production spaces |
-| **Department boundaries** | Finance, Engineering, Marketing each have isolated spaces |
-
-## Role-Based Access Control (RBAC)
-
-Anaphora provides granular permissions through roles.
-
-### Permission Levels
-
-| Level | Capabilities |
-|-------|-------------|
-| **Read-only** | View jobs, reports, and settings |
-| **Read-write** | Create and modify jobs, run reports |
-| **Admin** | Full control including user management and space settings |
-
-### Assignment Options
-
-Permissions can be assigned to:
-
-- **Individual users** - Direct permission grants
-- **Groups** - Permissions inherited by all group members
-- **Roles** - Reusable permission sets
-
-## Authentication Methods
-
-Anaphora supports enterprise-standard authentication:
-
-| Method | Description |
-|--------|-------------|
-| [Local](/administration/authentication/local) | Built-in username/password authentication |
-| [LDAP](/administration/authentication/ldap) | Active Directory and other LDAP directories |
-| [SAML](/administration/authentication/saml) | SSO with Okta, Azure AD, OneLogin, etc. |
-| [OIDC](/administration/authentication/oidc) | OAuth 2.0 / OpenID Connect providers |
-
-### Session Management
-
-Administrators can:
-
-- View all active sessions
-- Force logout of specific users
-- Set session timeout policies
-- Monitor login history
-
-## System Monitoring
-
-Monitor Anaphora's health and performance:
-
-### Health Endpoint
-
-A dedicated endpoint for monitoring tools (Prometheus, Nagios, etc.):
-
-- System status and uptime
-- Job execution statistics
-- Error rates and failures
-- Resource utilization
-
-### Alerting
-
-Configure alerts when:
-
-- Job execution error rates become too high
-- System resources are constrained
-- Authentication failures spike
-- Delivery channels fail
-
-## Backup & Recovery
-
-Protect your Anaphora configuration and data:
-
-- **Full system backup** - Export all jobs, settings, and configurations
-- **Scheduled backups** - Automate regular backup creation
-- **Point-in-time recovery** - Restore to a specific backup
-- **Migration support** - Move between Anaphora instances
+The first user created during setup is the system administrator with full privileges. Only system admins can access and
+manage the global settings. 
 
 ## Next Steps
 

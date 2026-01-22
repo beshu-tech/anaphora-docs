@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
 description: Create conditional Kibana alerts with Slack notifications when error thresholds are exceeded using Anaphora.
-keywords: [Kibana alert, conditional notification, Slack alert, error threshold, Anaphora alerting]
+keywords: [ Kibana alert, conditional notification, Slack alert, error threshold, Anaphora alerting ]
 ---
 
 # Kibana Alert
@@ -10,11 +10,12 @@ Create an alert that notifies you when specific conditions are met in your Kiban
 
 ## Goal
 
-Send a Slack notification when the error count in your logs exceeds 100 in the last hour.
+Send a notification when the error count in your logs exceeds 100 in the last hour.
 
 ## Concept
 
 In Anaphora, **an alert is a conditional report**. You create alerts by:
+
 1. Capturing data from Kibana
 2. Evaluating conditions
 3. Only delivering the report when conditions are met
@@ -23,38 +24,41 @@ In Anaphora, **an alert is a conditional report**. You create alerts by:
 
 ### 1. Create a New Job
 
-1. Navigate to **Jobs** > **Create New Job**
-2. Name it: "Error Rate Alert"
+1. Navigate to **Jobs**
+2. Click **Create New Job**
 
 ### 2. Configure General Settings
 
 - **Frequency**: Every 5 minutes (`*/5 * * * *`)
-- **Throttling**: 1 hour (avoid notification fatigue)
+- **Max notify frequency**: 3 hours (avoid notification fatigue)
 
 :::tip Why Throttling?
-Even if errors persist every 5 minutes, you'll only get one notification per hour.
+Even if errors persist every 5 minutes, you'll only get one notification in 3 hours.
 :::
 
-### 3. Set Up Advanced Capture
+### 3. Set Up Capture
 
-1. Toggle **Advanced** mode on
-2. Add actions:
+1. Select **Kibana** as the connector
+2. Enter your Kibana discover URL:
+	 ```
+	 https://kibana.example.com/app/discover#/view/your-view-id
+	 ```
+3. Choose authentication method: **ReadonlyREST** and add credentials
+4. Check **Deliver report only if conditions are met**
+5. Set Hits to be greater than `100`
 
-```
-Navigate → Kibana Discover (filtered for errors, last 1 hour)
-Wait for visible → .euiDataGrid__content
-Capture value → [data-test-subj="discoverQueryHits"] → $errorCount
-Conditional block → $errorCount > 100:
-  └── Capture snapshot → Dashboard screenshot
-```
+### 4. Compose the Alert Report
 
-### 4. Configure Delivery
+1. Add a text block
+2. Edit the text and include `{{kibanaDiscoverHits}}` to show the number of errors
+3. Add headers and other text as needed
 
-1. Select **Slack** as delivery interface
-2. Choose the alert channel
-3. Message: `Alert: {{$errorCount}} errors in the last hour`
+### 5. Configure Delivery
 
-### 5. Test and Save
+1. Select a delivery interface
+2. Modify the body: `Alert: {{kibanaDiscoverHits}} errors in the last hour`
+
+### 6. Test and Save
 
 1. **Test** the job to verify the workflow
 2. Check that conditions evaluate correctly
@@ -62,8 +66,11 @@ Conditional block → $errorCount > 100:
 
 ## Result
 
-You'll receive Slack alerts only when error count exceeds your threshold, with at most one notification per hour.
+You'll receive alerts only when error count exceeds your threshold, with at most one notification per hour.
 
 ## Next Steps
 
-- [Conditional Report](./conditional-report) - More complex conditions
+- [Kibana Conditional Report](./kibana-conditional-report) - Need to also take a dashboard screenshot when the condition is met? See
+	how to use actions for conditional reports.
+- [Kibana Anomaly Alert](../advanced-examples/kibana-anomaly-alert.md) - Need to compare current events to previous
+	events for anomaly detection? See this example for triggering alerts when events deviate from normal patterns.
