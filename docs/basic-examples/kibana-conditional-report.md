@@ -4,9 +4,14 @@ description: Create intelligent alerts that trigger when conditions are met, wit
 keywords: [ Anaphora alerts, conditional alerting, AI root cause analysis, multi-system monitoring, intelligent notifications ]
 ---
 
-# Conditional Report
+# Kibana Conditional Report
 
 Create reports that will only be built and delivered when specific conditions are met.
+
+:::tip Kibana Conditional Snapshot Template
+The **Kibana Conditional Snapshot** Template demonstrates this example for the Kibana demo instance. You can
+use it as a starting point for your own conditional reporting jobs.
+:::
 
 ## Goal
 
@@ -29,29 +34,29 @@ The report with the captured dashboard will only be delivered if the number of e
 
 1. Enable **Advanced** mode to build a conditional workflow
 2. In the preexisting **Navigate**-action:
-	- select **Kibana** as the connector
-	- Enter your Kibana discover URL:
-		```
-		https://kibana.example.com/app/discover#/view/your-view-id
-		```
-	- Choose authentication method: **ReadonlyREST** and add credentials
+    - select **Kibana** as the connector
+    - Enter your Kibana discover URL:
+      ```
+      https://kibana.example.com/app/discover#/view/your-view-id
+      ```
+    - Choose authentication method: **ReadonlyREST** and add credentials
 3. Add a **Capture value** action to extract the number of error logs:
-	- Set the **variable name** to something like `error_count`
-	- Set **capture template** to `Kibana discover hits`
-	- Set **Variable type** to `Number`
+    - Set the **variable name** to something like `error_count`
+    - Set **capture template** to `Kibana discover hits`
+    - Set **Variable type** to `Number`
 4. Add a **Conditional block** to check if the error count is smaller than the threshold:
-	- Choose **Variable**: `error_count`
-	- Set **Condition operation** to `Lesser than`
-	- Set **Condition value** to `100`
+    - Choose **Variable**: `error_count`
+    - Set **Condition operation** to `Lesser than`
+    - Set **Condition value** to `100`
 5. Inside the conditional block, add a **Break** action to stop execution if the condition is met (i.e., error count is
-	 below threshold)
+   below threshold)
 6. Add another **Navigate** action
-	- Select **Kibana** as the connector
-	- Enter your Kibana dashboard URL:
-		```
-		https://kibana.example.com/app/dashboards#/view/your-dashboard-id
-		```
-	- Ensure that **Take Snapshot** is checked and set the configuration properly
+    - Select **Kibana** as the connector
+    - Enter your Kibana dashboard URL:
+      ```
+      https://kibana.example.com/app/dashboards#/view/your-dashboard-id
+      ```
+    - Ensure that **Take Snapshot** is checked and set the configuration properly
 
 ### 4. Compose the Report
 

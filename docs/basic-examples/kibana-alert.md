@@ -70,7 +70,7 @@ You'll receive alerts only when error count exceeds your threshold, with at most
 
 ## Next Steps
 
-- [Conditional Report](./conditional-report) - Need to also take a dashboard screenshot when the condition is met? See
+- [Kibana Conditional Report](./kibana-conditional-report) - Need to also take a dashboard screenshot when the condition is met? See
 	how to use actions for conditional reports.
 - [Kibana Anomaly Alert](../advanced-examples/kibana-anomaly-alert.md) - Need to compare current events to previous
 	events for anomaly detection? See this example for triggering alerts when events deviate from normal patterns.

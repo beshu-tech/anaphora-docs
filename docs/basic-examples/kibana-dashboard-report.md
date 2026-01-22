@@ -8,6 +8,11 @@ keywords: [ Kibana report tutorial, scheduled dashboard, PDF email, Anaphora exa
 
 Create a scheduled report that captures your Kibana dashboard and delivers it via email.
 
+:::tip Kibana Dashboard Snapshot Template
+The **Kibana Dashboard Snapshot** Template demonstrates this example for the Kibana demo instance. You can use it as a
+starting point for your own dashboard reporting jobs.
+:::
+
 ## Goal
 
 Send a daily PDF report of a Kibana dashboard to your team every morning at 9 AM.
@@ -27,9 +32,9 @@ Send a daily PDF report of a Kibana dashboard to your team every morning at 9 AM
 
 1. Select **Kibana** as the connector
 2. Enter your dashboard URL:
-	 ```
-	 https://your-kibana.example.com/app/dashboards#/view/abc123
-	 ```
+    ```
+    https://your-kibana.example.com/app/dashboards#/view/abc123
+    ```
 3. Choose authentication method: **ReadonlyREST** and add credentials
 4. Set time range: "Last 24 hours"
 

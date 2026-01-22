@@ -25,7 +25,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'basic-examples/kibana-dashboard-report',
         'basic-examples/kibana-alert',
-        'basic-examples/conditional-report',
+        'basic-examples/kibana-conditional-report',
         'basic-examples/grafana-dashboard-report',
       ],
     },
