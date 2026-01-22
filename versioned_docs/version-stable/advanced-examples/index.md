@@ -10,11 +10,11 @@ Complex reporting scenarios demonstrating Anaphora's full capabilities.
 
 ## Available Examples
 
-| Example                                        | Description                                         |
-|------------------------------------------------|-----------------------------------------------------|
-| [Mixed Sources Report](./mixed-sources-report) | Combine data from multiple Kibana/Grafana instances |
-| [Kibana Anomaly Alert](./kibana-anomaly-alert) | Alerts based on anomaly analysis                    |
-| [AI News Collation](./ai-news-collation)       | Aggregate and summarize content with AI             |
+| Example                                                          | Description                                         |
+|------------------------------------------------------------------|-----------------------------------------------------|
+| [Mixed Sources Report](./advanced-examples/mixed-sources-report) | Combine data from multiple Kibana/Grafana instances |
+| [Kibana Anomaly Alert](./advanced-examples/kibana-anomaly-alert) | Alerts based on anomaly analysis                    |
+| [AI News Collation](./advanced-examples/ai-news-collation)       | Aggregate and summarize content with AI             |
 
 ## Prerequisites
 
