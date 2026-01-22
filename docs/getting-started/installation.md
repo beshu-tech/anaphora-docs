@@ -72,8 +72,8 @@ volumes:
 ```
 
 :::tip 🎁 Get a Free Trial Key
-The `ACTIVATION_KEY` unlocks PRO or Enterprise features. **[Request your free trial key →](https://portal.anaphora.it)
-** — instant activation, no credit card required.
+The `ACTIVATION_KEY` unlocks PRO or Enterprise features.
+**[Request your free trial key →](https://portal.anaphora.it)** — instant activation, no credit card required.
 :::
 
 ## Need Help?
