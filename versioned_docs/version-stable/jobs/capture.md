@@ -120,7 +120,7 @@ flowchart LR
 |----------------------|--------------------------------|--------------------------|
 | **Capture value**    | Extract text into variable     | Error count, status text |
 | **Capture snapshot** | Screenshot element to variable | Chart, panel, full page  |
-| **Calculate**        | Arithmetic on variables        | `$errors / $total * 100` |
+| **Calculate**        | Arithmetic on variables        | `errors / total * 100`   |
 
 ### Control Flow Actions
 
@@ -135,16 +135,15 @@ Capture from multiple dashboards in one job:
 
 ```
 1. Navigate → Kibana Dashboard A
-2. Capture snapshot → $dashboard_a
+2. Capture snapshot → dashboard_a
 3. Navigate → Grafana Dashboard B
-4. Capture snapshot → $dashboard_b
+4. Capture snapshot → dashboard_b
 5. Navigate → Internal Tool
 6. Click → "Generate Report" button
-7. Wait for visible → Report table
-8. Capture snapshot → $internal_report
+7. Capture snapshot → internal_report
 ```
 
-Result: Three snapshots available in Composer as `$dashboard_a`, `$dashboard_b`, `$internal_report`.
+Result: Three snapshots available in Composer as `dashboard_a`, `dashboard_b`, `internal_report`.
 
 ### Example: Conditional Alert
 

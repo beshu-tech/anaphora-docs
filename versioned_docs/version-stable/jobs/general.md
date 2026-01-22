@@ -103,7 +103,7 @@ High-frequency jobs generate more data. Without housekeeping:
 - 10-minute job = 144 runs/day = 4,320 runs/month
 - Each run may include snapshots and reports
 - Storage can grow rapidly without retention limits
-  :::
+:::
 
 ## Best Practices
 

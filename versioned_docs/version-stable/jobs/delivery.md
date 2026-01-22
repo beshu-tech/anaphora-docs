@@ -1,7 +1,7 @@
 ---
 sidebar_position: 4
-description: Configure report delivery - email, Slack, webhooks, and S3 archiving. Multi-channel distribution and conditional routing.
-keywords: [ report delivery, email reports, Slack notifications, webhook, S3 archiving, report distribution ]
+description: Configure report delivery - email, webhooks, and S3 archiving. Multi-channel distribution and conditional routing.
+keywords: [ report delivery, email reports, webhook, S3 archiving, report distribution ]
 ---
 
 # Delivery Configuration
@@ -112,7 +112,7 @@ Send the same report to multiple destinations:
 ### Example: Alert with Archive
 
 ```
-Delivery 1: Slack (immediate notification)
+Delivery 1: Webhook e.g. Slack (immediate notification)
 Delivery 2: Email (stakeholder distribution)
 Delivery 3: S3 (permanent archive)
 ```

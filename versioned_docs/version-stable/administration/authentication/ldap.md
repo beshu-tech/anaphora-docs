@@ -30,7 +30,7 @@ Navigate to **Settings** > **System Settings** > **Auth** > **LDAP** to configur
 | Bind credentials    | Service account password       | (stored securely)                      | Yes      |
 | Search base         | Base DN for user search        | `dc=example,dc=com`                    | Yes      |
 | Search filter       | LDAP filter for user lookup    | `uid={{username}}`                     | Yes      |
-| Group search base   | Base DN for group search       | `ou=groups,dc=example,dc=com`          | No	      |
+| Group search base   | Base DN for group search       | `ou=groups,dc=example,dc=com`          | No       |
 | Group search filter | LDAP filter for groups         | `(member={{cn}})`                      | No       |
 | Group name property | Attribute for group name       | `cn`                                   | No       |
 | Reject unauthorized | Enforce TLS certificate checks | `false` (unchecked)                    | No       |

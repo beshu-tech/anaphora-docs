@@ -10,33 +10,21 @@ Deliver reports directly to Slack channels. Use the webhook delivery interface t
 
 ## Setup Steps
 
-### 1. Create Slack App
+### 1. Create Slack Webhook
 
-1. Go to [api.slack.com/apps](https://api.slack.com/apps)
-2. Click **Create New App**
-3. Choose **From scratch**
-4. Name it "Anaphora" and select workspace
+1. Go to [Slack Docs](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/)
+2. Follow the instructions to create an **Incoming Webhook**
 
-### 2. Enable Incoming Webhooks
-
-1. In app settings, go to **Incoming Webhooks**
-2. Toggle **Activate Incoming Webhooks** on
-3. Click **Add New Webhook to Workspace**
-4. Select the default channel
-5. Copy the Webhook URL
-
-### 3. Configure in Anaphora
+### 2. Configure in Anaphora
 
 1. Go to **Delivery Interfaces**
 2. Add new **Webhook** interface
 3. Paste the Webhook URL
-4. Add the ```Authorization``` header with value ```Bearer xoxb-your-slack-bot-token```
-5. Set the method to **POST** and body type to **JSON**
-6. Add the JSON body:
-```json
-{
-  "channel": "#your-channel",
-  "text": "$MESSAGE"
-}
-```
-7. Test and save
+4. Set the method to **POST** and body type to **JSON**
+5. Add the JSON body:
+   ```json
+    {
+      "text": "Hello, world."
+    }
+   ```
+6. Test and save
