@@ -72,11 +72,54 @@
   margin-left: 0.5rem;
 }
 
-/* ===== VERSION BADGE ===== */
+/* ===== DOC PAGE HEADER ===== */
+/* Use CSS Grid to layout breadcrumbs and version badge inline */
+article[class*="docItemContainer"] {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto 1fr;
+  gap: 0;
+  align-items: start;
+}
+
+/* Breadcrumbs - first column, first row */
+.theme-doc-breadcrumbs {
+  grid-column: 1;
+  grid-row: 1;
+  margin-bottom: 0;
+  padding-top: 0.25rem;
+}
+
+/* Version badge - second column, first row (aligned right) */
 .theme-doc-version-badge {
+  grid-column: 2;
+  grid-row: 1;
   background-color: var(--ifm-color-emphasis-100);
   color: var(--ifm-color-primary);
   border: 1px solid var(--ifm-color-primary);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  margin-left: 1rem;
+  align-self: center;
+}
+
+/* Doc content - spans both columns, second row */
+.theme-doc-markdown {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin-top: 1.5rem;
+}
+
+/* Add breathing room above the main heading */
+.theme-doc-markdown > h1:first-child {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+/* Footer and other elements span full width */
+.theme-doc-footer,
+footer[class*="docItemFooter"] {
+  grid-column: 1 / -1;
 }
 
 /* ===== SIDEBAR ===== */
