@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
 description: Get started with Anaphora - automated Kibana and Grafana report generation. Install, configure, and create your first scheduled dashboard report.
-keywords: [Anaphora setup, Kibana reports installation, Grafana reports setup, automated reporting, dashboard scheduling, AI reports, headless browser]
+keywords: [ Anaphora setup, Kibana reports installation, Grafana reports setup, automated reporting, dashboard scheduling, AI reports, headless browser ]
 ---
 
 # Getting Started with Anaphora

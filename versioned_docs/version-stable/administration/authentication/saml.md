@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 description: Configure SAML 2.0 Single Sign-On for Anaphora with Okta, Azure AD, OneLogin, and other identity providers.
-keywords: [SAML, SSO, Single Sign-On, Okta, Azure AD, OneLogin, identity provider, IdP]
+keywords: [ SAML, SSO, Single Sign-On, Okta, Azure AD, OneLogin, identity provider, IdP ]
 ---
 
 # SAML / Single Sign-On

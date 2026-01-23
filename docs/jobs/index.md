@@ -1,7 +1,7 @@
 ---
 sidebar_position: 4
 description: Configure Anaphora jobs for automated report generation. Learn about capture, composer, delivery settings and conditional alerts.
-keywords: [Anaphora jobs, report scheduling, capture configuration, delivery settings, conditional alerts, headless browser]
+keywords: [ Anaphora jobs, report scheduling, capture configuration, delivery settings, conditional alerts, headless browser ]
 ---
 
 # Jobs - Automated Report Configuration

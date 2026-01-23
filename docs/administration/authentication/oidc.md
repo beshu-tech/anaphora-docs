@@ -1,7 +1,7 @@
 ---
 sidebar_position: 4
 description: Configure OpenID Connect (OIDC) authentication for Anaphora with Google, Auth0, Keycloak, and other OAuth 2.0 providers.
-keywords: [OpenID Connect, OIDC, OAuth, Google login, Auth0, Keycloak, OAuth 2.0]
+keywords: [ OpenID Connect, OIDC, OAuth, Google login, Auth0, Keycloak, OAuth 2.0 ]
 ---
 
 # OpenID Connect (OIDC)

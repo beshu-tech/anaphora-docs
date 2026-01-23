@@ -19,8 +19,6 @@ On first launch:
 5. Configure your license if using PRO/Enterprise features
 6. Create your first job
 
-<!-- todo Extend, go more into details of configuring the admin UI -->
-
 ## Next Steps
 
 - [Features & Editions](./features) - Compare Free, PRO, and Enterprise
