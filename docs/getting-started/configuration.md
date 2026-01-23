@@ -1,53 +1,25 @@
 ---
 sidebar_position: 2
 description: Configure Anaphora with environment variables for production deployments. PUBLIC_URL, admin credentials, and license setup.
-keywords: [Anaphora configuration, environment variables, PUBLIC_URL, setup guide, production deployment]
+keywords: [ Anaphora configuration, environment variables, PUBLIC_URL, setup guide, production deployment ]
 ---
 
 # Configuration Guide
 
-Configure Anaphora for your environment and requirements.
-
-## Environment Variables
-
-Anaphora is configured via environment variables:
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `PUBLIC_URL` | External URL where Anaphora is accessible | Yes (production) |
-| `ADMIN_USERNAME` | Initial admin username | No (default: `admin`) |
-| `ADMIN_PASSWORD` | Initial admin password | No (prompted on first login) |
-| `ACTIVATION_KEY` | PRO/Enterprise activation key | No |
-| `ANAPHORA_DATA_DIR` | Data storage path | No (default: `/data`) |
-
-### PUBLIC_URL
-
-The `PUBLIC_URL` environment variable defines the external URL where Anaphora is accessible. This is **required for production deployments** and used for:
-
-- SSO callback URLs (SAML, OIDC)
-- Links in email notifications
-- Webhook response URLs
-
-```bash
-# Example: Production deployment
-PUBLIC_URL=https://anaphora.company.com
-
-# Example: Local development (optional)
-PUBLIC_URL=http://localhost:3000
-```
-
-:::warning Required for SSO
-If you're using SAML or OIDC authentication, `PUBLIC_URL` must be set correctly. The callback URLs registered with your identity provider must match this value.
-:::
+After installing Anaphora and setting it up with Environment variables, you can further configure it in the admin UI.
 
 ## Initial Setup
 
 On first launch:
 
 1. Navigate to `PUBLIC_URL` in your browser
-2. Log in with admin credentials (set via environment variables or prompted)
-3. Configure your license if using PRO/Enterprise features
-4. Create your first job
+2. Create the initial admin user (if not set via env vars)
+3. Log in with your admin credentials
+4. Go to **Settings** → **System** to review and adjust global settings
+5. Configure your license if using PRO/Enterprise features
+6. Create your first job
+
+<!-- todo Extend, go more into details of configuring the admin UI -->
 
 ## Next Steps
 

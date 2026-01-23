@@ -84,7 +84,7 @@ Capture Dashboard -> Send to AI -> Receive Analysis -> Include in Report
 - **Visual Analysis** - Pass screenshots to AI models to evaluate dashboard content
 - **Text Summaries** - AI generates human-readable summaries of complex data
 - **Anomaly Detection** - AI identifies unusual patterns or concerning trends
-- **DeepSeek Compatible** - Works with any AI provider using the DeepSeek API format
+- **OpenAI Compatible** - Works with any AI provider using the OpenAI API format
 
 ## Visual Composer
 

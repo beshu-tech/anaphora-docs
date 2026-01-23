@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
 description: Configure SMTP email delivery for Anaphora reports. Supports SSL, STARTTLS, and common providers like Gmail and Office 365.
-keywords: [SMTP configuration, email delivery, SSL email, Gmail SMTP, Office 365 SMTP, Anaphora email]
+keywords: [ SMTP configuration, email delivery, SSL email, Gmail SMTP, Office 365 SMTP, Anaphora email ]
 ---
 
 # SMTP
@@ -12,15 +12,15 @@ Send reports via your own SMTP email server. Supports SSL, STARTLS, plain
 
 ## Configuration
 
-| Field | Description | Required |
-|-------|-------------|----------|
-| Name | Interface identifier | Yes |
-| Host | SMTP server hostname | Yes |
-| Port | SMTP port (25, 465, 587) | Yes |
-| Username | SMTP authentication user | Usually |
-| Password | SMTP authentication password | Usually |
-| From Address | Sender email address | Yes |
-| TLS/SSL | Encryption mode | Recommended |
+| Field        | Description                  | Required    |
+|--------------|------------------------------|-------------|
+| Name         | Interface identifier         | Yes         |
+| Host         | SMTP server hostname         | Yes         |
+| Port         | SMTP port (25, 465, 587)     | Yes         |
+| Username     | SMTP authentication user     | Usually     |
+| Password     | SMTP authentication password | Usually     |
+| From Address | Sender email address         | Yes         |
+| TLS/SSL      | Encryption mode              | Recommended |
 
 ## Common Configurations
 
@@ -61,8 +61,8 @@ TLS: STARTTLS
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| Connection refused | Check firewall, verify port |
+| Issue                 | Solution                                |
+|-----------------------|-----------------------------------------|
+| Connection refused    | Check firewall, verify port             |
 | Authentication failed | Verify credentials, check app passwords |
-| TLS error | Try different TLS mode |
+| TLS error             | Try different TLS mode                  |

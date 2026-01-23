@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 description: Use AI to aggregate, summarize, and deliver curated content from multiple sources with Anaphora.
-keywords: [AI summarization, news aggregation, content curation, LLM reports, Anaphora AI]
+keywords: [ AI summarization, news aggregation, content curation, LLM reports, Anaphora AI ]
 ---
 
 # AI News Collation
@@ -23,50 +23,26 @@ Create a daily digest that collects articles from multiple sources and provides 
 
 ### 1. Create the Job
 
-Name it: "Daily Industry Digest"
+1. Navigate to **Jobs**
+2. Click **Create New Job**
 
-### 2. Configure Multi-Source Capture
+### 2. Configure Capture
 
-```
-# Source 1: Tech news site
-Navigate → https://news.example.com/industry
-Capture value → .article-titles → $headlines1
-
-# Source 2: Blog aggregator
-Navigate → https://blogs.example.com/feed
-Capture value → .post-summaries → $headlines2
-
-# Source 3: Reddit/HN
-Navigate → https://reddit.com/r/industry
-Capture value → .post-titles → $headlines3
-```
-
-### 3. AI Processing
-
-Configure AI summarization in the composition phase:
-- Combine captured content
-- Generate executive summary
-- Highlight key trends
-- Create actionable insights
+1. Enable **Advanced** mode
+2. Add multiple **Navigate** actions for each source:
+	- Ensure that **Take Snapshot** is checked
+3. Add **AI** action to process captured content
+	- Set prompt to:
+		```
+		Summarize the following articles into an executive summary, highlighting key trends and actionable insights
+		```
+	- Ensure that all context is included
 
 ### 4. Compose the Digest
 
-Structure your report:
-1. AI-generated executive summary
-2. Top stories by category
-3. Trending topics
-4. Full article links
+1. Include the AI-generated summary
+2. Add other text blocks as needed
 
-### 5. Deliver
+### 5. Configure Delivery
 
-Send to subscribers via email with a clean, readable format.
-
-## Tips
-
-- Filter out duplicates across sources
-- Set appropriate content length limits
-- Include source attribution
-
-## Next Steps
-
-- [Branded Reports](./branded-reports) - Professional report styling
+- Add delivery interface and configure recipients

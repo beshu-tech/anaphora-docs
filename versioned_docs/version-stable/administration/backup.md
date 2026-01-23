@@ -1,87 +1,80 @@
 ---
 sidebar_position: 4
 description: Back up Anaphora configuration, jobs, and reports. Schedule automatic backups and restore from backup files.
-keywords: [Anaphora backup, configuration backup, disaster recovery, data protection, scheduled backup]
+keywords: [ Anaphora backup, configuration backup, disaster recovery, data protection, scheduled backup ]
 ---
 
 # Backup
 
-Protect your Anaphora configuration and data with regular backups.
+Protect your Anaphora configuration and data with backups. There are three ways to back up your Anaphora instance:
 
-## What to Back Up
+1. **UI Export** - Use the UI to create and download backup files.
+2. **API Export** - Use the API to programmatically export data.
+3. **Docker Volume Backup** - For Docker deployments, back up the data volume directly.
 
-| Component | Description | Priority |
-|-----------|-------------|----------|
-| Configuration | Jobs, templates, settings | Critical |
-| Reports | Generated report files | Important |
-| Database | User data, history | Critical |
-| Credentials | Encrypted secrets | Critical |
+:::tip
+**UI Export** and **API Export** will only back up the configuration and data stored within Anaphora.
+Report files are not included in these backups. So having a docker volume backup is recommended for complete data
+protection.
+:::
 
-## Backup Methods
+## UI Backup
 
-### Built-in Backup
+1. Access the **Settings** > **Data**.
+2. Click **Export to file** to download a backup of the current configuration and data.
+3. Store the backup file securely.
 
-1. Navigate to **Settings** > **Backup**
-2. Click **Create Backup**
-3. Download the backup file
-4. Store securely
+### UI Import
 
-### Scheduled Backups
+1. Go to **Settings** > **Data**
+2. Click **Import from file**
+3. Upload the backup file
 
-Configure automatic backups:
-
-| Setting | Description |
-|---------|-------------|
-| Frequency | Daily, weekly, monthly |
-| Retention | Number of backups to keep |
-| Location | Local or remote storage |
-| Encryption | Encrypt backup files |
-
-### Docker Volume Backup
+## Docker Volume Backup
 
 For Docker deployments, back up the data volume:
 
 ```bash
 docker run --rm \
-  -v anaphora-data:/data \
+  -v anaphora-content:/data/content \
+  -v anaphora-storage:/data/storage \
   -v $(pwd):/backup \
   alpine tar czf /backup/anaphora-backup.tar.gz /data
 ```
 
-## Restore
-
-### From UI
-
-1. Go to **Settings** > **Backup**
-2. Click **Restore**
-3. Upload backup file
-4. Confirm restoration
-
-### From Command Line
+### Docker Volume Import
 
 ```bash
 docker run --rm \
-  -v anaphora-data:/data \
+  -v anaphora-content:/content \
+  -v anaphora-storage:/storage \
   -v $(pwd):/backup \
   alpine tar xzf /backup/anaphora-backup.tar.gz -C /
 ```
 
-## Best Practices
+## API Backup
 
-- Back up before upgrades
-- Test restores regularly
-- Store backups off-site
-- Encrypt sensitive backups
-- Document recovery procedures
+**Authentication**: Use basic auth headers with a system user.
 
-## Disaster Recovery
+Get the backup via the following endpoint:
 
-Plan for disaster recovery:
+```
+GET /guest/api/export
+```
 
-1. Identify critical data
-2. Define recovery objectives (RTO/RPO)
-3. Document procedures
-4. Test recovery regularly
+**Response**: A downloadable backup file in `.ana` format.
+
+### API Import
+
+**Authentication**: Use basic auth headers with a system user.
+
+Upload the backup file via the following endpoint:
+
+```
+POST /guest/api/import
+```
+
+**Request Body**: `.ana` backup file as binary data.
 
 ## Next Steps
 

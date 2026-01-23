@@ -25,7 +25,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'basic-examples/kibana-dashboard-report',
         'basic-examples/kibana-alert',
-        'basic-examples/conditional-report',
+        'basic-examples/kibana-conditional-report',
         'basic-examples/grafana-dashboard-report',
       ],
     },
@@ -38,9 +38,8 @@ const sidebars: SidebarsConfig = {
       },
       items: [
         'advanced-examples/mixed-sources-report',
-        'advanced-examples/kibana-statistical-alert',
+        'advanced-examples/kibana-anomaly-alert',
         'advanced-examples/ai-news-collation',
-        'advanced-examples/branded-reports',
       ],
     },
     {

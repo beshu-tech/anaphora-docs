@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
 description: View and debug job execution history in Anaphora. Track run statuses, identify failures, and review captured content.
-keywords: [job runs, execution history, run status, debugging, job monitoring, Anaphora runs]
+keywords: [ job runs, execution history, run status, debugging, job monitoring, Anaphora runs ]
 ---
 
 # Runs
@@ -21,28 +21,9 @@ Every time a job executes, a **run** record is created. This allows you to:
 
 ## Run Statuses
 
-| Status | Description |
-|--------|-------------|
-| Success | Job completed and report delivered |
-| Partial | Some actions succeeded, others failed |
-| Failed | Job execution failed |
-| Skipped | Conditions not met, no report sent |
-
-## Viewing Run Details
-
-Select any run to view:
-
-- Execution timestamp
-- Job configuration at time of run
-- Captured screenshots and data
-- Delivery status and logs
-- Error messages (if any)
-
-## Debugging Failed Runs
-
-When a run fails, check:
-
-1. **Run logs** - Detailed execution trace
-2. **Screenshots** - Visual state at failure point
-3. **Network errors** - Connection or timeout issues
-4. **Selector changes** - Target page structure may have changed
+| Status          | Description                                                           |
+|-----------------|-----------------------------------------------------------------------|
+| Success         | Job completed and report delivered                                    |
+| Delivery issues | The report was created but could not be delivered to all destinations |
+| Failed          | Job execution failed                                                  |
+| Skipped         | Conditions not met, no report sent                                    |
