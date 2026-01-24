@@ -1,0 +1,36 @@
+.figure {
+  margin: 1.5rem 0;
+  padding: 0;
+}
+
+.imageWrapper {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow:
+    0 2px 8px -2px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] .imageWrapper {
+  box-shadow:
+    0 2px 12px -2px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.imageWrapper img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.caption {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-700);
+  text-align: center;
+  font-style: italic;
+}
+
+[data-theme='dark'] .caption {
+  color: var(--ifm-color-emphasis-500);
+}

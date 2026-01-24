@@ -8,7 +8,7 @@ keywords: [ LDAP, Active Directory, AD, directory integration, enterprise authen
 
 Connect to your enterprise directory for centralized user management. Supports Microsoft Active Directory, OpenLDAP, and
 other LDAP-compliant directories.
-![](images/ldap.png)
+![LDAP configuration panel showing connection settings including URL, Bind DN, search base, group mapping, and TLS options](images/ldap.png "Configure LDAP/Active Directory connection and group-to-role mapping")
 
 ## Overview
 

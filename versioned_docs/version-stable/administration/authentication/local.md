@@ -6,7 +6,7 @@ keywords: [ local authentication, user management, password policy, built-in use
 
 # Local Authentication
 
-![](images/local.png)
+![Local authentication settings showing user management interface with username, password, roles, and system role configuration](images/local.png "Manage local users with built-in authentication")
 Default authentication using Anaphora's built-in user database. Ideal for small teams, testing environments, or
 deployments without enterprise identity providers.
 

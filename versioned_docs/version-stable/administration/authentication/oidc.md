@@ -8,7 +8,7 @@ keywords: [ OpenID Connect, OIDC, OAuth, Google login, Auth0, Keycloak, OAuth 2.
 
 Integrate with OAuth 2.0 / OpenID Connect providers for modern authentication. OIDC provides a simpler setup than SAML while offering similar enterprise features.
 
-![](images/oidc.png)
+![OIDC configuration panel showing issuer URL, client credentials, scopes, claim mapping, and advanced settings](images/oidc.png "Configure OpenID Connect authentication with your identity provider")
 ## Overview
 
 OIDC integration provides:

@@ -7,7 +7,7 @@ keywords: [ self monitoring, health check, Prometheus, metrics, job monitoring, 
 # Self Monitoring
 
 Monitor Anaphora's health, job and delivery success.
-![](images/self-monitoring.png)
+![Health Monitoring settings panel with Job Health Alerts toggle, delivery interface selection, and frequency configuration options](images/self-monitoring.png "Configure health alerts to monitor job execution status")
 
 ## Health Monitoring
 

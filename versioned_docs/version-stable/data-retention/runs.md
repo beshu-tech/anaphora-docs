@@ -6,7 +6,7 @@ keywords: [ job runs, execution history, run status, debugging, job monitoring, 
 
 # Runs
 
-![Runs page showing job execution history with job name, type, timestamp, duration, status, and attempts columns](images/runs.png)
+![Runs page showing job execution history](images/runs.png "Job execution history with status, duration, and delivery details")
 
 The Runs section shows the execution history of your jobs, including successful captures, failures, and delivery status.
 

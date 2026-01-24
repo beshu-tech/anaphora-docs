@@ -9,7 +9,7 @@ keywords: [ multi-tenancy, Spaces, workspace isolation, team separation, RBAC ]
 Spaces provide multi-tenant workspace isolation in Anaphora. They act as "share-nothing" containers that completely
 separate resources between teams, projects, or tenants.
 
-![](images/spaces.png)
+![Spaces permissions panel showing user and role assignments with access level configuration for each space](images/spaces.png "Configure space permissions with role-based access control")
 
 ## Overview
 
@@ -90,7 +90,7 @@ Role: DevOps Team
 
 You can switch between Spaces using the Space selector in the sidebar.
 
-![space-selector.png](images/space-selector.png)
+![Space selector dropdown in the sidebar showing current space name with admin access level](images/space-selector.png "Switch between spaces using the sidebar selector")
 
 All resources you create or manage will be scoped to the selected Space.
 

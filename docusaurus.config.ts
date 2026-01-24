@@ -168,6 +168,13 @@ const config: Config = {
     },
     footer: {
       style: 'dark',
+      logo: {
+        alt: 'Anaphora Logo',
+        src: 'img/logo.png',
+        href: 'https://anaphora.it',
+        width: 48,
+        height: 48,
+      },
       links: [
         {
           title: 'Documentation',
@@ -183,6 +190,10 @@ const config: Config = {
             {
               label: 'Basic Examples',
               to: '/basic-examples/',
+            },
+            {
+              label: 'Jobs Configuration',
+              to: '/jobs/',
             },
           ],
         },

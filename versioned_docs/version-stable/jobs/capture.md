@@ -98,9 +98,8 @@ Advanced mode enables multi-step browser automation for complex scenarios.
 
 ```mermaid
 flowchart LR
-    A["Navigate to URL"]]
-    B --> C["Interact (click, type)"]
-    C --> D["Capture (snapshot to var)"]
+    A["Navigate to URL"] --> B["Interact (click, type)"]
+    B --> C["Capture (snapshot to var)"]
 ```
 
 ### Browser Actions
