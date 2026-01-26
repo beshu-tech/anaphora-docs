@@ -119,7 +119,7 @@ A "share-nothing" container that isolates jobs, delivery interfaces, AI provider
 ## Get Started Now
 
 :::tip 🚀 Try PRO or Enterprise Features
-**[Get a free trial key →](https://portal.anaphora.it)** — Instant activation, no credit card required.
+**[Get a free trial key →](https://portal.anaphora.it/trial)** — Instant activation, no credit card required.
 :::
 
 :::note 💬 Questions? Join the Community

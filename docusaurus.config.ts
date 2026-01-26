@@ -144,7 +144,7 @@ const config: Config = {
           position: 'left',
         },
         {
-          href: 'https://portal.anaphora.it',
+          href: 'https://portal.anaphora.it/trial',
           label: '🎁 Free Trial',
           position: 'right',
           className: 'navbar-trial-link',
@@ -206,7 +206,7 @@ const config: Config = {
             },
             {
               label: 'Free Trial Key',
-              href: 'https://portal.anaphora.it',
+              href: 'https://portal.anaphora.it/trial',
             },
             {
               label: 'Get a License',

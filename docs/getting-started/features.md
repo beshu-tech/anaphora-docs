@@ -10,7 +10,7 @@ Choose the edition that fits your needs. All editions include the **full reporti
 features and integrations.
 
 :::info 🚀 Ready to try PRO or Enterprise?
-**[Get a free trial key →](https://portal.anaphora.it)** — No credit card required. Instant activation.
+**[Get a free trial key →](https://portal.anaphora.it/trial)** — No credit card required. Instant activation.
 :::
 
 ## 🆓 Free Edition
@@ -137,7 +137,7 @@ docker run -p 3000:3000 \
 ## Get Your Trial Key
 
 :::tip 🎁 Try PRO or Enterprise Free
-**[Request a trial activation key →](https://portal.anaphora.it)**
+**[Request a trial activation key →](https://portal.anaphora.it/trial)**
 
 - Instant delivery — no waiting
 - Full access to all features
