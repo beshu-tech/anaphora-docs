@@ -15,6 +15,21 @@ All notable changes to Anaphora are documented here.
 - 🧐 **Enhancement** - Improvements to existing features
 - 🐞 **Fix** - Bug fixes
 
+---
+
+## [Unreleased]
+
+### 🧐 Enhancement: Performance Improvements
+
+<details>
+<summary>Optimized loading and saving times for Anaphora instances with large numbers of runs</summary>
+
+We improved the Anaphora database to handle large datasets more efficiently. This results in faster loading and saving times.
+
+</details>
+
+---
+
 ## [0.9.0] - 2026-01-15
 
 ### 🚀 New Feature: Grafana Connector
