@@ -19,12 +19,25 @@ All notable changes to Anaphora are documented here.
 
 ## [Unreleased]
 
+### 🧐 Enhancement: Storage Optimization
+
+<details>
+<summary>Optimized database to reduce storage usage</summary>
+
+We implemented storage optimizations in the Anaphora database, resulting in reduced disk usage for large datasets.
+
+- Deletions will now free up space more effectively
+- Removement of unnecessary internal data will immediately reduce storage usage
+
+</details>
+
 ### 🧐 Enhancement: Performance Improvements
 
 <details>
 <summary>Optimized loading and saving times for Anaphora instances with large numbers of runs</summary>
 
-We improved the Anaphora database to handle large datasets more efficiently. This results in faster loading and saving times.
+We improved the Anaphora database to handle large datasets more efficiently. This results in faster loading and saving
+times.
 
 </details>
 
