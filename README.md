@@ -14,7 +14,8 @@ yarn
 yarn start
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+This command starts a local development server and opens up a browser window. Most changes are reflected live without
+having to restart the server.
 
 ## Build
 
@@ -22,7 +23,8 @@ This command starts a local development server and opens up a browser window. Mo
 yarn build
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+This command generates static content into the `build` directory and can be served using any static contents hosting
+service.
 
 ## Deployment
 
@@ -38,5 +40,27 @@ Not using SSH:
 GIT_USER=<Your GitHub username> yarn deploy
 ```
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the
+`gh-pages` branch.
+
+## Versioning
+
+### Patch Release
+
+- Every push to `develop` branch creates a new patch release. The version number is automatically incremented.
+- In Docker Hub, a new image is created with a version tag like `preview-0.9.1`.
+- Add the changes to the `Unreleased` section of the [CHANGELOG](./docs/changelog.md). If no `Unreleased` section
+  exists, create one at the top of the changelog.
+- If the change is related to a customer issue, report back to the customer with the preview image tag and a link to the
+  changelog entry.
+
+### Minor Release
+
+- At the end of a development cycle, create a PR to merge `develop` into `main`.
+- After the merge, the version number is automatically incremented to the next minor version.
+- In Docker Hub, a new image is created with a version tag like `0.9.0` and `latest`.
+- Update the changelog by renaming the `Unreleased` section to the new version and date, and add any additional changes
+  that were not included in patch releases.
+
+To create a new stable documentation version, run 
 
