@@ -62,5 +62,8 @@ If you are using GitHub pages for hosting, this command is a convenient way to b
 - Update the changelog by renaming the `Unreleased` section to the new version and date, and add any additional changes
   that were not included in patch releases.
 
-To create a new stable documentation version, run ´´
+To create a new stable documentation version, run ```npm run update-stable-version```. This will:
+
+- Make the current `docs/` content available under `versioned_docs/version-stable/`
+- Every change that was made in the `docs/` directory will be available in the main documentation now.
 
