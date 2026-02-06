@@ -12,7 +12,8 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "update-stable-version": "npx tsx scripts/remove-stable-version.ts && docusaurus docs:version stable && git restore --staged --worktree docusaurus.config.ts"
   },
   "dependencies": {
     "@docusaurus/core": "3.9.2",
