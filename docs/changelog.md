@@ -19,6 +19,43 @@ All notable changes to Anaphora are documented here.
 
 ## [Unreleased]
 
+### 🚀 Feature: License Expiration Warning
+
+<details>  
+<summary>Display warning when license is close to expiration and send notification</summary>  
+
+When the Anaphora license is nearing its expiration date, a warning message is now displayed in the Anaphora Web UI.
+
+If health alerts are configured, a notification will also be sent to the defined channel. This enables administrators to
+renew the license in time and prevent any potential service interruption.
+
+</details>  
+
+### 🐞 Fix: Kibana Discover Hits Variable Could Not Be Used in Reports
+
+<details>  
+<summary>Fixed issue where Kibana Discover hits variable was not available in report composition</summary>  
+
+The Kibana Discover hits variable, which returns the number of results from a Discover query, was not available during
+report composition. This issue has been resolved, and the variable can now be used to dynamically include hit counts
+within reports.
+
+</details>  
+
+### 🚨 Security Fix: Removal of YAML Import/Export for System Settings
+
+<details>  
+<summary>Removed YAML import/export of system settings to prevent corrupted data</summary>  
+
+The YAML import/export functionality for system settings has been removed. This capability is no longer required due to
+the new Import/Export feature available under `/settings/data`.
+
+The updated approach supports exporting and importing all relevant data at once (including settings, jobs, delivery
+interfaces, and more). It also properly handles version changes, preventing data corruption and ensuring that exports
+created in older versions remain compatible with newer versions of Anaphora.
+
+</details>
+
 ### 🧐 Enhancement: Storage Optimization
 
 <details>
