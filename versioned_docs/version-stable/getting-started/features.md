@@ -126,7 +126,7 @@ docker run -p 3000:3000 \
 3. Enter your activation key
 4. Click **Activate**
 
-![Activation Key settings panel showing license information, current edition status, and key input field](images/activationkey.png "Enter your activation key to unlock PRO or Enterprise features")
+![](images/activationkey.png)
 
 ### Key Benefits
 
