@@ -19,6 +19,17 @@ All notable changes to Anaphora are documented here.
 
 ## [Unreleased]
 
+### 🚀 Enhancement: Create Delivery Interfaces Directly from Job Configuration
+
+<details>  
+<summary>Enables creating delivery interfaces inside job configuration without navigation</summary>
+
+When setting up a job's delivery configuration, you can now create new delivery interfaces directly within the job
+configuration flow. This eliminates the need to navigate to the separate Delivery Interfaces page, streamlining
+the setup process.
+
+</details>  
+
 ### 🚀 Feature: License Expiration Warning
 
 <details>  
