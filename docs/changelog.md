@@ -17,7 +17,7 @@ All notable changes to Anaphora are documented here.
 
 ---
 
-## [Unreleased]
+## [0.10.0] - 2026-03-04
 
 ### 🚀 Enhancement: Create Delivery Interfaces Directly from Job Configuration
 
