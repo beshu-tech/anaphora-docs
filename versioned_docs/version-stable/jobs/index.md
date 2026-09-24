@@ -6,7 +6,7 @@ keywords: [ Anaphora jobs, report scheduling, capture configuration, delivery se
 
 # Jobs - Automated Report Configuration
 
-At the heart of Anaphora is the **Job**—a scheduled unit of execution that utilizes a headless browser to interact with web pages. A job is not just a screenshot tool; it is a programmable workflow that can navigate, interact, extract data, and apply conditional logic.
+At the heart of Anaphora is the **Job**—a scheduled unit of execution that uses a headless browser to interact with web pages. A job is not just a screenshot tool; it is a programmable workflow that can navigate, interact, extract data, and apply conditional logic.
 
 ## Job Structure
 
@@ -27,8 +27,9 @@ Jobs can perform complex interactions with web applications:
 
 - **Click elements** - Buttons, links, menu items
 - **Type text** - Search boxes, form fields, filters
+- **Enter** - Press Enter in a form field
 - **Navigate** - Follow links, handle redirects, manage authentication
-- **Wait conditions** - Wait for elements to appear, data to load, or animations to complete
+- **Wait conditions** - Wait for elements to appear (**Wait for visible**) or for a number of seconds (**Wait before continue**)
 
 ### Capture Data
 
@@ -45,11 +46,11 @@ Extract information in multiple formats:
 
 Implement sophisticated automation with:
 
-- **Conditional execution** - `if/else` blocks based on extracted values
-- **Wait conditions** - `wait until visible`, `wait for text`
-- **Reload strategies** - Force reload, clear cache, retry on failure
+- **Conditional execution** - **Conditional block** actions based on extracted values
+- **Wait conditions** - **Wait for visible**, **Wait before continue**
+- **Reload and retry** - **Reload** the page; **Retry on failure** retries a failed run
 - **Variables** - Store and reuse extracted values throughout the workflow
-- **Break conditions** - Stop execution if criteria aren't met (useful for alerts)
+- **Break conditions** - Stop execution if criteria are not met (useful for alerts)
 
 ## Job Types
 
@@ -88,7 +89,7 @@ Capture Dashboard -> Send to AI -> Receive Analysis -> Include in Report
 
 ## Visual Composer
 
-The Composer tab allows you to design professional reports:
+Use the **Compose** tab to design professional reports:
 
 | Setting | Description |
 |---------|-------------|
@@ -102,15 +103,15 @@ Combine visual snapshots with AI-generated summaries for comprehensive, polished
 
 ## Creating a Job
 
-1. Navigate to **Jobs** in the sidebar
-2. Click **Create New**
+1. Go to **Jobs** in the sidebar
+2. Click **Create Job**, then select **Create New** (or a template)
 3. Configure each tab:
    - **General** - Set name, schedule, and basic settings
    - **Capture** - Define what to capture and extraction logic
-   - **Composer** - Design the report layout and branding
-   - **Delivery** - Select delivery channels and recipients
-4. **Test** the job to verify it works correctly
-5. **Save and activate**
+   - **Compose** - Design the report layout and branding
+   - **Deliver** - Select delivery channels and recipients
+4. Test the job: click **Test capture** in the **Capture** tab, or a test run button in the **Deliver** tab
+5. Click **Save**. A new job is active by default. Use the **Active** switch in the job list to suspend it or activate it again
 
 ## Next Steps
 

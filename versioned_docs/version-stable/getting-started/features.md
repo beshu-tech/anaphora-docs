@@ -36,6 +36,7 @@ features and integrations.
 In the Free edition, every account is a system user, and Spaces are not available.
 When you reach a limit, the interface asks you to upgrade before you add another job, delivery interface or AI provider.
 A job with more than three capture actions cannot be saved until you upgrade.
+The server checks these limits for every write, also through the [API](../administration/agent-api.md) and for imports.
 :::
 
 ---
@@ -129,8 +130,8 @@ docker run -p 3000:3000 \
 
 **Option 2: Admin UI**
 
-1. Go to **Settings** → **System** → **Activation Key**
-2. Click on Load another
+1. Go to **Settings** > **System** > **Activation key**
+2. Click **Load another**
 3. Enter your activation key
 4. Click **Activate**
 

@@ -45,7 +45,7 @@ flowchart TB
 ## Core Concepts
 
 ### Job
-The main configuration unit — a periodic execution that captures, composes, and delivers reports. Configured across four tabs: General, Capture, Composer, and Delivery.
+The main configuration unit — a periodic execution that captures, composes, and delivers reports. Configured across four tabs: General, Capture, Compose and Deliver.
 
 ![Job configuration showing the General tab with name, description, and timing settings](images/capture-tab.png)
 

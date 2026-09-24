@@ -16,6 +16,7 @@ users, permissions, and system health.
 | [Authentication](/administration/authentication/)  | User authentication and access control |
 | [Spaces](/administration/spaces)                   | Multi-tenant workspace management      |
 | [AI Providers](/administration/ai-providers)       | Configure AI for intelligent analysis  |
+| [API for AI Agents](./agent-api.md)     | Let an AI agent build jobs via the API |
 | [Self Monitoring](/administration/self-monitoring) | System health and metrics              |
 | [Backup](/administration/backup)                   | Data backup and recovery               |
 
@@ -29,5 +30,6 @@ manage the global settings.
 - [Authentication](/administration/authentication/) - Configure identity providers
 - [Spaces](/administration/spaces) - Set up multi-tenant workspaces
 - [AI Providers](/administration/ai-providers) - Configure AI for intelligent analysis
+- [API for AI Agents](./agent-api.md) - Let an AI agent build jobs via the API
 - [Self Monitoring](/administration/self-monitoring) - Monitor system health
 - [Backup](/administration/backup) - Configure backup and recovery

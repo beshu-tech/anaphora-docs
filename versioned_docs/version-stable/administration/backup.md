@@ -45,9 +45,18 @@ the future. A legacy import has three modes:
 | Validate the imported file but autofix when possible            | Repairs what it can                         |
 | Do not validate the imported file (Use at own risk)             | Imports the file as it is                   |
 
+A file with a template that has no page is refused by the first option. Pick the autofix option to repair it on the
+way in. A refused import names the template and the field.
+
+## Automatic Database Backup Before an Upgrade
+
+Before a new version changes the database, Anaphora writes a copy of it to `storage/backups/`. It keeps the three
+newest copies. See [Upgrading](../getting-started/upgrading.md#automatic-database-backups).
+
 ## Docker Volume Backup
 
-For Docker deployments, back up the data volume:
+If you mount host folders, as in the [Docker Compose](../getting-started/installation.md#docker-compose) example, back
+up the `storage/` and `content/` folders. For named Docker volumes, back up the data volume:
 
 ```bash
 docker run --rm \
