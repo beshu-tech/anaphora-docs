@@ -90,12 +90,16 @@ High-frequency sampling + throttling creates an alerting-style workflow:
 ## Retry Policy
 
 Enable retries to retry failed runs automatically after failures.
-When enabled, set how many times the run should be retried before giving up.
+When enabled, set how many times the run should be retried before giving up. A new job retries 3 times.
+Each retry waits longer than the one before it.
 
 ## Housekeeping (Data Retention)
 
-Enable run expire time to automatically delete old runs and reports after a specified period.
+Enable **Run Expire Time** to automatically delete old runs and reports after a specified period.
 This helps manage storage usage over time.
+
+A new job keeps its runs for six months. Untick the option to keep runs forever (**Never expire**). An hourly clean-up
+deletes the expired runs and their report files.
 
 :::warning Storage Impact
 High-frequency jobs generate more data. Without housekeeping:

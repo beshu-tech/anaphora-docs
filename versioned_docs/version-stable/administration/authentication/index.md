@@ -54,6 +54,13 @@ Users are assigned permissions within specific spaces:
 | Manage users               | Yes         | No          | No              | No             |
 | Manage spaces              | Yes         | No          | No              | No             |
 | Global settings            | Yes         | No          | No              | No             |
+| Export and import data     | Yes         | No          | No              | No             |
+
+Every action on jobs, templates, delivery interfaces and AI providers checks your access to the space that holds them.
+
+:::note Free edition
+In the Free edition, every account has the System role.
+:::
 
 ### Add User Permissions
 

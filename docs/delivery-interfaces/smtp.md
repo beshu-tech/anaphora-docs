@@ -62,6 +62,12 @@ Connection security: STARTTLS
 3. Enter the **Test email** address. The subject and the body are optional.
 4. Click **Send test email**, and make sure that the email arrives.
 
+## Sending Behavior
+
+Anaphora sends the emails of a run one at a time, over one connection. So a server that allows few connections accepts
+every recipient. Every SMTP timeout is at most one minute. After a server failure, Anaphora marks the other recipients
+as failed at once.
+
 ## Troubleshooting
 
 | Issue                 | Solution                                |

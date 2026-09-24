@@ -97,6 +97,24 @@ GET /guest/api/health
 | **red**    | All recent runs failed     |
 | **gray**   | No recent activity         |
 
+### Run States
+
+Each entry of `recentRuns` has a `state`:
+
+| State       | Meaning                                                                            |
+|-------------|------------------------------------------------------------------------------------|
+| `success`   | The run succeeded and its report was delivered                                     |
+| `partial`   | The report reached some delivery interfaces or recipients, but not all            |
+| `failed`    | The capture failed, or the report reached nobody (for example a withheld report)  |
+
+A job is green when its last five runs are all `success`, and red when they are all `failed`. A `partial` run makes the
+job yellow, not red: one address that refuses the mail keeps the job yellow.
+
+### AI Budget Alerts
+
+The delivery interface of the health alerts also carries the [AI token budget](./ai-providers.md#budget-alerts) alerts.
+You can set it without switching health monitoring on.
+
 ## Next Steps
 
 - [Backup](./backup) - Configure backups

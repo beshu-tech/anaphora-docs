@@ -28,20 +28,45 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser and log
 
 ### Environment Variables
 
-| Variable            | Description                                     | Required    | Example                            |
-|---------------------|-------------------------------------------------|-------------|------------------------------------|
-| `PUBLIC_URL`        | External URL where Anaphora is accessible       | Yes         | `http://anaphora.example.com:3000` |
-| `DB_ENCRYPTION_KEY` | Key used to encrypt the DB.                     | Recommended | `your-encryption-key`              |
-| `ADMIN_USERNAME`    | Initial admin username                          | No          | `admin`                            |
-| `ADMIN_PASSWORD`    | Initial admin password                          | No          | `your-secure-password`             |
-| `ACTIVATION_KEY`    | License / activation key for Anaphora           | No          | `xxxx-xxxx-xxxx-xxxx`              |
-| `DEBUG`             | Enable debug logging                            | No          | `false`                            |
-| `WORKER_COUNT`      | Number of concurrent Puppeteer worker instances | No          | `2`                                |
+| Variable            | Description                                                                                  | Required    | Example                            |
+|---------------------|----------------------------------------------------------------------------------------------|-------------|------------------------------------|
+| `PUBLIC_URL`        | External URL where Anaphora is accessible                                                    | Yes         | `http://anaphora.example.com:3000` |
+| `DB_ENCRYPTION_KEY` | Key that encrypts the database. Without it, a built-in default key is used.                  | Recommended | `your-encryption-key`              |
+| `ADMIN_USERNAME`    | Initial admin username                                                                       | No          | `admin`                            |
+| `ADMIN_PASSWORD`    | Initial admin password                                                                       | No          | `your-secure-password`             |
+| `ACTIVATION_KEY`    | License / activation key for Anaphora                                                        | No          | `xxxx-xxxx-xxxx-xxxx`              |
+| `DEBUG`             | Enable debug logging                                                                         | No          | `false`                            |
+| `WORKER_COUNT`      | Number of concurrent Puppeteer worker instances                                              | No          | `2`                                |
+| `SKIP_NOTIFIER`     | Set to `true` to send no notifications at all. Every delivery is skipped, as in a test run.  | No          | `false`                            |
+| `AI_PROVIDER`       | Adds an AI provider when the database is created: `openai`, `deepseek` or `custom`           | No          | `deepseek`                         |
+| `AI_MODEL`          | Model of that AI provider                                                                    | No          | `deepseek-chat`                    |
+| `AI_API_KEY`        | API key of that AI provider                                                                  | No          | `sk-...`                           |
 
 :::tip Production Deployment
 For production, use a strong `DB_ENCRYPTION_KEY` and set `PUBLIC_URL` to your actual external URL (this is used for
 callback URLs in SSO configurations).
 :::
+
+:::warning Keep the database key
+Set `DB_ENCRYPTION_KEY` before the first start and keep it. The database does not open with another key.
+:::
+
+### AI Provider from the Environment
+
+`AI_PROVIDER`, `AI_MODEL` and `AI_API_KEY` add one AI provider, named **Default Provider**, to the default space.
+Anaphora reads them once, when it creates the database. Set all three, or none. After that, manage the provider on the
+[AI Providers](../administration/ai-providers.md) page.
+
+### Demo Data
+
+For a preview or evaluation instance, Anaphora can fill an empty database with demo content:
+
+| Variable     | Description                                                                                                                                      | Example                                |
+|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|
+| `SEED_DEMO`  | Set to `1` to add demo jobs, runs, delivery interfaces and settings at start. Anaphora does this only when the database holds no job.            | `1`                                    |
+| `DEMO_USERS` | Extra local users next to the admin, as `name:password:role`, separated by commas. The role is `admin` (a system user) or `user` (read-only). | `alice:Welcome:admin,bob:Welcome:user` |
+
+`DEMO_USERS` works without `SEED_DEMO`. An entry with an error is skipped and logged.
 
 ### Docker Compose
 
@@ -52,6 +77,7 @@ version: '3.8'
 services:
   anaphora:
     image: beshultd/anaphora
+    init: true # reaps finished browser processes
     ports:
       - "3000:3000"
     volumes:
@@ -75,6 +101,19 @@ volumes:
 The `ACTIVATION_KEY` unlocks PRO or Enterprise features.
 **[Request your free trial key →](https://portal.anaphora.it/trial)** — instant activation, no credit card required.
 :::
+
+## Updating Anaphora
+
+Before you update, [back up](../administration/backup.md) your data. Then pull the new image and start the container
+again:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+If you use `docker run`, run `docker pull beshultd/anaphora:latest`, then remove the old container and start a new one
+with the same options.
 
 ## Need Help?
 

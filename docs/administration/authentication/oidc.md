@@ -145,6 +145,40 @@ Default: `openid`, `profile`, `email`
 Be careful with custom scopes. Adding non-existing scopes may cause authentication errors, such as redirect loops back to the login URL after authorization.
 :::
 
+## Configure from the Environment
+
+Instead of the settings page, you can configure OIDC with environment variables. This is an Enterprise feature.
+
+| Variable               | Required | Default                | Description                                                                         |
+|------------------------|----------|------------------------|-------------------------------------------------------------------------------------|
+| `OIDC_ISSUER`          | Yes      |                        | The issuer URL, as the browser reaches it                                           |
+| `OIDC_CLIENT_ID`       | Yes      |                        | The client ID                                                                       |
+| `OIDC_CLIENT_SECRET`   | Yes      |                        | The client secret                                                                   |
+| `OIDC_INTERNAL_ISSUER` | No       |                        | The issuer URL as the Anaphora container reaches it, when the two are not the same |
+| `OIDC_SCOPES`          | No       | `openid profile email` | The scopes to request, separated by spaces                                          |
+| `OIDC_USERNAME_CLAIM`  | No       | `preferred_username`   | The claim that names the user                                                       |
+| `OIDC_GROUPS_CLAIM`    | No       | `groups`               | The claim that lists the user's roles                                               |
+
+- The three required variables switch OIDC on. A partial set logs a warning and leaves OIDC off.
+- The identity provider must allow the callback `<PUBLIC_URL>/auth/login-oidc/callback`.
+- The identity provider must send the user's roles (`admin`, `user`, `superuser`) in the claim that
+  `OIDC_GROUPS_CLAIM` names.
+- The environment owns these settings. The settings page cannot change them, and the client secret stays in memory. It
+  is never written to the database.
+- A new installation starts with OIDC in its list of sign-in methods. On an existing installation, switch OIDC on under
+  **Settings**, in the list of sign-in methods.
+- Anaphora reads the variables at every start.
+
+The other settings use fixed values: `client_secret_basic` as auth method, the userInfo endpoint as user info source,
+and `<OIDC_ISSUER>/protocol/openid-connect/logout` as logout address. The logout address is the Keycloak form.
+
+:::tip Keycloak in the same Docker network
+When the browser reaches Keycloak at a public URL and the Anaphora container reaches it at an internal URL, set
+`OIDC_ISSUER` to the public URL and `OIDC_INTERNAL_ISSUER` to the internal one, for example
+`http://keycloak:8080/realms/your-realm`. Anaphora uses the internal URL for discovery and for the calls from the
+server. Keycloak must publish the browser endpoints under the public URL (`KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true`).
+:::
+
 ## Claim Mapping
 
 Map OIDC claims to Anaphora user fields.

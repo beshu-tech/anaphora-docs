@@ -38,6 +38,12 @@ Turn on the **Advanced** switch to type a CRON expression in the **Cron** field:
 | `*/10 * * * *`  | Every 10 minutes         |
 | `0 9,17 * * *`  | At 9:00 AM and 5:00 PM   |
 
+Anaphora refuses to save a CRON expression that the scheduler cannot run, for example `0 */25 * * *`. A stored job with
+such an expression shows **Never runs** on the Jobs list.
+
+If Anaphora is down when a job should run, it does not run the job late. The job runs at its next scheduled time, and
+the log at start names the runs that were missed.
+
 ## Notification Throttling
 
 **Max Notify Freq** sets the minimum time between two delivered reports, whatever the job frequency. A run inside this
@@ -98,11 +104,17 @@ to 10. New jobs use 3 retries.
 Anaphora retries in increasing intervals: 5 minutes, 15 minutes, 30 minutes, 1 hour, 2 hours, 4 hours, 12 hours,
 1 day, 2 days, and 3 days after the initial failure.
 
+- A run is retried when its capture fails, or when its report reached no destination. A report that reached some
+  destinations is not sent again.
+- A capture that runs longer than 30 minutes is stopped, stored as failed, and retried.
+- Retries are listed under the run that failed first, in its **Attempts**.
+- If you start a manual run after a scheduled run failed, the pending retries of the scheduled run still happen.
+
 ## Housekeeping (Data Retention)
 
 Select the **Run Expire Time** checkbox to delete old runs and their reports automatically after the time you set
 (months, days, and hours). New jobs use 6 months. Clear the checkbox to keep runs forever (**Never expire**).
-This helps manage storage usage over time.
+An hourly clean-up deletes the expired runs and their report files.
 
 :::warning Storage Impact
 High-frequency jobs generate more data. Without housekeeping:

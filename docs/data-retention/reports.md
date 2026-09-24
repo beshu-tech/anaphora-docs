@@ -27,3 +27,12 @@ Access reports through:
 Most importantly, reports are delivered to configured destinations (email, Slack, S3, webhooks).
 However, Anaphora also stores copies of generated reports for reference.
 In the job's **General** tab, **Housekeeping** > **Run Expire Time** sets how long Anaphora keeps them.
+
+## Private Report Links
+
+Report links are private. Every run has a secret token, and the links in a delivered email, Slack message or webhook
+carry it. The report files (PDF, HTML, images) open for a link with the token, or for a signed-in member of the run's
+space. Anyone else gets "not found".
+
+Runs from before the upgrade to this version keep the links that Anaphora already sent, until the runs expire or are
+deleted.

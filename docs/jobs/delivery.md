@@ -81,6 +81,9 @@ Emails sent to individual mailboxes include a snooze and unsubscribe link in the
 these links.
 :::
 
+A snooze pauses the job's emails to that recipient for 5 minutes to 8 days. The recipient must pick a duration. The
+unsubscribe link stops the emails.
+
 ## Webhook Delivery
 
 Webhooks enable custom integrations with any HTTP endpoint.
@@ -126,12 +129,29 @@ With multi-channel delivery:
 
 - Each channel is attempted independently
 - Partial success (some channels succeed, others fail) is logged
+- The run and the Jobs list show **Delivery issue**. Job health counts a report that reached nobody as failed, and a
+  report that reached some destinations as partly delivered.
+
+## Report Links
+
+The links in a delivered email, Slack message or webhook are private. Each run has a secret token, and the links carry
+it. The report files (PDF, HTML, images) open for a link with that token, or for a signed-in member of the run's space.
+Anyone else gets "not found".
+
+## Withheld Reports
+
+When a text block of the report fails, or the report cannot be built, Anaphora does not deliver it. No recipient, bucket
+or webhook gets it. The Jobs list shows the job as **Not delivered**, and job health counts the run as failed. The run
+does not count as sent, so a throttled job sends the next run. See [Composer](./composer.md#errors-in-a-text-block).
+
+With the S3 file type **PDF & HTML Report**, nothing is uploaded when the HTML copy cannot be built.
 
 ## Testing Delivery
 
 Every delivery config includes a test button: **Run with test email** for SMTP and Mailgun, **Test run** for Webhook
 and S3 Object Storage. Use it to verify configuration before saving the job. **Test run without delivery** runs the job
-and shows the output without notifying any recipients.
+and shows the output without notifying any recipients. A test
+withholds a report with a broken text block in the same way, and says so.
 All steps during the capture and delivery process are logged for troubleshooting.
 Select **Debug test run** in the button menu to also receive a video of the capture process.
 

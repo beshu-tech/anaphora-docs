@@ -21,6 +21,22 @@ On first launch:
 
 <!-- todo Extend, go more into details of configuring the admin UI -->
 
+## Theme
+
+Anaphora has a light theme and a dark theme. To choose one, open **Theme** at the bottom of the sidebar:
+
+| Option     | Result                                                          |
+|------------|-----------------------------------------------------------------|
+| **Light**  | The light theme. This is the default.                           |
+| **Dark**   | The dark theme.                                                 |
+| **System** | Follows your operating system, and switches when the OS does.   |
+
+Anaphora stores the choice in a cookie, so it applies per browser. The login page and the authentication settings use
+the same theme.
+
+Reports always stay on white paper. The template page, the text editor and the preview show what your recipients see,
+in both themes.
+
 ## Next Steps
 
 - [Features & Editions](./features) - Compare Free, PRO, and Enterprise

@@ -54,6 +54,14 @@ Most users must have the `user` role. At least one local user must have the `sys
 In the Free edition, all local users are system users, and the **Roles** and **System role** fields do not show.
 :::
 
+### Password Storage
+
+Anaphora stores local passwords as salted scrypt hashes. A login attempt takes the same time whether the account exists
+or not.
+
+Accounts from older versions keep working. The log can say that some local users "still carry the legacy sha512 password
+hash". Save their passwords again to store the new kind of hash.
+
 ### Managing Local Users
 
 Only system users manage local users. Users cannot change their own accounts.

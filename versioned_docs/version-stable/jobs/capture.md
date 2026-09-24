@@ -121,6 +121,11 @@ flowchart LR
 | **Capture snapshot** | Screenshot element to variable | Chart, panel, full page  |
 | **Calculate**        | Arithmetic on variables        | `errors / total * 100`   |
 
+:::note Equation limits
+An equation in a **Calculate** action runs with a time limit and a memory limit. It cannot create a matrix with more
+than one million cells. The job editor checks equations when you save the job.
+:::
+
 ### Control Flow Actions
 
 | Action                | Description          | Example                          |
