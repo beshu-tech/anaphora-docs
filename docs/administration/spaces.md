@@ -57,6 +57,13 @@ While resources cannot be shared, they can be copied:
 
 The same process applies to delivery interfaces.
 
+To copy, you need these permissions in the Space the resource comes from:
+
+| Resource                                  | Permission needed |
+|-------------------------------------------|-------------------|
+| Job                                       | ReadWrite         |
+| Delivery interface, AI provider, template | Admin             |
+
 ## Creating Spaces
 
 1. Navigate to **Settings** > **System Settings** >  **Permissions**

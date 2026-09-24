@@ -42,7 +42,7 @@ Create an OAuth/OIDC application in your identity provider.
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
 2. APIs & Services > Credentials > Create Credentials > OAuth Client ID
 3. Application type: Web application
-4. Authorized redirect URIs: `https://anaphora.company.com/oauth/callback`
+4. Authorized redirect URIs: `https://anaphora.company.com/auth/login-oidc/callback`
 5. Copy Client ID and Client Secret
 
 #### Auth0
@@ -50,7 +50,7 @@ Create an OAuth/OIDC application in your identity provider.
 1. Applications > Create Application
 2. Choose "Regular Web Application"
 3. Settings tab:
-   - Allowed Callback URLs: `https://anaphora.company.com/oauth/callback`
+   - Allowed Callback URLs: `https://anaphora.company.com/auth/login-oidc/callback`
    - Allowed Logout URLs: `https://anaphora.company.com`
 4. Copy Domain, Client ID, and Client Secret
 
@@ -60,7 +60,7 @@ Create an OAuth/OIDC application in your identity provider.
 2. Client ID: `anaphora`
 3. Client Protocol: openid-connect
 4. Access Type: confidential
-5. Valid Redirect URIs: `https://anaphora.company.com/oauth/callback`
+5. Valid Redirect URIs: `https://anaphora.company.com/auth/login-oidc/callback`
 6. Copy Client Secret from Credentials tab
 
 #### Okta
@@ -68,13 +68,13 @@ Create an OAuth/OIDC application in your identity provider.
 1. Applications > Create App Integration
 2. Sign-in method: OIDC
 3. Application type: Web Application
-4. Sign-in redirect URIs: `https://anaphora.company.com/oauth/callback`
+4. Sign-in redirect URIs: `https://anaphora.company.com/auth/login-oidc/callback`
 5. Copy Client ID and Client Secret
 
 #### Azure AD
 
 1. App registrations > New registration
-2. Redirect URI: Web > `https://anaphora.company.com/oauth/callback`
+2. Redirect URI: Web > `https://anaphora.company.com/auth/login-oidc/callback`
 3. Certificates & secrets > New client secret
 4. Copy Application (client) ID and secret value
 
@@ -127,6 +127,40 @@ Default: `openid`, `profile`, `email`
 
 :::caution Custom Scopes
 Be careful with custom scopes. Adding non-existing scopes may cause authentication errors, such as redirect loops back to the login URL after authorization.
+:::
+
+## Configure from the Environment
+
+Instead of the settings page, you can configure OIDC with environment variables. This is an Enterprise feature.
+
+| Variable               | Required | Default                | Description                                                                         |
+|------------------------|----------|------------------------|-------------------------------------------------------------------------------------|
+| `OIDC_ISSUER`          | Yes      |                        | The issuer URL, as the browser reaches it                                           |
+| `OIDC_CLIENT_ID`       | Yes      |                        | The client ID                                                                       |
+| `OIDC_CLIENT_SECRET`   | Yes      |                        | The client secret                                                                   |
+| `OIDC_INTERNAL_ISSUER` | No       |                        | The issuer URL as the Anaphora container reaches it, when the two are not the same |
+| `OIDC_SCOPES`          | No       | `openid profile email` | The scopes to request, separated by spaces                                          |
+| `OIDC_USERNAME_CLAIM`  | No       | `preferred_username`   | The claim that names the user                                                       |
+| `OIDC_GROUPS_CLAIM`    | No       | `groups`               | The claim that lists the user's roles                                               |
+
+- The three required variables switch OIDC on. A partial set logs a warning and leaves OIDC off.
+- The identity provider must allow the callback `<PUBLIC_URL>/auth/login-oidc/callback`.
+- The identity provider must send the user's roles (`admin`, `user`, `superuser`) in the claim that
+  `OIDC_GROUPS_CLAIM` names.
+- The environment owns these settings. The settings page cannot change them, and the client secret stays in memory. It
+  is never written to the database.
+- A new installation starts with OIDC in its list of sign-in methods. On an existing installation, switch OIDC on under
+  **Settings**, in the list of sign-in methods.
+- Anaphora reads the variables at every start.
+
+The other settings use fixed values: `client_secret_basic` as auth method, the userInfo endpoint as user info source,
+and `<OIDC_ISSUER>/protocol/openid-connect/logout` as logout address. The logout address is the Keycloak form.
+
+:::tip Keycloak in the same Docker network
+When the browser reaches Keycloak at a public URL and the Anaphora container reaches it at an internal URL, set
+`OIDC_ISSUER` to the public URL and `OIDC_INTERNAL_ISSUER` to the internal one, for example
+`http://keycloak:8080/realms/your-realm`. Anaphora uses the internal URL for discovery and for the calls from the
+server. Keycloak must publish the browser endpoints under the public URL (`KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true`).
 :::
 
 ## Claim Mapping

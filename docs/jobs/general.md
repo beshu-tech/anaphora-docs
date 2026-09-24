@@ -38,6 +38,12 @@ Toggle **Advanced** to use CRON expressions for precise scheduling:
 | `*/10 * * * *`  | Every 10 minutes         |
 | `0 9,17 * * *`  | At 9:00 AM and 5:00 PM   |
 
+Anaphora refuses to save a CRON expression that the scheduler cannot run, for example `0 */25 * * *`. A stored job with
+such an expression shows **Never runs** on the Jobs list.
+
+If Anaphora is down when a job should run, it does not run the job late. The job runs at its next scheduled time, and
+the log at start names the runs that were missed.
+
 ## Notification Throttling
 
 **Max Notify Frequency** controls the maximum notification rate regardless of how often the job runs. This is especially
@@ -90,12 +96,22 @@ High-frequency sampling + throttling creates an alerting-style workflow:
 ## Retry Policy
 
 Enable retries to retry failed runs automatically after failures.
-When enabled, set how many times the run should be retried before giving up.
+When enabled, set how many times the run should be retried before giving up. A new job retries 3 times.
+Each retry waits longer than the one before it.
+
+- A run is retried when its capture fails, or when its report reached no destination. A report that reached some
+  destinations is not sent again.
+- A capture that runs longer than 30 minutes is stopped, stored as failed, and retried.
+- Retries are listed under the run that failed first, in its **Attempts**.
+- If you start a manual run after a scheduled run failed, the pending retries of the scheduled run still happen.
 
 ## Housekeeping (Data Retention)
 
-Enable run expire time to automatically delete old runs and reports after a specified period.
+Enable **Run Expire Time** to automatically delete old runs and reports after a specified period.
 This helps manage storage usage over time.
+
+A new job keeps its runs for six months. Untick the option to keep runs forever (**Never expire**). An hourly clean-up
+deletes the expired runs and their report files.
 
 :::warning Storage Impact
 High-frequency jobs generate more data. Without housekeeping:

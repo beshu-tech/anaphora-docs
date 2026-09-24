@@ -12,6 +12,10 @@ Protect your Anaphora configuration and data with backups. There are three ways 
 2. **API Export** - Use the API to programmatically export data.
 3. **Docker Volume Backup** - For Docker deployments, back up the data volume directly.
 
+:::note System role required
+Only a system user can export or import data, in the UI and through the API. An import replaces the current data.
+:::
+
 :::tip
 **UI Export** and **API Export** will only back up the configuration and data stored within Anaphora.
 Report files are not included in these backups. So having a docker volume backup is recommended for complete data
@@ -29,6 +33,17 @@ protection.
 1. Go to **Settings** > **Data**
 2. Click **Import from file**
 3. Upload the backup file
+
+### Legacy Import and Export
+
+The **Legacy** tab under **Settings** > **Data** reads and writes the older `.json` format. This tab will be removed in
+the future. A legacy import has three modes:
+
+| Option                                                          | Behavior                                    |
+|-----------------------------------------------------------------|---------------------------------------------|
+| Validate the imported file to ensure correct data (recommended) | Refuses a file with errors. The default.    |
+| Validate the imported file but autofix when possible            | Repairs what it can                         |
+| Do not validate the imported file (Use at own risk)             | Imports the file as it is                   |
 
 ## Docker Volume Backup
 

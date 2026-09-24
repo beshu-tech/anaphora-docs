@@ -121,6 +121,12 @@ flowchart LR
 | **Capture snapshot** | Screenshot element to variable | Chart, panel, full page  |
 | **Calculate**        | Arithmetic on variables        | `errors / total * 100`   |
 
+:::note Equation limits
+An equation in a **Calculate** action runs in a separate process, with 256 MB of memory and 5 seconds of time. It
+cannot create a matrix with more than one million cells. When a limit is reached, only that process stops, and the
+action fails. The job editor checks equations when you save the job.
+:::
+
 ### Control Flow Actions
 
 | Action                | Description          | Example                          |
@@ -189,6 +195,14 @@ For reliable automation:
 
 - Configure retry policies in General tab
 - Test captures manually before scheduling
+
+Anaphora stops a capture in these cases:
+
+| Case                                                       | Result                                                        |
+|------------------------------------------------------------|---------------------------------------------------------------|
+| The capture runs longer than 30 minutes                    | The run fails and is retried                                  |
+| A Kibana page does not show Kibana after 5 minutes (for example a login or error page) | The run fails. A missing panel or a spinner that does not stop only logs a warning. |
+| The job has no valid URL                                   | The run fails with "Found no valid URL to navigate to"        |
 
 ## Testing
 

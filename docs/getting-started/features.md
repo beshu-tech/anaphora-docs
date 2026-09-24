@@ -19,7 +19,8 @@ features and integrations.
 
 :::tip What you get
 
-- ✅ Up to **2 scheduled jobs**
+- ✅ Up to **2 scheduled jobs**, **2 delivery interfaces** and **1 AI provider**
+- ✅ Up to **3 capture actions** per job
 - ✅ Kibana, Grafana, and generic web capture
 - ✅ PDF report composer with custom layouts
 - ✅ Email (SMTP) delivery
@@ -30,6 +31,13 @@ features and integrations.
   :::
 
 **Best for:** Trying Anaphora, personal dashboards, small-scale reporting
+
+:::note Free edition limits
+In the Free edition, every account is a system user, and Spaces are not available.
+When you reach a limit, the interface asks you to upgrade before you add another job, delivery interface or AI provider.
+A job with more than three capture actions cannot be saved until you upgrade.
+The server checks these limits for every write, also through the [API](../administration/agent-api.md) and for imports.
+:::
 
 ---
 
@@ -72,6 +80,7 @@ features and integrations.
 |-------------------------|:-------:|:-----------:|:-------------:|
 | **Jobs**                |    2    | ∞ Unlimited |  ∞ Unlimited  |
 | **Delivery Interfaces** |    2    | ∞ Unlimited |  ∞ Unlimited  |
+| **AI Providers**        |    1    | ∞ Unlimited |  ∞ Unlimited  |
 |                         |         |             |               |
 | **Capture**             |         |             |               |
 | Capture Actions         |    3    | ∞ Unlimited |  ∞ Unlimited  |
@@ -116,7 +125,7 @@ Anaphora runs in **Free mode by default**. Unlock PRO or Enterprise with an acti
 docker run -p 3000:3000 \
   -e PUBLIC_URL=http://localhost:3000 \
   -e ACTIVATION_KEY=your-activation-key \
-  -d beshu/anaphora
+  -d beshultd/anaphora
 ```
 
 **Option 2: Admin UI**

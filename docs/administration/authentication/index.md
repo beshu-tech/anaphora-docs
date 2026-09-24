@@ -54,6 +54,20 @@ Users are assigned permissions within specific spaces:
 | Manage users               | Yes         | No          | No              | No             |
 | Manage spaces              | Yes         | No          | No              | No             |
 | Global settings            | Yes         | No          | No              | No             |
+| Export and import data     | Yes         | No          | No              | No             |
+| Read authentication config | Yes         | No          | No              | No             |
+| List and end sessions      | Yes         | No          | No              | No             |
+| Read capture passwords     | Yes         | Yes         | Yes             | No             |
+
+Every action on jobs, templates, delivery interfaces and AI providers checks your access to the space that holds them.
+
+- Only a system user can read the authentication configuration (it holds the session secret and the LDAP, SAML and
+  OIDC credentials), list and end sessions, and use the password and secret tools of the settings.
+- A user with Readonly access sees the jobs and templates without the login passwords of their captures.
+
+:::note Free edition
+In the Free edition, every account has the System role.
+:::
 
 ### Add User Permissions
 

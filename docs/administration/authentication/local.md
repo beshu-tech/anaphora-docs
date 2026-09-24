@@ -52,6 +52,14 @@ System settings include authentication configuration, space configuration, backu
 Most users should have the `user` role.
 :::
 
+### Password Storage
+
+Anaphora stores local passwords as salted scrypt hashes. A login attempt takes the same time whether the account exists
+or not.
+
+Accounts from older versions keep working. The log can say that some local users "still carry the legacy sha512 password
+hash". Save their passwords again to store the new kind of hash.
+
 ### Managing Local Users
 
 All local users will be managed by the system user alone. Users cannot modify their own accounts.

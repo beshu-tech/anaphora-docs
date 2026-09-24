@@ -52,6 +52,16 @@ flowchart LR
 4. Test the connection
 5. Save
 
+:::note Free edition
+The Free edition allows one AI provider per space.
+:::
+
+### Provider from the Environment
+
+You can also add a provider with environment variables: `AI_PROVIDER`, `AI_MODEL` and `AI_API_KEY`. Anaphora reads
+them once, when it creates the database, and adds a provider named **Default Provider** to the default space. See
+[Installation](../getting-started/installation.md#ai-provider-from-the-environment).
+
 ### Provider Inheritance
 
 - Each Space can have its own AI provider configuration

@@ -69,3 +69,14 @@ Authorization: Bearer your-token
 X-Custom-Header: value
 Content-Type: application/json
 ```
+
+## Response Handling
+
+A delivery succeeds only when the webhook answers with a 2xx status. Any other answer fails the delivery, and the run
+shows the status and the answer of the webhook. The **Test** button, the health monitor, the license alert and the AI
+budget alert use the same check.
+
+:::warning Test route removed
+The route `/guest/api/test/webhook` no longer exists. If a webhook interface points at it, point it at a real receiver.
+A webhook that answers "not found" fails the delivery.
+:::

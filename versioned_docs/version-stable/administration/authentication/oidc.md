@@ -42,7 +42,7 @@ Create an OAuth/OIDC application in your identity provider.
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
 2. APIs & Services > Credentials > Create Credentials > OAuth Client ID
 3. Application type: Web application
-4. Authorized redirect URIs: `https://anaphora.company.com/oauth/callback`
+4. Authorized redirect URIs: `https://anaphora.company.com/auth/login-oidc/callback`
 5. Copy Client ID and Client Secret
 
 #### Auth0
@@ -50,7 +50,7 @@ Create an OAuth/OIDC application in your identity provider.
 1. Applications > Create Application
 2. Choose "Regular Web Application"
 3. Settings tab:
-   - Allowed Callback URLs: `https://anaphora.company.com/oauth/callback`
+   - Allowed Callback URLs: `https://anaphora.company.com/auth/login-oidc/callback`
    - Allowed Logout URLs: `https://anaphora.company.com`
 4. Copy Domain, Client ID, and Client Secret
 
@@ -60,7 +60,7 @@ Create an OAuth/OIDC application in your identity provider.
 2. Client ID: `anaphora`
 3. Client Protocol: openid-connect
 4. Access Type: confidential
-5. Valid Redirect URIs: `https://anaphora.company.com/oauth/callback`
+5. Valid Redirect URIs: `https://anaphora.company.com/auth/login-oidc/callback`
 6. Copy Client Secret from Credentials tab
 
 #### Okta
@@ -68,13 +68,13 @@ Create an OAuth/OIDC application in your identity provider.
 1. Applications > Create App Integration
 2. Sign-in method: OIDC
 3. Application type: Web Application
-4. Sign-in redirect URIs: `https://anaphora.company.com/oauth/callback`
+4. Sign-in redirect URIs: `https://anaphora.company.com/auth/login-oidc/callback`
 5. Copy Client ID and Client Secret
 
 #### Azure AD
 
 1. App registrations > New registration
-2. Redirect URI: Web > `https://anaphora.company.com/oauth/callback`
+2. Redirect URI: Web > `https://anaphora.company.com/auth/login-oidc/callback`
 3. Certificates & secrets > New client secret
 4. Copy Application (client) ID and secret value
 
