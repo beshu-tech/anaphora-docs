@@ -8,9 +8,9 @@ keywords: [ Slack integration, webhook delivery, Slack notifications, report del
 
 Deliver reports directly to Slack channels. Use the webhook delivery interface to send Slack messages.
 
-## Setup Steps
+## Setup steps
 
-### 1. Create Slack Webhook
+### 1. Create a Slack webhook
 
 1. Go to [Slack Docs](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/)
 2. Follow the instructions to create an **Incoming Webhook**

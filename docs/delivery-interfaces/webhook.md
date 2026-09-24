@@ -10,7 +10,7 @@ Send reports to custom HTTP endpoints for integration with any system.
 
 ![Webhook delivery interface configuration showing URL, HTTP method, headers, and JSON body options](images/webhook.png)
 
-## Use Cases
+## Use cases
 
 - Custom notification systems
 - Integration with ticketing tools
@@ -29,11 +29,11 @@ Send reports to custom HTTP endpoints for integration with any system.
 | JSON body | Custom payload template (body type `json`)          | No       |
 | Form body | Key-value pairs (body type `form`)                  | No       |
 
-## Payload Format
+## Payload format
 
-### JSON Template
+### JSON template
 
-Define a JSON structure that works with your endpoint in **JSON body**. Use the ```$MESSAGE``` variable as placeholder
+Define a JSON structure that works with your endpoint in **JSON body**. Use the ```$MESSAGE``` variable as a placeholder
 for the report content. Anaphora replaces this variable with the text that you define in the job's delivery settings.
 Click **Pretty print** to format the JSON.
 
@@ -46,7 +46,7 @@ Example:
 }
 ```
 
-### Form Body
+### Form body
 
 Send key-value pairs (**Form name**, **Form value**) as form data. Use the ```$MESSAGE``` variable for the report content.
 
@@ -57,11 +57,11 @@ report_title=Anaphora Report
 report_content=$MESSAGE
 ```
 
-### JSON in Job Delivery
+### JSON in job delivery
 
 Select **Define body in job instead**. Each job then defines the entire JSON body in its delivery settings.
 
-## Custom Headers
+## Custom headers
 
 Add headers for authentication or routing:
 
@@ -76,7 +76,7 @@ Anaphora sets `Content-Type` from the body type.
 
 Click **Test**, enter an optional **Test message**, then click **Send to webhook**.
 
-## Response Handling
+## Response handling
 
 A delivery succeeds only when the webhook answers with a 2xx status. Any other answer fails the delivery, and the run
 shows the status and the answer of the webhook. The **Test** button, the health monitor, the license alert and the AI

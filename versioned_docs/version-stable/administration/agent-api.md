@@ -4,12 +4,12 @@ description: Let an AI agent in your browser build Anaphora jobs - the /llms.txt
 keywords: [ Anaphora API, AI agent, llms.txt, OpenAPI, JSON API, Claude in Chrome, browser agent, automation ]
 ---
 
-# API for AI Agents
+# API for AI agents
 
 Anaphora explains itself to an AI agent that works in your browser, such as Claude in Chrome. The agent can read a guide
 and then create jobs, templates and runs through a JSON API instead of the editor.
 
-## The Guide
+## The guide
 
 Every page of Anaphora links to `/llms.txt` (**Guide for AI agents** in the footer). The login page names the path too.
 The guide explains what a job is, how a capture is built, and how a report is templated and delivered. It is served by
@@ -74,7 +74,7 @@ A `POST` or `PUT` from another origin is refused, even with the session cookie.
 `run`, `preview` and `test` answer with a stream (`text/event-stream`). The last event, `end`, carries the result. A
 preview or a test takes as long as the page takes to load, often 10 to 60 seconds.
 
-## Next Steps
+## Next steps
 
-- [Jobs](../jobs/) - What a job holds
-- [Authentication](./authentication/) - Roles and space permissions
+- [Jobs](../jobs/): what a job holds
+- [Authentication](./authentication/): roles and space permissions

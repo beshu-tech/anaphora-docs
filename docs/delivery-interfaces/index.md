@@ -4,14 +4,14 @@ description: Configure Anaphora delivery channels - send reports via SMTP email,
 keywords: [ email reports, Slack reports, webhook delivery, SMTP configuration, Mailgun integration, S3 archiving, PDF export, report distribution ]
 ---
 
-# Delivery Interfaces - Email, Slack, S3 & Webhook
+# Delivery interfaces: email, Slack, S3 and webhook
 
-Delivery Interfaces define how reports reach your recipients. After Anaphora makes a report, it sends it
+Delivery interfaces define how reports reach your recipients. After Anaphora makes a report, it sends it
 through one or more channels at the same time.
 
-## Available Interfaces
+## Available interfaces
 
-| Interface                               | Description                  | Best For                  |
+| Interface                               | Description                  | Best for                  |
 |-----------------------------------------|------------------------------|---------------------------|
 | [SMTP](/delivery-interfaces/smtp)       | Direct email via SMTP server | Corporate email systems   |
 | [Mailgun](/delivery-interfaces/mailgun) | Email via Mailgun API        | High-volume delivery      |
@@ -26,17 +26,17 @@ through one or more channels at the same time.
 4. Click **Test**
 5. Click **Save**
 
-## Using in Jobs
+## Using in jobs
 
 After you save an interface, it shows in the job's **Delivery** tab:
 
 - Select one or multiple delivery channels
 - Configure per-channel settings (recipients, notification body, etc.)
 
-## Next Steps
+## Next steps
 
-- [SMTP](/delivery-interfaces/smtp) - Configure direct email delivery
-- [Mailgun](/delivery-interfaces/mailgun) - Set up Mailgun API integration
-- [Slack](/delivery-interfaces/slack) - Connect Slack workspaces
-- [S3](/delivery-interfaces/s3) - Archive reports to S3 storage
-- [Webhook](/delivery-interfaces/webhook) - Configure custom endpoints
+- [SMTP](/delivery-interfaces/smtp): configure direct email delivery
+- [Mailgun](/delivery-interfaces/mailgun): set up Mailgun API integration
+- [Slack](/delivery-interfaces/slack): connect Slack workspaces
+- [S3](/delivery-interfaces/s3): archive reports to S3 storage
+- [Webhook](/delivery-interfaces/webhook): configure custom endpoints

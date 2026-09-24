@@ -4,13 +4,14 @@ description: Configure Anaphora jobs for automated report generation. Learn abou
 keywords: [ Anaphora jobs, report scheduling, capture configuration, delivery settings, conditional alerts, headless browser ]
 ---
 
-# Jobs - Automated Report Configuration
+# Jobs: automated report configuration
 
-At the heart of Anaphora is the **Job**—a scheduled unit of execution that uses a headless browser to interact with web pages. A job is not just a screenshot tool; it is a programmable workflow that can navigate, interact, extract data, and apply conditional logic.
+The central unit of Anaphora is the job: a scheduled unit of execution that uses a headless browser to interact with
+web pages. A job is a programmable workflow. It can navigate, interact, extract data, and apply conditional logic.
 
-## Job Structure
+## Job structure
 
-Every job consists of four main components:
+Every job has four main components:
 
 | Component | Description |
 |-----------|-------------|
@@ -19,42 +20,42 @@ Every job consists of four main components:
 | [Composer](./jobs/composer) | How to arrange content into a report |
 | [Delivery](./jobs/delivery) | Where and how to send the report |
 
-## Core Capabilities
+## Core capabilities
 
-### Navigate & Interact
+### Navigate and interact
 
-Jobs can perform complex interactions with web applications:
+Jobs can do complex interactions with web applications:
 
-- **Click elements** - Buttons, links, menu items
-- **Type text** - Search boxes, form fields, filters
-- **Enter** - Press Enter in a form field
-- **Navigate** - Follow links, handle redirects, manage authentication
-- **Wait conditions** - Wait for elements to appear (**Wait for visible**) or for a number of seconds (**Wait before continue**)
+- Click elements: buttons, links, menu items
+- **Type text**: search boxes, form fields, filters
+- **Enter**: press Enter in a form field
+- **Navigate**: follow links, handle redirects, manage authentication
+- Wait conditions: wait for elements to appear (**Wait for visible**) or for a number of seconds (**Wait before continue**)
 
-### Capture Data
+### Capture data
 
-Extract information in multiple formats:
+Extract information in several formats:
 
-| Capture Type | Use Case |
+| Capture type | Use case |
 |--------------|----------|
-| **Screenshots** | Visual snapshots of dashboards, charts, or specific elements |
-| **Text extraction** | Pull specific values like counts, percentages, or status text |
-| **Element capture** | Screenshot only a specific chart or panel |
+| Screenshots | Visual snapshots of dashboards, charts, or specific elements |
+| Text extraction | Pull specific values like counts, percentages, or status text |
+| Element capture | Screenshot only a specific chart or panel |
 | **Full page** | Capture the entire scrollable page |
 
-### Logic & Control Flow
+### Logic and control flow
 
-Implement sophisticated automation with:
+Build the automation logic with:
 
-- **Conditional execution** - **Conditional block** actions based on extracted values
-- **Wait conditions** - **Wait for visible**, **Wait before continue**
-- **Reload and retry** - **Reload** the page; **Retry on failure** retries a failed run
-- **Variables** - Store and reuse extracted values throughout the workflow
-- **Break conditions** - Stop execution if criteria are not met (useful for alerts)
+- Conditional execution: **Conditional block** actions based on extracted values
+- Wait conditions: **Wait for visible**, **Wait before continue**
+- Reload and retry: **Reload** the page. **Retry on failure** retries a failed run.
+- Variables: store extracted values and use them again anywhere in the workflow
+- Break conditions: stop execution if criteria are not met (useful for alerts)
 
-## Job Types
+## Job types
 
-### Report Jobs
+### Report jobs
 
 Regular scheduled reports that always produce output:
 
@@ -62,34 +63,35 @@ Regular scheduled reports that always produce output:
 - Weekly metric summaries
 - Monthly trend reports
 
-### Alert Jobs
+### Alert jobs
 
-Conditional reports that only send when criteria are met:
+Conditional reports that send only when criteria are met:
 
 - Error rate exceeds threshold
 - Document count drops below minimum
 - Custom conditions based on extracted values
 
 :::tip
-In Anaphora, **an alert is a conditional report**. You create alerts by adding conditions to your capture workflow that determine whether the report should be sent. Use the **Break** action to skip delivery when conditions aren't met.
+In Anaphora, an alert is a conditional report. To create an alert, add conditions to your capture workflow. The
+conditions decide whether the report is sent. Use the **Break** action to skip delivery when conditions are not met.
 :::
 
-## AI-Powered Analysis
+## AI-powered analysis
 
-Jobs can integrate AI to analyze captured data:
+Jobs can use AI to analyze captured data:
 
 ```
 Capture Dashboard -> Send to AI -> Receive Analysis -> Include in Report
 ```
 
-- **Visual Analysis** - Pass screenshots to AI models to evaluate dashboard content
-- **Text Summaries** - AI generates human-readable summaries of complex data
-- **Anomaly Detection** - AI identifies unusual patterns or concerning trends
-- **OpenAI Compatible** - Works with any AI provider using the OpenAI API format
+- Visual analysis: pass screenshots to AI models to evaluate dashboard content
+- Text summaries: AI generates human-readable summaries of complex data
+- Anomaly detection: AI identifies unusual patterns or concerning trends
+- OpenAI compatible: works with any AI provider that uses the OpenAI API format
 
-## Visual Composer
+## Visual composer
 
-Use the **Compose** tab to design professional reports:
+Use the **Compose** tab to design reports:
 
 | Setting | Description |
 |---------|-------------|
@@ -99,23 +101,23 @@ Use the **Compose** tab to design professional reports:
 | **Opacity** | Layer elements with transparency |
 | **Branding** | Add logos and company colors |
 
-Combine visual snapshots with AI-generated summaries for comprehensive, polished reports.
+You can combine visual snapshots with AI-generated summaries in one report.
 
-## Creating a Job
+## Creating a job
 
 1. Go to **Jobs** in the sidebar
 2. Click **Create Job**, then select **Create New** (or a template)
 3. Configure each tab:
-   - **General** - Set name, schedule, and basic settings
-   - **Capture** - Define what to capture and extraction logic
-   - **Compose** - Design the report layout and branding
-   - **Deliver** - Select delivery channels and recipients
+   - **General**: set the name, schedule, and basic settings
+   - **Capture**: define what to capture and the extraction logic
+   - **Compose**: design the report layout and branding
+   - **Deliver**: select delivery channels and recipients
 4. Test the job: click **Test capture** in the **Capture** tab, or a test run button in the **Deliver** tab
 5. Click **Save**. A new job is active by default. Use the **Active** switch in the job list to suspend it or activate it again
 
-## Next Steps
+## Next steps
 
-- [General Settings](./jobs/general) - Scheduling and throttling
-- [Capture Configuration](./jobs/capture) - Data extraction workflows
-- [Composer](./jobs/composer) - Report design and branding
-- [Delivery](./jobs/delivery) - Output channels and formats
+- [General settings](./jobs/general): scheduling and throttling
+- [Capture configuration](./jobs/capture): data extraction workflows
+- [Composer](./jobs/composer): report design and branding
+- [Delivery](./jobs/delivery): output channels and formats

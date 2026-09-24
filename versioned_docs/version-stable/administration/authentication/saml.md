@@ -6,33 +6,29 @@ keywords: [ SAML, SSO, Single Sign-On, Okta, Azure AD, OneLogin, identity provid
 
 # SAML / Single Sign-On
 
-Integrate with SAML 2.0 identity providers for enterprise single sign-on. Users authenticate through your corporate IdP and are automatically provisioned in Anaphora.
+Anaphora supports single sign-on through SAML 2.0 identity providers. Users log in through your corporate IdP, and Anaphora creates their accounts automatically.
 ![](images/saml.png)
 ## Overview
 
-SAML SSO provides:
+With SAML SSO, users have one login for all applications, and you manage them in your IdP. Anaphora creates each user
+at the first login and maps IdP groups to Anaphora roles.
 
-- **Single Sign-On** — One login for all applications
-- **Centralized access control** — Manage users in your IdP
-- **Automatic provisioning** — Users created on first login
-- **Group-based roles** — Map IdP groups to Anaphora roles
-
-## Supported Identity Providers
+## Supported identity providers
 
 | Provider | Status | Notes |
 |----------|--------|-------|
-| **Okta** | Tested | Full support |
-| **Azure AD** | Tested | Full support |
-| **OneLogin** | Tested | Full support |
-| **Google Workspace** | Tested | SAML app required |
-| **PingFederate** | Compatible | Standard SAML 2.0 |
-| **ADFS** | Compatible | Standard SAML 2.0 |
-| **Keycloak** | Compatible | Standard SAML 2.0 |
-| **Custom IdP** | Compatible | Any SAML 2.0 compliant |
+| Okta | Tested | Full support |
+| Azure AD | Tested | Full support |
+| OneLogin | Tested | Full support |
+| Google Workspace | Tested | SAML app required |
+| PingFederate | Compatible | Standard SAML 2.0 |
+| ADFS | Compatible | Standard SAML 2.0 |
+| Keycloak | Compatible | Standard SAML 2.0 |
+| Custom IdP | Compatible | Any SAML 2.0 compliant |
 
-## Configuration Steps
+## Configuration steps
 
-### Step 1: Collect the SP Values
+### Step 1: Collect the SP values
 
 Anaphora does not supply an SP metadata file. Enter these values in your IdP by hand. `<anaphora-external-url>` is the
 public URL of Anaphora (`NEXT_PUBLIC_SITE_URL`).
@@ -43,7 +39,7 @@ public URL of Anaphora (`NEXT_PUBLIC_SITE_URL`).
 | Entity ID (SP identifier, Audience)           | The value of **Issuer** in Anaphora, for example `anaphora` |
 | Single Logout URL                             | `https://<anaphora-external-url>/auth/logout-saml`      |
 
-### Step 2: Configure Your IdP
+### Step 2: Configure your IdP
 
 Create a new SAML application in your identity provider.
 
@@ -51,7 +47,7 @@ Create a new SAML application in your identity provider.
 
 1. Admin Console > Applications > Create App Integration
 2. Select SAML 2.0
-3. Upload Anaphora SP metadata or enter manually:
+3. Enter these values by hand:
    - Single Sign On URL: `https://anaphora.company.com/auth/login-saml/callback`
    - Audience URI: the value of **Issuer** in Anaphora
 4. Configure attribute statements (see below)
@@ -77,7 +73,7 @@ Create a new SAML application in your identity provider.
 3. Parameters tab: Add attribute mappings
 4. Access tab: Assign roles
 
-### Step 3: Enter the IdP Values
+### Step 3: Enter the IdP values
 
 Back in Anaphora:
 
@@ -99,11 +95,11 @@ Back in Anaphora:
 3. Click **Save**
 4. To activate SAML, add `saml` to **Strategies** in **Settings** > **System** > **General**
 
-### Signing Certificate
+### Signing certificate
 
-The **Certificate** field contains the IdP's signing certificate to validate SAML assertions. This is the X.509 certificate in your IdP's SAML metadata as `<ds:X509Certificate>`.
+The **Certificate** field holds the IdP signing certificate that validates SAML assertions. It is the X.509 certificate in the SAML metadata of your IdP, in `<ds:X509Certificate>`.
 
-**Keycloak:** The metadata URL is:
+For Keycloak, the metadata URL is:
 ```
 https://<keycloak-host>/realms/<your-realm>/protocol/saml/descriptor
 ```
@@ -117,19 +113,19 @@ MIICizCCAfQCCQCET8tKaMc0BMjANBgkqh...g=
 Anaphora does not read the IdP metadata. Copy the certificate from the metadata into **Certificate**.
 :::
 
-### Step 4: Map Attributes
+### Step 4: Map attributes
 
-Configure how IdP claims map to Anaphora user fields.
+Configure how IdP claims map to the Anaphora user fields.
 
-## Attribute Mapping
+## Attribute mapping
 
-### Required Claims
+### Required claims
 
 | Anaphora Field | SAML Claim | Description |
 |----------------|------------|-------------|
 | Username | `nameID` (set in **Username parameter**) | Unique user identifier |
 
-### Optional Claims
+### Optional claims
 
 | Anaphora Field | SAML Claim | Description |
 |----------------|------------|-------------|
@@ -137,7 +133,7 @@ Configure how IdP claims map to Anaphora user fields.
 
 Anaphora reads no other attributes.
 
-### Okta Attribute Statements
+### Okta attribute statements
 
 ```
 Name: email
@@ -155,7 +151,7 @@ Value: (Group membership attribute)
 
 Set **Groups parameter** to the attribute name, in this example `groups`.
 
-### Azure AD Claims
+### Azure AD claims
 
 ```
 Claim name: email
@@ -168,26 +164,26 @@ Claim name: groups
 Source attribute: user.groups
 ```
 
-## Group-Based Roles
+## Group-based roles
 
-Map IdP groups to Anaphora roles for automatic permission assignment.
+Map IdP groups to Anaphora roles to assign permissions automatically.
 
-### Groups Attribute Configuration
+### Groups attribute configuration
 
-The **Groups parameter** setting specifies the SAML attribute that contains group/role information. Default: `Role`
+The **Groups parameter** setting is the SAML attribute that contains the group or role information. Default: `Role`
 
 :::warning Important: Single Role Attribute
-You must enable **Single Role Attribute** (also called *Single Role Attribute Mapping* or *Roles as Claims* depending on your IdP) in your identity provider. Without this, group claims may not be sent correctly.
+You must enable **Single Role Attribute** in your identity provider. Some IdPs call it *Single Role Attribute Mapping* or *Roles as Claims*. If it is not enabled, the IdP may not send the group claims correctly.
 
 Anaphora reads the roles only when the attribute has more than one value. An attribute with one value gives no roles.
 
-**Keycloak setup:**
-1. Go to **Client Scopes** → **role_list**
-2. Select **Mappers** → **role_list**
+In Keycloak:
+1. Go to **Client Scopes** > **role_list**
+2. Select **Mappers** > **role_list**
 3. Enable **Single Role Attribute**
 :::
 
-### Role Mapping
+### Role mapping
 
 Each IdP group becomes an Anaphora role with the same name.
 
@@ -200,7 +196,7 @@ Each IdP group becomes an Anaphora role with the same name.
 | `Anaphora-Editors` | Read Write |
 | `Anaphora-Viewers` | Read Only |
 
-### Space Mapping
+### Space mapping
 
 Give each group access to one or more spaces:
 
@@ -210,9 +206,9 @@ Give each group access to one or more spaces:
 | `Team-Beta` | Beta Reports | Read Write |
 | `All-Staff` | Company Dashboards | Read Only |
 
-## Advanced Settings
+## Advanced settings
 
-### SAML Configuration Options
+### SAML configuration options
 
 Anaphora sets these node-saml options. Change them in **Extra config**.
 
@@ -222,9 +218,9 @@ Anaphora sets these node-saml options. Change them in **Extra config**.
 | `wantAuthnResponseSigned` | Require the IdP to sign the response | `false` |
 | `audience` | Expected audience of the assertion. `false` turns the check off | `false` |
 
-### Extra Configuration
+### Extra configuration
 
-The **Extra config** field accepts a YAML object with additional SAML strategy options. Use this to override or extend the default SAML configuration.
+The **Extra config** field accepts a YAML object with more SAML strategy options. Use it to override or extend the default SAML configuration.
 
 ```yaml
 wantAssertionsSigned: true
@@ -247,7 +243,7 @@ See the full list of available options in the [node-saml documentation](https://
 Use extra configuration options with caution. Incorrect settings may break SAML authentication.
 :::
 
-### Session Settings
+### Session settings
 
 | Setting | Where | Description |
 |---------|-------|-------------|
@@ -257,7 +253,7 @@ Use extra configuration options with caution. Incorrect settings may break SAML 
 
 ## Testing
 
-### Test SAML Configuration
+### Test SAML configuration
 
 1. Log out, then click **Continue with SAML** on the login page
 2. Anaphora sends you to your IdP
@@ -278,30 +274,30 @@ Use a more detailed log level:
 
 | Issue | Solution |
 |-------|----------|
-| Redirect loop | Check ACS URL matches exactly in both systems |
-| Invalid signature | Verify IdP certificate is current in Anaphora |
+| Redirect loop | Check that the ACS URL is exactly the same in both systems |
+| Invalid signature | Make sure the IdP certificate in Anaphora is current |
 | User has no username | Check **Username parameter**, make sure the IdP sends that attribute |
 | Groups not mapped | Make sure the IdP sends the attribute in **Groups parameter**, check group name format |
 | Clock skew error | Make sure server clocks are synchronized (NTP), or set **Accepted clock skew ms** |
 
-### Common Errors
+### Common errors
 
 **"SAML Response validation failed"**
-- Certificate mismatch: Copy the current certificate from the IdP metadata into **Certificate**
-- Clock skew: Check server time synchronization
+- Certificate mismatch: copy the current certificate from the IdP metadata into **Certificate**
+- Clock skew: check server time synchronization
 
 **"NameID not found"**
-- IdP not sending NameID
+- The IdP does not send NameID
 - Check IdP configuration for NameID format
 
-## Best Practices
+## Best practices
 
 - Update **Certificate** when the IdP rotates its signing certificate
 - Set `wantAssertionsSigned: true` in **Extra config** for security
-- Map groups to roles rather than individual users
-- Test thoroughly before enabling for all users
+- Map groups to roles instead of individual users
+- Test fully before you enable SAML for all users
 
-## Next Steps
+## Next steps
 
-- [OIDC](./oidc) - Alternative: OpenID Connect
-- [Spaces](../spaces) - Configure Space-based access
+- [OIDC](./oidc): OpenID Connect, an alternative to SAML
+- [Spaces](../spaces): configure space-based access

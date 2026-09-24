@@ -4,23 +4,20 @@ description: Configure local authentication with Anaphora's built-in user databa
 keywords: [ local authentication, user management, password policy, built-in users ]
 ---
 
-# Local Authentication
+# Local authentication
 
 ![](images/local.png)
-Default authentication using Anaphora's built-in user database. Ideal for small teams, testing environments, or
-deployments without enterprise identity providers.
+Local authentication is the default. It uses Anaphora's built-in user database. It suits small teams, testing
+environments, and deployments without an enterprise identity provider.
 
 ## Overview
 
-Local authentication provides:
+Local authentication has a built-in user database with no external dependencies. You manage users in the UI, and
+it works with no setup.
 
-- **Built-in user database** — No external dependencies
-- **User management UI** — Easy administration
-- **Quick setup** — Works out of the box
+## User management
 
-## User Management
-
-### Adding Users
+### Add users
 
 1. Go to **Settings** > **System** > **Auth** > **Local**
 2. Click **Add new User**
@@ -29,7 +26,7 @@ Local authentication provides:
 5. Select the **System role**: `user` or `system`
 6. Click **Save**
 
-### User Properties
+### User properties
 
 | Field        | Description                                                                 | Required |
 |--------------|-----------------------------------------------------------------------------|----------|
@@ -39,7 +36,7 @@ Local authentication provides:
 | Roles        | Roles that you assign to spaces to give permissions                         | No       |
 | System role  | `user` or `system`. Default: `user`                                         | Yes      |
 
-### System Role
+### System role
 
 The **System role** controls access to system-wide settings:
 
@@ -54,7 +51,7 @@ Most users must have the `user` role. At least one local user must have the `sys
 In the Free edition, all local users are system users, and the **Roles** and **System role** fields do not show.
 :::
 
-### Password Storage
+### Password storage
 
 Anaphora stores local passwords as salted scrypt hashes. A login attempt takes the same time whether the account exists
 or not.
@@ -62,16 +59,16 @@ or not.
 Accounts from older versions keep working. The log can say that some local users "still carry the legacy sha512 password
 hash". Save their passwords again to store the new kind of hash.
 
-### Managing Local Users
+### Manage local users
 
 Only system users manage local users. Users cannot change their own accounts.
-System users can change the password or add roles to existing users. The system user can also delete the local users.
+System users can change the password of existing users, add roles to them, and delete local users.
 
 :::warning
-Deleting a user removes their access immediately. Jobs created by the user will remain.
+Deleting a user removes their access immediately. The jobs of the user stay.
 :::
 
-## When to Use Local Auth
+## When to use local auth
 
 | Scenario                    | Recommendation               |
 |-----------------------------|------------------------------|
@@ -82,8 +79,8 @@ Deleting a user removes their access immediately. Jobs created by the user will 
 | Enterprise environment      | Consider LDAP, SAML, or OIDC |
 | Compliance requirements     | Use enterprise SSO           |
 
-## Next Steps
+## Next steps
 
-- [LDAP](./ldap) - Connect to Active Directory
-- [SAML](./saml) - Enable Single Sign-On
-- [OIDC](./oidc) - Use OpenID Connect providers
+- [LDAP](./ldap): connect to Active Directory
+- [SAML](./saml): enable Single Sign-On
+- [OIDC](./oidc): use OpenID Connect providers

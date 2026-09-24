@@ -4,33 +4,32 @@ description: Compare Anaphora Free, PRO, and Enterprise editions. See what's inc
 keywords: [ Anaphora features, free edition, pro license, enterprise edition, activation key, feature comparison, pricing tiers ]
 ---
 
-# Features & Editions
+# Features and editions
 
-Choose the edition that fits your needs. All editions include the **full reporting engine** — higher tiers unlock team
-features and integrations.
+All editions include the full reporting engine. The higher tiers add team features and integrations.
 
-:::info 🚀 Ready to try PRO or Enterprise?
-**[Get a free trial key →](https://portal.anaphora.it/trial)** — No credit card required. Instant activation.
+:::info Try PRO or Enterprise
+[Get a free trial key](https://portal.anaphora.it/trial). You do not need a credit card, and activation is instant.
 :::
 
-## 🆓 Free Edition
+## Free edition
 
-**Perfect for evaluation and personal projects**
+For evaluation and personal projects.
 
 :::tip What you get
 
-- ✅ Up to **2 scheduled jobs**, **2 delivery interfaces** and **1 AI provider**
-- ✅ Up to **3 capture actions** per job
-- ✅ Kibana, Grafana, and generic web capture
-- ✅ PDF report composer with custom layouts
-- ✅ Email (SMTP) delivery
-- ✅ Notification throttling and retry policies
-- ✅ Local user authentication
-- ✅ **Self-Monitoring API** — health endpoints for external systems
-- ✅ **AI Analysis** — LLM-powered summaries and anomaly detection
+- Up to 2 scheduled jobs, 2 delivery interfaces and 1 AI provider
+- Up to 3 capture actions per job
+- Kibana, Grafana, and generic web capture
+- PDF report composer with custom layouts
+- Email (SMTP) delivery
+- Notification throttling and retry policies
+- Local user authentication
+- Self-Monitoring API: health endpoints for external systems
+- AI Analysis: summaries and anomaly detection by an LLM
   :::
 
-**Best for:** Trying Anaphora, personal dashboards, small-scale reporting
+Best for: trying Anaphora, personal dashboards, small-scale reporting.
 
 :::note Free edition limits
 In the Free edition, every account is a system user, and Spaces are not available.
@@ -39,51 +38,45 @@ A job with more than three capture actions cannot be saved until you upgrade.
 The server checks these limits for every write, also through the [API](../administration/agent-api.md) and for imports.
 :::
 
----
+## PRO edition
 
-## ⭐ PRO Edition
-
-**For production teams who need unlimited jobs and AI**
+For production teams that need unlimited jobs and AI providers.
 
 :::tip Everything in Free, plus
 
-- ✅ **Unlimited jobs** — no restrictions
-- ✅ **Additional Delivery** - Mailgun, Slack, Webhook, and S3
-- ✅ **Spaces** — organize jobs into isolated workspaces
-- ✅ **Priority support** — faster response times
+- Unlimited jobs
+- Additional delivery: Mailgun, Slack, Webhook, and S3
+- Spaces: organize jobs into isolated workspaces
+- Priority support: faster response times
   :::
 
-**Best for:** Production workloads, growing teams, AI-enhanced reports
+Best for: production workloads, growing teams, reports with AI analysis.
 
----
+## Enterprise edition
 
-## 🏢 Enterprise Edition
-
-**For organizations requiring SSO and compliance**
+For organizations that need SSO and compliance.
 
 :::tip Everything in PRO, plus
 
-- ✅ **LDAP / Active Directory** — enterprise directory auth
-- ✅ **SAML SSO** — Okta, Azure AD, OneLogin, etc.
-- ✅ **OpenID Connect** — Google, Auth0, Keycloak, etc.
-- ✅ **Branding** — Customization of login screen
+- LDAP / Active Directory: enterprise directory authentication
+- SAML SSO: Okta, Azure AD, OneLogin, and others
+- OpenID Connect: Google, Auth0, Keycloak, and others
+- Branding: customization of the login screen
 
 :::
 
-**Best for:** Corporate SSO requirements, compliance, large-scale deployments
+Best for: corporate SSO requirements, compliance, large-scale deployments.
 
----
+## Feature comparison
 
-## Feature Comparison
-
-| Feature                 | 🆓 Free |    ⭐ PRO    | 🏢 Enterprise |
+| Feature                 |  Free   |     PRO     |  Enterprise   |
 |-------------------------|:-------:|:-----------:|:-------------:|
-| **Jobs**                |    2    | ∞ Unlimited |  ∞ Unlimited  |
-| **Delivery Interfaces** |    2    | ∞ Unlimited |  ∞ Unlimited  |
-| **AI Providers**        |    1    | ∞ Unlimited |  ∞ Unlimited  |
+| **Jobs**                |    2    |  Unlimited  |   Unlimited   |
+| **Delivery Interfaces** |    2    |  Unlimited  |   Unlimited   |
+| **AI Providers**        |    1    |  Unlimited  |   Unlimited   |
 |                         |         |             |               |
 | **Capture**             |         |             |               |
-| Capture Actions         |    3    | ∞ Unlimited |  ∞ Unlimited  |
+| Capture Actions         |    3    |  Unlimited  |   Unlimited   |
 | Kibana Connector        |    ✅    |      ✅      |       ✅       |
 | Grafana Connector       |    ✅    |      ✅      |       ✅       |
 | Generic Web Capture     |    ✅    |      ✅      |       ✅       |
@@ -113,13 +106,13 @@ The server checks these limits for every write, also through the [API](../admini
 | Self-Monitoring API     |    ✅    |      ✅      |       ✅       |
 | Priority Support        |    ❌    |      ✅      |       ✅       |
 
-## Activation Keys
+## Activation keys
 
-Anaphora runs in **Free mode by default**. Unlock PRO or Enterprise with an activation key.
+Anaphora runs in Free mode by default. An activation key unlocks PRO or Enterprise.
 
-### How to Activate
+### How to activate
 
-**Option 1: Environment Variable**
+Option 1, with an environment variable:
 
 ```bash
 docker run -p 3000:3000 \
@@ -128,7 +121,7 @@ docker run -p 3000:3000 \
   -d beshultd/anaphora
 ```
 
-**Option 2: Admin UI**
+Option 2, in the admin UI:
 
 1. Go to **Settings** > **System** > **Activation key**
 2. Click **Load another**
@@ -137,32 +130,31 @@ docker run -p 3000:3000 \
 
 ![](images/activationkey.png)
 
-### Key Benefits
+### Activation key properties
 
-- 🔒 **Offline Validation** — no internet required
-- ♾️ **Perpetual Licenses** — keys don't expire
-- 🔄 **Transferable** — move between deployments
+- Offline validation: no internet connection is necessary
+- Perpetual licenses: keys do not expire
+- Transferable: you can move a key between deployments
 
-## Get Your Trial Key
+## Get your trial key
 
-:::tip 🎁 Try PRO or Enterprise Free
-**[Request a trial activation key →](https://portal.anaphora.it/trial)**
+:::tip Try PRO or Enterprise for free
+[Request a trial activation key](https://portal.anaphora.it/trial).
 
-- Instant delivery — no waiting
+- Instant delivery
 - Full access to all features
 - No credit card required
   :::
 
-## Need Help?
+## Need help?
 
-:::note 💬 Join the Community
-**[Visit the Anaphora Forum →](https://forum.anaphora.it)**
-
-Ask questions, share your workflows, and connect with other users and the Anaphora team.
+:::note Join the community
+[Visit the Anaphora Forum](https://forum.anaphora.it) to ask questions, share your workflows, and talk with other users
+and the Anaphora team.
 :::
 
-## Next Steps
+## Next steps
 
-- [Installation](./installation) — Get Anaphora running
-- [Configuration](./configuration) — Set up your environment
-- [Basic Examples](../basic-examples/) — Create your first report job
+- [Installation](./installation): get Anaphora running
+- [Configuration](./configuration): set up your environment
+- [Basic Examples](../basic-examples/): create your first report job

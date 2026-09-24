@@ -23,7 +23,7 @@ version changed. So a rollback needs the database from before the upgrade. The s
   or in a named volume.
 - Docker Compose v2 and `python3` on the host
 
-## Get the Script
+## Get the script
 
 Take the script from the version you upgrade to. Run this in the folder of your `docker-compose.yaml`, and replace
 `<version>` with the new version:
@@ -32,7 +32,7 @@ Take the script from the version you upgrade to. Run this in the folder of your 
 docker run --rm --entrypoint cat beshultd/anaphora:<version> /usr/local/bin/anaphora-upgrade.sh > anaphora-upgrade.sh
 ```
 
-## Upgrade Step by Step
+## Upgrade step by step
 
 1. **Check.** Try the new version on a copy of your database. Anaphora keeps running. The copy has no network and sends
    nothing.
@@ -70,7 +70,7 @@ docker run --rm --entrypoint cat beshultd/anaphora:<version> /usr/local/bin/anap
 
 Every docker command is printed before it runs, and the whole session goes to a log file.
 
-### Script Options
+### Script options
 
 Set these in the environment of the script:
 
@@ -86,7 +86,7 @@ The script copies the database, not the reports folder (`content/`). A rollback 
 After that, the hourly clean-up can remove the reports of runs that are past their retention.
 :::
 
-## Automatic Database Backups
+## Automatic database backups
 
 Anaphora also backs up its database by itself. Before it applies a migration, it writes a copy to `storage/backups/`,
 encrypted with the same `DB_ENCRYPTION_KEY`. It keeps the three newest copies. The log names the file and says how to
@@ -98,7 +98,7 @@ restore it:
 
 If Anaphora cannot write the copy, it applies no migration, and the database stays as it was.
 
-## After the Upgrade to This Version
+## After the upgrade to this version
 
 This version changes the database. After the upgrade:
 
@@ -118,11 +118,11 @@ This version changes the database. After the upgrade:
   loses the extra cells. This change cannot be reversed.
 - The first health check rates the last five runs of each job with the new rules for failed deliveries. It can turn a
   job yellow or red, and send the health mail once, for a delivery that failed days ago. See
-  [Self Monitoring](../administration/self-monitoring.md).
+  [Self-monitoring](../administration/self-monitoring.md).
 - If accounts that you do not trust can sign in, change the session secret and the identity-provider secrets. Before
   this version, any signed-in account could read them.
 
-## Next Steps
+## Next steps
 
-- [Installation](./installation.md) - Environment variables and Docker Compose
-- [Backup](../administration/backup.md) - Export data and back up volumes
+- [Installation](./installation.md): environment variables and Docker Compose
+- [Backup](../administration/backup.md): export data and back up volumes

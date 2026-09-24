@@ -6,10 +6,10 @@ keywords: [ authentication, LDAP, SAML, SSO, OpenID Connect, OIDC, session manag
 
 # Authentication
 
-Configure user authentication and access control for Anaphora. The platform supports enterprise-standard authentication
-methods for secure access.
+This section describes how to configure user authentication and access control for Anaphora. Anaphora supports the
+authentication methods below.
 
-## Authentication Methods
+## Authentication methods
 
 | Method                                        | Description                  | Best For                        |
 |-----------------------------------------------|------------------------------|---------------------------------|
@@ -23,7 +23,7 @@ LDAP, SAML and OIDC need the Enterprise edition. The Free and Pro editions use L
 edition, all local users are system users.
 :::
 
-## Roles and Permissions
+## Roles and permissions
 
 Anaphora uses role-based access control (RBAC).
 
@@ -32,14 +32,14 @@ Anaphora uses role-based access control (RBAC).
 Anaphora has two main user types: system users and normal users. System users have global access and manage the
 Anaphora instance. Normal users get access to specific spaces, with permissions for those spaces only.
 
-| User Type       | Description                                | Methods |
+| User type       | Description                                | Methods |
 |-----------------|--------------------------------------------|---------|
 | **System user** | Full global access, manage system settings | Local   |
 | **Normal user** | Access and manage resources within spaces  | All     |
 
-### Space Permissions
+### Space permissions
 
-Users are assigned permissions within specific spaces:
+Each user gets permissions in specific spaces:
 
 | Permission     | Description                        |
 |----------------|------------------------------------|
@@ -47,7 +47,7 @@ Users are assigned permissions within specific spaces:
 | **Read Write** | Create and edit jobs, run reports  |
 | **Read Only**  | View reports and job status only   |
 
-### Permission Details
+### Permission details
 
 | Rights                     | System User | Space Admin | Space Read Write | Space Read Only |
 |----------------------------|-------------|-------------|-----------------|----------------|
@@ -74,15 +74,15 @@ Every action on jobs, templates, delivery interfaces and AI providers checks you
 In the Free edition, every account has the System role.
 :::
 
-### Add User Permissions
+### Add user permissions
 
 Assign users and roles to spaces in **Settings** > **System** > **Permissions**. See the
 [Spaces](/administration/spaces) documentation for details.
 
-## Next Steps
+## Next steps
 
-- [Local Authentication](/administration/authentication/local) - Built-in user management
-- [LDAP](/administration/authentication/ldap) - Active Directory integration
-- [SAML](/administration/authentication/saml) - Single Sign-On configuration
-- [OIDC](/administration/authentication/oidc) - OpenID Connect setup
-- [Spaces](/administration/spaces) - Configure multi-tenant workspaces
+- [Local Authentication](/administration/authentication/local): built-in user management
+- [LDAP](/administration/authentication/ldap): Active Directory integration
+- [SAML](/administration/authentication/saml): Single Sign-On configuration
+- [OIDC](/administration/authentication/oidc): OpenID Connect setup
+- [Spaces](/administration/spaces): configure multi-tenant workspaces

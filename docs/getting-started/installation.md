@@ -4,18 +4,18 @@ description: Install Anaphora with Docker or Docker Compose. Quick setup guide f
 keywords: [ Anaphora installation, Docker setup, Kibana reporting tool, Grafana reporting tool, automated reports installation ]
 ---
 
-# Installation Guide
+# Installation guide
 
-Get Anaphora up and running in your environment.
+Install and start Anaphora in your environment.
 
 ## Requirements
 
 - Docker and Docker Compose (recommended)
 - Network access to your Kibana/Grafana instances
 
-## Quick Start with Docker
+## Quick start with Docker
 
-The fastest way to get started is using Docker:
+The fastest way to start is with Docker:
 
 ```bash
 docker run -p 3000:3000 \
@@ -26,11 +26,11 @@ docker run -p 3000:3000 \
 
 Then open [http://localhost:3000](http://localhost:3000) in your browser and log in with `admin` / `admin`.
 
-### Environment Variables
+### Environment variables
 
 | Variable            | Description                                                                                  | Required    | Example                            |
 |---------------------|----------------------------------------------------------------------------------------------|-------------|------------------------------------|
-| `PUBLIC_URL`        | External URL where Anaphora is accessible                                                    | Yes         | `http://anaphora.example.com:3000` |
+| `PUBLIC_URL`        | External URL where you can reach Anaphora                                                    | Yes         | `http://anaphora.example.com:3000` |
 | `DB_ENCRYPTION_KEY` | Key that encrypts the database. Without it, a published default key is used.                 | Recommended | `your-encryption-key`              |
 | `ADMIN_USERNAME`    | Initial admin username (default `admin`)                                                     | No          | `admin`                            |
 | `ADMIN_PASSWORD`    | Initial admin password (default `admin`)                                                     | No          | `your-secure-password`             |
@@ -43,9 +43,9 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser and log
 More variables configure [OpenID Connect](../administration/authentication/oidc.md#configure-from-the-environment),
 an [AI provider](#ai-provider-from-the-environment) and [demo data](#demo-data).
 
-:::tip Production Deployment
-For production, use a strong `DB_ENCRYPTION_KEY` and set `PUBLIC_URL` to your actual external URL (this is used for
-callback URLs in SSO configurations).
+:::tip Production deployment
+For production, use a strong `DB_ENCRYPTION_KEY` and set `PUBLIC_URL` to your external URL. SSO configurations use it
+for callback URLs.
 :::
 
 :::warning Keep the database key
@@ -57,7 +57,7 @@ source, and it says so in the log at start. Anaphora has no command to change th
 `WORKER_COUNT` also limits report rendering: at most two report templates or equations per worker run at the same
 time. Each one runs in a separate process with 256 MB of memory.
 
-### AI Provider from the Environment
+### AI provider from the environment
 
 The environment can own one AI provider. Anaphora creates it at the first start, in the default space, and updates it
 at every start to match the environment.
@@ -72,7 +72,7 @@ at every start to match the environment.
 
 A partial or invalid set logs a warning and creates nothing. See [AI Providers](../administration/ai-providers.md).
 
-### Demo Data
+### Demo data
 
 For a preview or evaluation instance, Anaphora can fill an empty database with demo content:
 
@@ -142,9 +142,9 @@ Without a `user:` setting, the container starts as root, makes `storage/` and `c
 writable, the container stops and prints the `chown` command to run.
 :::
 
-:::tip 🎁 Get a Free Trial Key
+:::tip Get a free trial key
 The `ACTIVATION_KEY` unlocks PRO or Enterprise features.
-**[Request your free trial key →](https://portal.anaphora.it/trial)** — instant activation, no credit card required.
+[Request your free trial key](https://portal.anaphora.it/trial). Activation is instant, and you do not need a credit card.
 :::
 
 ## Upgrading Anaphora
@@ -152,15 +152,15 @@ The `ACTIVATION_KEY` unlocks PRO or Enterprise features.
 Use the upgrade script that comes in every image. It tests the new version on a copy of your database first, and it can
 roll back. See [Upgrading](./upgrading.md).
 
-## Need Help?
+## Need help?
 
-:::note 💬 Join the Community
-Having trouble? **[Ask on the Anaphora Forum →](https://forum.anaphora.it)** — Get help from the team and other users.
+:::note Join the community
+If you have a problem, [ask on the Anaphora Forum](https://forum.anaphora.it). The team and other users can help.
 :::
 
-## Next Steps
+## Next steps
 
-- [Upgrading](./upgrading.md) - Move to a new version safely
-- [Features & Editions](./features) - Compare Free, PRO, and Enterprise editions
-- [Configuration](./configuration) - Configure Anaphora settings
-- [Basic Examples](../basic-examples/) - Create your first report job
+- [Upgrading](./upgrading.md): move to a new version safely
+- [Features & Editions](./features): compare Free, PRO, and Enterprise editions
+- [Configuration](./configuration): configure Anaphora settings
+- [Basic Examples](../basic-examples/): create your first report job

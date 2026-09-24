@@ -4,16 +4,16 @@ description: Monitor Anaphora health, performance, and job metrics. Configure al
 keywords: [ self monitoring, health check, Prometheus, metrics, job monitoring, performance, Anaphora monitoring ]
 ---
 
-# Self Monitoring
+# Self-monitoring
 
-Monitor Anaphora's health, job and delivery success.
+Monitor the health of Anaphora and the success of its jobs and deliveries.
 ![](images/self-monitoring.png)
 
-## Health Monitoring
+## Health monitoring
 
 Access the monitoring settings at **Settings** > **Application** > **Health Monitoring**.
 
-### Setup Health Alerts
+### Set up health alerts
 
 Get alerts when Anaphora detects changes in job success rates.
 
@@ -31,13 +31,13 @@ The same delivery settings also receive the token budget alerts of the AI provid
 
 ## Health API
 
-Query Anaphora's health status programmatically:
+To get the health status of Anaphora through the API, call this endpoint:
 
 ```
 GET /guest/api/health
 ```
 
-### Response Format
+### Response format
 
 ```json
 {
@@ -88,7 +88,7 @@ GET /guest/api/health
 }
 ```
 
-### Health Status Values
+### Health status values
 
 | Status     | Meaning                    |
 |------------|----------------------------|
@@ -97,7 +97,7 @@ GET /guest/api/health
 | **red**    | All recent runs failed     |
 | **gray**   | No recent activity         |
 
-### Run States
+### Run states
 
 Each entry of `recentRuns` has a `state`:
 
@@ -110,11 +110,11 @@ Each entry of `recentRuns` has a `state`:
 A job is green when its last five runs are all `success`, and red when they are all `failed`. A `partial` run makes the
 job yellow, not red: one address that refuses the mail keeps the job yellow.
 
-### AI Budget Alerts
+### AI budget alerts
 
 The delivery interface of the health alerts also carries the [AI token budget](./ai-providers.md#budget-alerts) alerts.
 You can set it without switching health monitoring on.
 
-## Next Steps
+## Next steps
 
-- [Backup](./backup) - Configure backups
+- [Backup](./backup): configure backups

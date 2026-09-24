@@ -4,21 +4,21 @@ description: Design professional PDF reports with Anaphora's block-based compose
 keywords: [ PDF report builder, report composer, branded reports, PDF layout, report template ]
 ---
 
-# Composer - Report Builder
+# Composer: report builder
 
-The **Compose** tab is where captured content becomes a professional report. Using a block-based editor, you can create
+In the **Compose** tab, you make a report from the captured content. With the block-based editor, you can create
 branded PDFs with custom layouts, text, images, and snapshots.
 
-## Block Types
+## Block types
 
-### Capture Blocks
+### Capture blocks
 
 | Block         | Description                                   |
 |---------------|-----------------------------------------------|
 | **Snapshots** | All captured screenshots                      |
 | **Variables** | Captured texts, calculated values, AI results |
 
-### Component Blocks
+### Component blocks
 
 | Block          | Description                                        |
 |----------------|----------------------------------------------------|
@@ -29,25 +29,25 @@ branded PDFs with custom layouts, text, images, and snapshots.
 
 ## Layout
 
-The report layout is built using a hierarchical structure of pages, rows, and cells.
+The report layout is a hierarchy of pages, rows, and cells.
 
 | Structure | Description                                                                                                   |
 |-----------|---------------------------------------------------------------------------------------------------------------|
-| **Page**  | Pages reflect PDF pagination. Every page consists of rows.                                                    |
+| **Page**  | Pages follow PDF pagination. Every page has rows.                                                             |
 | **Row**   | Rows split pages horizontally into sections.                                                                  |
-| **Cell**  | Cells hold blocks within rows. Up to 3 cells can fit per row (**1 Column**, **2 Columns**, or **3 Columns**). |
+| **Cell**  | Cells hold blocks in a row. A row has up to 3 cells (**1 Column**, **2 Columns**, or **3 Columns**).          |
 
-## Text Blocks
+## Text blocks
 
 A text block is a [Liquid](https://shopify.github.io/liquid/) template. It can show variables, for example
 `{{ hits }}`, and use tags such as `{% if hits > 5 %}`.
 
-### Errors in a Text Block
+### Errors in a text block
 
 - The editor shows a syntax error in the place of the block. You cannot save a template with a syntax error.
 - A template that fails only on the example values in the editor (for example a colour filter on a captured text) can
   still be saved.
-- If a text block fails at run time, the report is **not delivered**. Anaphora keeps the report on the run, with the
+- If a text block fails at run time, the report is not delivered. Anaphora keeps the report on the run, with the
   error in the place of the broken block, so you can open it and see where the template breaks. The Jobs list shows the
   job as **Not delivered**, and each delivery of the run names the page, row and column of the broken block.
 
@@ -72,7 +72,7 @@ syntax error.
 A colour field accepts `#rrggbb`, `rgb()`, `rgba()`, `hsl()`, `hsla()` or a colour name. Anaphora refuses other values
 when you save.
 
-## Next Steps
+## Next steps
 
-- [Delivery](./delivery) - Configure where reports are sent
-- [Basic Examples](../basic-examples/) - See complete job examples
+- [Delivery](./delivery): configure where reports are sent
+- [Basic examples](../basic-examples/): see complete job examples

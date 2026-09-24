@@ -8,27 +8,27 @@ keywords: [ reports, report storage, report retention, PDF reports, captured dat
 
 ![Reports gallery showing generated report thumbnails with timestamps and durations](images/reports.png)
 
-The Reports section provides access to all generated report documents and their delivery history.
+The Reports section shows all generated report documents and their delivery history.
 
 ## Overview
 
 Reports are the final output of your capture jobs. A report is a PDF document assembled from captured screenshots,
 extracted data, and formatted content.
 
-## Viewing Reports
+## Viewing reports
 
-Access reports through:
+You can open reports from two places:
 
-- **Runs** - Open the report of one run from the **Report** column
-- **Reports** - Browse all generated reports. Use the **All Jobs** menu to show the reports of one job
+- **Runs**: open the report of one run from the **Report** column
+- **Reports**: browse all generated reports. Use the **All Jobs** menu to show the reports of one job
 
-## Report Storage
+## Report storage
 
-Most importantly, reports are delivered to configured destinations (email, Slack, S3, webhooks).
-However, Anaphora also stores copies of generated reports for reference.
+Anaphora delivers reports to the configured destinations (email, Slack, S3, webhooks).
+It also stores copies of the generated reports for reference.
 In the job's **General** tab, **Housekeeping** > **Run Expire Time** sets how long Anaphora keeps them.
 
-## Private Report Links
+## Private report links
 
 Report links are private. Every run has a secret token, and the links in a delivered email, Slack message or webhook
 carry it. The report files (PDF, HTML, images) open for a link with the token, or for a signed-in member of the run's

@@ -4,11 +4,11 @@ description: Step-by-step Anaphora tutorials for Kibana PDF reports, Grafana das
 keywords: [ Kibana PDF report, Grafana scheduled report, dashboard alert, Elasticsearch report, tutorial ]
 ---
 
-# Basic Examples - Kibana & Grafana Report Tutorials
+# Basic examples: Kibana and Grafana report tutorials
 
-Learn Anaphora through practical examples. Each example walks you through creating a complete job from start to finish.
+Each example builds one complete job in Anaphora, from start to finish.
 
-## Available Examples
+## Available examples
 
 | Example                                                                 | Description                                          |
 |-------------------------------------------------------------------------|------------------------------------------------------|
@@ -19,12 +19,12 @@ Learn Anaphora through practical examples. Each example walks you through creati
 
 ## Prerequisites
 
-Before starting these examples, ensure you have:
+Before you start, make sure you have:
 
 - Anaphora installed and running
 - Access to a Kibana or Grafana instance. The examples use the public demos at `demo.elastic.co` and `play.grafana.org`.
 - At least one delivery interface set up (email, Slack, etc.)
 
-## Next Steps
+## Next steps
 
-Start with the [Kibana Dashboard Report](./basic-examples/kibana-dashboard-report) example for a complete walkthrough.
+Start with the [Kibana Dashboard Report](./basic-examples/kibana-dashboard-report) example. It shows every step of one job.

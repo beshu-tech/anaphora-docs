@@ -12,14 +12,14 @@ The Runs section shows the execution history of your jobs, including successful 
 
 ## Overview
 
-Each time a job runs, Anaphora makes a **run** record. Use it to:
+Each time a job runs, Anaphora makes a run record. Use it to:
 
 - Track job execution history
 - Identify and debug failures
 - Review captured content
 - Verify delivery success
 
-## Run Statuses
+## Run statuses
 
 | Status             | Description                                                            |
 |--------------------|------------------------------------------------------------------------|
@@ -30,7 +30,7 @@ Each time a job runs, Anaphora makes a **run** record. Use it to:
 
 Click an **Error** or **Delivery issue** tag to see the details.
 
-## Retries and Attempts
+## Retries and attempts
 
 A retry is not a separate run. Anaphora lists the retries under the run that failed first, and the **Attempts** column
 counts them. When you delete a run, its retries and their files go with it.
@@ -38,7 +38,7 @@ counts them. When you delete a run, its retries and their files go with it.
 The **Status** and **Report** filters read the latest attempt of a run. So a run whose retry succeeded is listed as a
 success.
 
-## Status on the Jobs List
+## Status on the Jobs list
 
 The Jobs list shows the result of the last run of each job:
 
@@ -48,4 +48,4 @@ The Jobs list shows the result of the last run of each job:
 | **Error**          | The run failed                                                              |
 | **Delivery issue** | A destination refused the report                                            |
 | **Not delivered**  | Anaphora withheld the report because a text block of the template failed   |
-| **No runs**        | The job has not run yet                                                     |
+| **No runs**        | The job did not run yet                                                     |

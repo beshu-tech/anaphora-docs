@@ -25,7 +25,7 @@ Send reports through your own SMTP server, with plain, STARTTLS or SSL connectio
 | Reject unauthorized | Refuse a server certificate that does not verify. On by default.            | No       |
 | Cert, Private key, Passphrase | A client certificate in PEM, for servers that ask for one (SSL only) | No       |
 
-## Common Configurations
+## Common configurations
 
 ### Gmail
 
@@ -62,7 +62,7 @@ Connection security: STARTTLS
 3. Enter the **Test email** address. The subject and the body are optional.
 4. Click **Send test email**, and make sure that the email arrives.
 
-## Sending Behavior
+## Sending behavior
 
 Anaphora sends the emails of a run one at a time, over one connection. So a server that allows few connections accepts
 every recipient. Every SMTP timeout is at most one minute. After a server failure, Anaphora marks the other recipients
