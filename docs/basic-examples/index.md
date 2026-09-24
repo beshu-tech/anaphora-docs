@@ -22,7 +22,7 @@ Learn Anaphora through practical examples. Each example walks you through creati
 Before starting these examples, ensure you have:
 
 - Anaphora installed and running
-- A connection configured to your Kibana or Grafana instance
+- Access to a Kibana or Grafana instance. The examples use the public demos at `demo.elastic.co` and `play.grafana.org`.
 - At least one delivery interface set up (email, Slack, etc.)
 
 ## Next Steps

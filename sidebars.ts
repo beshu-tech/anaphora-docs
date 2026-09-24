@@ -11,6 +11,7 @@ const sidebars: SidebarsConfig = {
       },
       items: [
         'getting-started/installation',
+        'getting-started/upgrading',
         'getting-started/features',
         'getting-started/configuration',
       ],
@@ -95,6 +96,7 @@ const sidebars: SidebarsConfig = {
         },
         'administration/spaces',
         'administration/ai-providers',
+        'administration/agent-api',
         'administration/self-monitoring',
         'administration/backup',
       ],

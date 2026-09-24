@@ -21,9 +21,11 @@ Every time a job executes, a **run** record is created. This allows you to:
 
 ## Run Statuses
 
-| Status          | Description                                                           |
-|-----------------|-----------------------------------------------------------------------|
-| Success         | Job completed and report delivered                                    |
-| Delivery issues | The report was created but could not be delivered to all destinations |
-| Failed          | Job execution failed                                                  |
-| Skipped         | Conditions not met, no report sent                                    |
+| Status             | Description                                                            |
+|--------------------|------------------------------------------------------------------------|
+| **Success**        | The job completed and the report was delivered                         |
+| **Delivery issue** | The report was created, but it could not be delivered to all destinations |
+| **Error**          | The job execution failed                                               |
+| **Cancelled**      | A condition stopped the run (for example a **Break** action), so no report was sent |
+
+Click an **Error** or **Delivery issue** tag to see the details.

@@ -51,23 +51,37 @@ Users can belong to multiple Spaces with different roles.
 While resources cannot be shared, they can be copied:
 
 1. In the jobs list, select the jobs to copy to another Space
-2. Click **Copy to Space**
+2. Click **Copy to other space**
 3. Choose target Space
-4. If applicable, select to copy associated delivery interfaces
+4. If applicable, select what to do with each associated delivery interface, for example **Copy delivery interface**
+   or **Exclude from copy**
 
 The same process applies to delivery interfaces.
 
+To copy, you need these permissions in the Space the resource comes from:
+
+| Resource                                  | Permission needed |
+|-------------------------------------------|-------------------|
+| Job                                       | ReadWrite         |
+| Delivery interface, AI provider, template | Admin             |
+
 ## Creating Spaces
 
-1. Navigate to **Settings** > **System Settings** >  **Permissions**
+1. Navigate to **Settings** > **System** > **Permissions**
 2. Click **Add Space**
-3. Enter the name of the Space
+3. Enter the **Name** of the Space
+4. Click **Save**
 
 ### Assignment Process
 
-1. Click **Add Permission**
-2. Select user or role
-3. Assign permission (Admin, ReadWrite, Readonly)
+1. In the Space, click **Add Permission**
+2. Select user or role, and enter its name in **Role/User**
+3. Select the **Access** (**Admin**, **Read Write**, **Read Only**)
+4. Click **Save**
+
+:::info
+System users automatically have admin permissions for all spaces.
+:::
 
 :::tip User Roles
 Users can have roles assigned to them. These roles can then be assigned to Spaces for easier management. So it is not
@@ -80,10 +94,10 @@ Users can belong to multiple Spaces, by direct assignment or via roles:
 
 ```
 User: alice@company.com
-├── Space: Engineering → Permission: Admin
-└── Space: Marketing → Permission: Readonly
+├── Space: Engineering → Access: Admin
+└── Space: Marketing → Access: Read Only
 Role: DevOps Team
-└── Space: DevOps → Permission: ReadWrite
+└── Space: DevOps → Access: Read Write
 ```
 
 ## Switching Spaces
@@ -138,8 +152,8 @@ See [Authentication](authentication/index.md) for details on user roles and perm
 
 Assign minimal required permissions:
 
-- Most users: Space Readonly
-- Job creators: Space ReadWrite
+- Most users: Space Read Only
+- Job creators: Space Read Write
 - Team leads: Space Admin
 - IT/Operations: System Admin
 

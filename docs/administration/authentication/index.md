@@ -18,14 +18,19 @@ methods for secure access.
 | [SAML](/administration/authentication/saml)   | Single Sign-On via SAML 2.0  | Okta, Azure AD, OneLogin        |
 | [OIDC](/administration/authentication/oidc)   | OpenID Connect providers     | Google, Auth0, Keycloak         |
 
+:::note
+LDAP, SAML and OIDC need the Enterprise edition. The Free and Pro editions use Local authentication only. In the Free
+edition, all local users are system users.
+:::
+
 ## Roles and Permissions
 
 Anaphora uses role-based access control (RBAC).
 
 ### User types
 
-Anaphora has two main user types: System users and normal users. System users will have global access and can manage the
-Anaphora instance. While normal users will be assigned to specific spaces with permissions scoped to those spaces.
+Anaphora has two main user types: system users and normal users. System users have global access and manage the
+Anaphora instance. Normal users get access to specific spaces, with permissions for those spaces only.
 
 | User Type       | Description                                | Methods |
 |-----------------|--------------------------------------------|---------|
@@ -36,15 +41,15 @@ Anaphora instance. While normal users will be assigned to specific spaces with p
 
 Users are assigned permissions within specific spaces:
 
-| Permission    | Description                        |
-|---------------|------------------------------------|
-| **Admin**     | Full access within assigned spaces |
-| **ReadWrite** | Create and edit jobs, run reports  |
-| **Readonly**  | View reports and job status only   |
+| Permission     | Description                        |
+|----------------|------------------------------------|
+| **Admin**      | Full access within assigned spaces |
+| **Read Write** | Create and edit jobs, run reports  |
+| **Read Only**  | View reports and job status only   |
 
 ### Permission Details
 
-| Rights                     | System User | Space Admin | Space ReadWrite | Space Readonly |
+| Rights                     | System User | Space Admin | Space Read Write | Space Read Only |
 |----------------------------|-------------|-------------|-----------------|----------------|
 | View reports               | Yes         | Yes         | Yes             | Yes            |
 | View runs                  | Yes         | Yes         | Yes             | Yes            |
@@ -54,11 +59,25 @@ Users are assigned permissions within specific spaces:
 | Manage users               | Yes         | No          | No              | No             |
 | Manage spaces              | Yes         | No          | No              | No             |
 | Global settings            | Yes         | No          | No              | No             |
+| Export and import data     | Yes         | No          | No              | No             |
+| Read authentication config | Yes         | No          | No              | No             |
+| List and end sessions      | Yes         | No          | No              | No             |
+| Read capture passwords     | Yes         | Yes         | Yes             | No             |
+
+Every action on jobs, templates, delivery interfaces and AI providers checks your access to the space that holds them.
+
+- Only a system user can read the authentication configuration (it holds the session secret and the LDAP, SAML and
+  OIDC credentials), list and end sessions, and use the password and secret tools of the settings.
+- A user with Readonly access sees the jobs and templates without the login passwords of their captures.
+
+:::note Free edition
+In the Free edition, every account has the System role.
+:::
 
 ### Add User Permissions
 
-See the [Spaces](/administration/spaces) documentation for details on assigning users to spaces with specific
-permissions.
+Assign users and roles to spaces in **Settings** > **System** > **Permissions**. See the
+[Spaces](/administration/spaces) documentation for details.
 
 ## Next Steps
 

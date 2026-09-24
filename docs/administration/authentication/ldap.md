@@ -21,7 +21,8 @@ LDAP integration provides:
 
 ## Configuration
 
-Navigate to **Settings** > **System Settings** > **Auth** > **LDAP** to configure.
+Go to **Settings** > **System** > **Auth** > **LDAP** to configure. To activate LDAP, add `ldap` to **Strategies** in
+**Settings** > **System** > **General**.
 
 | Field               | Description                    | Example                                | Required |
 |---------------------|--------------------------------|----------------------------------------|----------|
@@ -29,20 +30,23 @@ Navigate to **Settings** > **System Settings** > **Auth** > **LDAP** to configur
 | Bind DN             | Service account for binding    | `cn=read-only-admin,dc=example,dc=com` | Yes      |
 | Bind credentials    | Service account password       | (stored securely)                      | Yes      |
 | Search base         | Base DN for user search        | `dc=example,dc=com`                    | Yes      |
-| Search filter       | LDAP filter for user lookup    | `uid={{username}}`                     | Yes      |
+| Search filter       | LDAP filter for user lookup    | `(uid={{username}})`                   | Yes      |
 | Group search base   | Base DN for group search       | `ou=groups,dc=example,dc=com`          | No       |
 | Group search filter | LDAP filter for groups         | `(member={{cn}})`                      | No       |
-| Group name property | Attribute for group name       | `cn`                                   | No       |
-| Reject unauthorized | Enforce TLS certificate checks | `false` (unchecked)                    | No       |
-| CA                  | Certificate authority          | base64-encoded PEM                     | No       |
-| Key                 | Client private key             | base64-encoded PEM                     | No       |
-| Certificate         | Client certificate             | base64-encoded PEM                     | No       |
+| Group name property | Attribute for group name       | `cn` (default)                         | No       |
+| Reject unauthorized | Enforce TLS certificate checks | `false` (unchecked, default)           | No       |
+| Ca                  | Certificate authority          | PEM file contents, one or more         | No       |
+| Key                 | Client private key             | PEM file contents                      | No       |
+| Certificate         | Client certificate             | PEM file contents                      | No       |
+| Passphrase          | Passphrase for the client key  |                                        | No       |
 
 ### Group to Role Mapping
 
-Use the group search to retrieve LDAP groups and map them to Anaphora roles.
-In the **group search filter**, use `{{<attribute>}}` placeholders to reference attributes from the login user.
-Use the **Group name property** to specify which attribute will be used as the mapped role name.
+Use the group search to get LDAP groups and map them to Anaphora roles.
+In the **Group search filter**, use `{{<attribute>}}` placeholders to reference attributes of the login user, for
+example `{{username}}`, `{{dn}}`, `{{uid}}` or `{{cn}}`.
+Use the **Group name property** to specify the attribute that becomes the role name.
+Give these roles access to spaces in **Settings** > **System** > **Permissions**.
 
 ### SSL/TLS Configuration
 
@@ -54,7 +58,8 @@ For secure connections use LDAPS (port 636):
 | LDAPS    | 636  | SSL/TLS encrypted             |
 | StartTLS | 389  | Upgraded to TLS               |
 
-Provide CA, Key, and Certificate fields for TLS client authentication if required by your LDAP server.
+If your LDAP server requires TLS client authentication, fill in **Ca**, **Key** and **Certificate** under
+**TLS Options**. Paste the contents of the certificate or key file.
 
 ## Active Directory Specifics
 
@@ -71,8 +76,8 @@ Create a dedicated service account for Anaphora:
 
 Enable LDAP debug logging:
 
-1. Go to **Settings** > **System Settings** > **General** > **General**
-2. Set **Log Level** to `debug`
+1. Go to **Settings** > **System** > **General**
+2. Set **Log level** to `debug`
 3. Reproduce the issue
 4. Review logs for detailed LDAP communication
 

@@ -6,59 +6,79 @@ keywords: [ Kibana report tutorial, scheduled dashboard, PDF email, Anaphora exa
 
 # Kibana Dashboard Report
 
-Create a scheduled report that captures your Kibana dashboard and delivers it via email.
+Capture a Kibana dashboard on a schedule and send it by email as a PDF report.
 
-:::tip Kibana Dashboard Snapshot Template
-The **Kibana Dashboard Snapshot** Template demonstrates this example for the Kibana demo instance. You can use it as a
-starting point for your own dashboard reporting jobs.
+:::tip Kibana Dashboard Snapshot template
+The **Kibana Dashboard Snapshot** template builds this job for the public Kibana demo at `demo.elastic.co`. Pick it
+under **Jobs → Create Job** and change the URL to your own dashboard.
 :::
 
 ## Goal
 
-Send a daily PDF report of a Kibana dashboard to your team every morning at 9 AM.
+Every morning at 9:00, send the team a PDF of the web traffic dashboard for the last 24 hours.
 
 ## Steps
 
-### 1. Create a New Job
+### 1. Create the job
 
-1. Navigate to **Jobs** in the sidebar
-2. Click **Create New Job**
+1. Open **Jobs** in the sidebar.
+2. Click **Create Job**, then **Create New**.
 
-### 2. Configure General Settings
+### 2. General
 
-- **Frequency**: Daily at 9:00 AM (or use CRON: `0 9 * * *`)
+- **Name**: `Web traffic, every morning`
+- **Frequency**: every **day** at **9:00**. Switch on **Advanced** to type a cron expression instead, for example
+  `0 9 * * *`.
+- **Run Expire Time** keeps the runs and their reports for six months. Shorten it if disk space is tight.
 
-### 3. Set Up Capture
+![The General tab: name, description, a daily frequency at 9:00, retries and the run expiry](images/kibana-dashboard-report-general.png)
 
-1. Select **Kibana** as the connector
-2. Enter your dashboard URL:
-    ```
-    https://your-kibana.example.com/app/dashboards#/view/abc123
-    ```
-3. Choose authentication method: **ReadonlyREST** and add credentials
-4. Set time range: "Last 24 hours"
+### 3. Capture
 
-### 4. Configure Composition
+1. **Connector**: **Kibana**.
+2. **URL**: the address of the dashboard, as the browser shows it:
+   ```
+   https://kibana.example.com/app/dashboards#/view/your-dashboard-id
+   ```
+3. **Authentication**: the method your Kibana needs, for example **ReadonlyREST**, with its credentials. The public
+   demo needs none.
+4. **Snapshot template**: **Full page** takes the whole dashboard. Choose the tiles template to get one image per
+   visualisation.
+5. **Time select**: from **1 day ago** to **Now**. Anaphora sets this range on the dashboard at each run.
+6. Click **Test capture** to see the snapshot before you save.
 
-1. Drag the captured dashboard snapshot into the layout
-2. Add additional text blocks if needed
-3. Adjust the layout for optimal viewing
+![The Capture tab in Basic mode: the Kibana connector, the dashboard URL, the authentication, the snapshot template and the time range](images/kibana-dashboard-report-capture.png)
 
-### 5. Set Up Delivery
+### 4. Compose
 
-1. Select **Email** as delivery interface (needs to be configured first in **Delivery Interfaces**)
-2. Add recipient email addresses
+Drag the captured snapshot into the page, and add a text block above it for the title. A text block can show values
+of the run, for example the date of the report:
 
-### 6. Test and Save
+```liquid
+<h1>Web traffic, last 24 hours</h1>
+<p>Generated {{ metaData.createdAt | date: "%A %d %B %Y, %H:%M" }}</p>
+```
 
-1. Use the test to send a sample report to your email
-2. Verify the email arrives correctly
-3. **Save** the job
+![The Compose tab: a title block with the date of the run above the dashboard snapshot](images/kibana-dashboard-report-compose.png)
+
+### 5. Deliver
+
+1. Choose a delivery interface, for example your SMTP server. Set it up first under **Delivery Interfaces**.
+2. Add the recipients.
+3. Write the message. `{{ metaData.reportLink }}` is the link to the PDF.
+
+![The Deliver tab: an SMTP interface, a recipient and a message with the report link](images/kibana-dashboard-report-deliver.png)
+
+### 6. Run and save
+
+Click **Run** to build and send the report once, then **Save**. The job then runs every morning.
 
 ## Result
 
-Your team will receive a PDF report every morning with the latest dashboard data.
+Every morning the team gets an email with a link to the PDF:
 
-## Next Steps
+![The delivered report: the title, the date and the Kibana web traffic dashboard of the last 24 hours](images/kibana-dashboard-report-result.png)
 
-- [Kibana Alert](./kibana-alert) - Add conditional logic to your reports
+## Next steps
+
+- [Kibana Alert](./kibana-alert): send the report only when the data meets a condition.

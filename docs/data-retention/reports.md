@@ -19,11 +19,20 @@ extracted data, and formatted content.
 
 Access reports through:
 
-- **Run history** - View report from specific execution
-- **Report browser** - Browse all generated reports
+- **Runs** - Open the report of one run from the **Report** column
+- **Reports** - Browse all generated reports. Use the **All Jobs** menu to show the reports of one job
 
 ## Report Storage
 
 Most importantly, reports are delivered to configured destinations (email, Slack, S3, webhooks).
 However, Anaphora also stores copies of generated reports for reference.
-In the job configuration, you can set how long reports are retained.
+In the job's **General** tab, **Housekeeping** > **Run Expire Time** sets how long Anaphora keeps them.
+
+## Private Report Links
+
+Report links are private. Every run has a secret token, and the links in a delivered email, Slack message or webhook
+carry it. The report files (PDF, HTML, images) open for a link with the token, or for a signed-in member of the run's
+space. Anyone else gets "not found".
+
+Runs from before the upgrade to this version keep the links that Anaphora already sent, until the runs expire or are
+deleted.

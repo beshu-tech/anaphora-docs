@@ -17,14 +17,14 @@ Deliver reports directly to Slack channels. Use the webhook delivery interface t
 
 ### 2. Configure in Anaphora
 
-1. Go to **Delivery Interfaces**
-2. Add new **Webhook** interface
-3. Paste the Webhook URL
-4. Set the method to **POST** and body type to **JSON**
-5. Add the JSON body:
+1. In the sidebar, click **Delivery Interfaces**
+2. Click **Create Delivery Interface** and select the **Webhook** type
+3. Paste the webhook URL into **URL**
+4. Set **Method** to `POST` and **Body type** to `json`
+5. Add the **JSON body**:
    ```json
     {
-      "text": "Hello, world."
+      "text": "$MESSAGE"
     }
    ```
-6. Test and save
+6. Click **Test**, then click **Save**
