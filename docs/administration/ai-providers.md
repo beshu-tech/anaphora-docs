@@ -37,20 +37,20 @@ flowchart LR
 
 ### Adding a Provider
 
-1. Navigate to **AI Providers**
-2. Click **Add Provider**
+1. In the sidebar, click **AI Providers**
+2. Click **Create AI Provider**
 3. Configure the connection:
 
 | Field        | Description                                           | Example                        |
 |--------------|-------------------------------------------------------|--------------------------------|
 | **Name**     | Identifier for this provider                          | `Production GPT-5`             |
-| **Provider** | Type of AI provider                                   | `OpenAI`, `DeepSeek`, `Custom` |
+| **Provider** | Type of AI provider                                   | `OpenAI`, `DeepSeek`, `Custom (OpenAI API compatible)` |
 | **Endpoint** | OpenAI-compatible base URL (Only for custom provider) | `https://api.openai.com/v1`    |
-| **API Key**  | Authentication token                                  | `sk-...` (stored encrypted)    |
+| **API key**  | Authentication token                                  | `sk-...` (stored encrypted)    |
 | **Model**    | Model to use. Needs API key to fetch suggestions.     | `gpt-5.2`                      |
 
-4. Test the connection
-5. Save
+4. Click **Test**
+5. Click **Save**
 
 ### Provider Inheritance
 
@@ -66,17 +66,19 @@ Use AI actions in the job actions:
 
 1. Edit or create a job
 2. Navigate to the **Capture** tab
-3. Enable advanced mode to use actions.
-4. Add **AI** action
+3. Turn on the **Advanced** switch to use actions
+4. Add an **AI** action
 5. Configure:
 
-| Field         | Description                             |
-|---------------|-----------------------------------------|
-| Variable Name | Name of the variable to store AI output |
-| Provider      | Select the AI provider to use           |
-| Prompt        | Define the prompt with instructions     |
-| Output type   | Text, HTML, Number                      |
-| Context       | Choose what to include as context       |
+| Field                        | Description                                                                    |
+|------------------------------|--------------------------------------------------------------------------------|
+| Variable name                | Name of the variable to store AI output                                        |
+| Provider                     | Select the AI provider to use                                                  |
+| Prompt                       | Define the prompt with instructions                                            |
+| Output type                  | `text`, `number`, `html`                                                       |
+| Answer length cap            | Maximum tokens in the answer. Empty leaves it to the provider                  |
+| Context                      | **Everything so far** or **Only ticked rows**                                  |
+| Send the snapshots as images | Send the snapshots to the model as images (only for providers that read images) |
 
 ### Example: Dashboard Summary
 

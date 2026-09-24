@@ -15,13 +15,19 @@ Access the monitoring settings at **Settings** > **Application** > **Health Moni
 
 ### Setup Health Alerts
 
-Configure email alerts when the system detects changes in job health status.
+Get alerts when Anaphora detects changes in job success rates.
 
-1. Enable **Health Alerts**.
-2. Select a delivery interface and recipient email.
+1. Under **Operator notifications** > **Delivery**, select a **Delivery Interface**. For an SMTP or Mailgun interface,
+   also add the **Recipients**. A webhook with **Define body in job instead** is not available.
+2. Select **Job Health Alerts**.
 3. Set **Health Check Frequency**: how often to check job health.
-4. Set **Maximum Notification Frequency**: minimum time between alerts (Optional).
-5. Click **Save**.
+4. Set **Maximum Notification Frequency**: minimum time between alerts (optional).
+5. Optionally, click **Test** to send the current health status.
+6. Click **Save**.
+
+:::info
+The same delivery settings also receive the token budget alerts of the AI providers.
+:::
 
 ## Health API
 

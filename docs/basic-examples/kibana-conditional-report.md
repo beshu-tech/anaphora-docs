@@ -1,75 +1,93 @@
 ---
 sidebar_position: 3
-description: Create intelligent alerts that trigger when conditions are met, with AI-powered root cause analysis and detailed PDF reports.
-keywords: [ Anaphora alerts, conditional alerting, AI root cause analysis, multi-system monitoring, intelligent notifications ]
+description: Build a conditional Kibana report in Anaphora that checks a search and captures a dashboard only when the condition holds.
+keywords: [ Kibana conditional report, advanced capture, conditional block, Kibana dashboard, Anaphora example ]
 ---
 
 # Kibana Conditional Report
 
-Create reports that will only be built and delivered when specific conditions are met.
+Check a Kibana search first, and capture and send a dashboard only when the result calls for it.
 
-:::tip Kibana Conditional Snapshot Template
-The **Kibana Conditional Snapshot** Template demonstrates this example for the Kibana demo instance. You can
-use it as a starting point for your own conditional reporting jobs.
+:::tip Conditional Kibana Dashboard Snapshot template
+The **Conditional Kibana Dashboard Snapshot** template builds this flow for the public Kibana demo. Pick it under
+**Jobs → Create Job** and change the URLs and the threshold.
 :::
 
 ## Goal
 
-In this example, we will check the Kibana discover page for error logs. Then we will capture a snapshot of a dashboard.
-The report with the captured dashboard will only be delivered if the number of errors exceeds a defined threshold.
+Every hour, count the server errors of the last 24 hours. When there are 5 or more, capture the web traffic dashboard
+and send it, at most once every 12 hours.
 
 ## Steps
 
-### 1. Create a new job
+### 1. Create the job
 
-1. Navigate to **Jobs**
-2. Click **Create New Job**
+1. Open **Jobs** in the sidebar.
+2. Click **Create Job**, then **Create New**.
 
-### 2. Configure General Settings
+### 2. General
 
-- **Frequency**: Every hour
-- **Max Notify Frequency**: 12 hours
+- **Frequency**: every hour (**Advanced**: `0 * * * *`).
+- **Max Notify Freq**: **12 hours**.
 
-### 3. Set Up Capture
+![The General tab: an hourly frequency and a maximum notification frequency of 12 hours](images/kibana-conditional-report-general.png)
 
-1. Enable **Advanced** mode to build a conditional workflow
-2. In the preexisting **Navigate**-action:
-    - select **Kibana** as the connector
-    - Enter your Kibana discover URL:
-      ```
-      https://kibana.example.com/app/discover#/view/your-view-id
-      ```
-    - Choose authentication method: **ReadonlyREST** and add credentials
-3. Add a **Capture value** action to extract the number of error logs:
-    - Set the **variable name** to something like `error_count`
-    - Set **capture template** to `Kibana discover hits`
-    - Set **Variable type** to `Number`
-4. Add a **Conditional block** to check if the error count is smaller than the threshold:
-    - Choose **Variable**: `error_count`
-    - Set **Condition operation** to `Lesser than`
-    - Set **Condition value** to `100`
-5. Inside the conditional block, add a **Break** action to stop execution if the condition is met (i.e., error count is
-   below threshold)
-6. Add another **Navigate** action
-    - Select **Kibana** as the connector
-    - Enter your Kibana dashboard URL:
-      ```
-      https://kibana.example.com/app/dashboards#/view/your-dashboard-id
-      ```
-    - Ensure that **Take Snapshot** is checked and set the configuration properly
+### 3. Capture
 
-### 4. Compose the Report
+Switch on **Advanced**. The capture becomes a flow of actions, run from top to bottom. Click an action to edit it, and
+the **+** between two actions to add one.
 
-1. Add the captured snapshot
-2. If desired, add a text block with the `{{error_count}}` variable to show the number of errors
-3. Add headers and other text as needed
+![The capture flow: go to Discover, capture the hits, stop when there are fewer than 5, go to the dashboard and take a snapshot](images/kibana-conditional-report-capture.png)
 
-### 5. Set Up Delivery
+1. **Navigate** (the first action): the Discover search to check.
+   - **Connector**: **Kibana**.
+   - **URL**: the search, for example `response >= 500` on your web logs.
+   - **Auth type**: the method your Kibana needs, for example **ReadonlyREST**.
 
-1. Select **Email** as delivery interface (needs to be configured first in **Delivery Interfaces**)
-2. Add recipient email addresses
+   ![The Navigate action: the Kibana connector, the Discover URL and the authentication](images/kibana-conditional-report-action-navigate.png)
 
-## Next Steps
+2. **Capture value**: reads the hit count into a variable.
+   - **Variable name**: `error_count`.
+   - **Capture template**: **Kibana discover hits**. It reads the count as a whole number.
 
-- [Grafana Dashboard Report](./grafana-dashboard-report) - Add Grafana to your monitoring
-- [AI Analysis](../advanced-examples/ai-news-collation) - More AI-powered workflows
+   ![The Capture value action: the variable error_count and the Kibana discover hits template](images/kibana-conditional-report-action-capture-value.png)
+
+3. **Conditional block**: stops the flow when there is nothing to report.
+   - **Variable**: `error_count`.
+   - **Condition operation**: **less than**.
+   - **Condition value**: `5`.
+   - Inside the block, add a **Break** action. When the count is below 5, the run stops here and sends nothing.
+
+   ![The Conditional block: error_count less than 5](images/kibana-conditional-report-action-condition.png)
+
+4. **Navigate** again, below the block: the dashboard to capture. Choose **Kibana**, enter the dashboard URL, and tick
+   **Take snapshot**.
+
+### 4. Compose
+
+Add the dashboard snapshot, and a text block with the count:
+
+```liquid
+<h1>Server errors: {{ error_count }}</h1>
+<p>The web traffic dashboard at the time of the alert.</p>
+```
+
+![The Compose tab: a title with the error count above the dashboard snapshot](images/kibana-conditional-report-compose.png)
+
+### 5. Deliver
+
+Choose a delivery interface and the recipients.
+
+![The Deliver tab: an SMTP interface and the on-call address](images/kibana-conditional-report-deliver.png)
+
+## Result
+
+When there are 5 errors or more, the report holds the count and the dashboard:
+
+![The conditional report: "Server errors: 10" above the web traffic dashboard](images/kibana-conditional-report-result.png)
+
+## Next steps
+
+- [Grafana Dashboard Report](./grafana-dashboard-report): add Grafana to your reports.
+- [Kibana Anomaly Alert](../advanced-examples/kibana-anomaly-alert.md): compare the current data with an earlier
+  period.

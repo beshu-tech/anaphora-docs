@@ -4,7 +4,7 @@ description: Configure webhook delivery to send Anaphora reports to custom HTTP 
 keywords: [ webhook integration, HTTP delivery, API integration, custom notifications, automation, Anaphora webhook ]
 ---
 
-# WebHook
+# Webhook
 
 Send reports to custom HTTP endpoints for integration with any system.
 
@@ -19,22 +19,23 @@ Send reports to custom HTTP endpoints for integration with any system.
 
 ## Configuration
 
-| Field     | Description             | Required |
-|-----------|-------------------------|----------|
-| Name      | Interface identifier    | Yes      |
-| URL       | Endpoint URL            | Yes      |
-| Method    | HTTP method (POST/PUT)  | Yes      |
-| Headers   | Custom headers          | No       |
-| Body type | JSON, form-data         | Yes      |
-| JSON Body | Custom payload template | No       |
-| Form Data | Key-value pairs         | No       |
+| Field     | Description                                         | Required |
+|-----------|-----------------------------------------------------|----------|
+| Name      | Interface identifier                                | Yes      |
+| URL       | Endpoint URL. Can contain `$MESSAGE`                | Yes      |
+| Method    | HTTP method (`GET` or `POST`, default `POST`)       | Yes      |
+| Headers   | Custom headers (**Header name**, **Header value**)  | No       |
+| Body type | `json` or `form`. Shown only for `POST`             | Yes      |
+| JSON body | Custom payload template (body type `json`)          | No       |
+| Form body | Key-value pairs (body type `form`)                  | No       |
 
 ## Payload Format
 
 ### JSON Template
 
-Define a JSON structure that works with your endpoint. Use the ```$MESSAGE``` variable as placeholder for the report
-content. This variable will be replaced with the custom text that you define in the job's delivery settings.
+Define a JSON structure that works with your endpoint in **JSON body**. Use the ```$MESSAGE``` variable as placeholder
+for the report content. Anaphora replaces this variable with the text that you define in the job's delivery settings.
+Click **Pretty print** to format the JSON.
 
 Example:
 
@@ -45,9 +46,9 @@ Example:
 }
 ```
 
-### Form Data
+### Form Body
 
-Send key-value pairs as form data. Use the ```$MESSAGE``` variable for the report content.
+Send key-value pairs (**Form name**, **Form value**) as form data. Use the ```$MESSAGE``` variable for the report content.
 
 Example:
 
@@ -58,7 +59,7 @@ report_content=$MESSAGE
 
 ### JSON in Job Delivery
 
-In this case the entire body is defined in the job's delivery settings.
+Select **Define body in job instead**. Each job then defines the entire JSON body in its delivery settings.
 
 ## Custom Headers
 
@@ -67,5 +68,10 @@ Add headers for authentication or routing:
 ```
 Authorization: Bearer your-token
 X-Custom-Header: value
-Content-Type: application/json
 ```
+
+Anaphora sets `Content-Type` from the body type.
+
+## Testing
+
+Click **Test**, enter an optional **Test message**, then click **Send to webhook**.

@@ -18,8 +18,8 @@ The Data Retention section provides access to:
 
 ## Housekeeping & Automatic Cleanup
 
-Anaphora includes automatic housekeeping to manage storage usage over time. You can configure retention policies for
-runs and reports in the job settings.
+Anaphora includes automatic housekeeping to manage storage usage over time. Set how long Anaphora keeps runs and
+reports in the job's **General** tab, under **Housekeeping** > **Run Expire Time**.
 
 ## Next Steps
 

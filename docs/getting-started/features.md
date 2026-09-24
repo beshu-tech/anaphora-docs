@@ -72,6 +72,7 @@ features and integrations.
 |-------------------------|:-------:|:-----------:|:-------------:|
 | **Jobs**                |    2    | ∞ Unlimited |  ∞ Unlimited  |
 | **Delivery Interfaces** |    2    | ∞ Unlimited |  ∞ Unlimited  |
+| **AI Providers**        |    1    | ∞ Unlimited |  ∞ Unlimited  |
 |                         |         |             |               |
 | **Capture**             |         |             |               |
 | Capture Actions         |    3    | ∞ Unlimited |  ∞ Unlimited  |
@@ -116,13 +117,13 @@ Anaphora runs in **Free mode by default**. Unlock PRO or Enterprise with an acti
 docker run -p 3000:3000 \
   -e PUBLIC_URL=http://localhost:3000 \
   -e ACTIVATION_KEY=your-activation-key \
-  -d beshu/anaphora
+  -d beshultd/anaphora
 ```
 
 **Option 2: Admin UI**
 
-1. Go to **Settings** → **System** → **Activation Key**
-2. Click on Load another
+1. Go to **Settings** > **System** > **Activation key**
+2. Click **Load another**
 3. Enter your activation key
 4. Click **Activate**
 

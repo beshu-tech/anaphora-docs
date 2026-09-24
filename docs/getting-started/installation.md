@@ -31,12 +31,13 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser and log
 | Variable            | Description                                     | Required    | Example                            |
 |---------------------|-------------------------------------------------|-------------|------------------------------------|
 | `PUBLIC_URL`        | External URL where Anaphora is accessible       | Yes         | `http://anaphora.example.com:3000` |
-| `DB_ENCRYPTION_KEY` | Key used to encrypt the DB.                     | Recommended | `your-encryption-key`              |
-| `ADMIN_USERNAME`    | Initial admin username                          | No          | `admin`                            |
-| `ADMIN_PASSWORD`    | Initial admin password                          | No          | `your-secure-password`             |
+| `DB_ENCRYPTION_KEY` | Key that encrypts the database. Without it, Anaphora uses a published default key. Set it before the first start and keep it | Recommended | `your-encryption-key`              |
+| `ADMIN_USERNAME`    | Initial admin username (default `admin`)        | No          | `admin`                            |
+| `ADMIN_PASSWORD`    | Initial admin password (default `admin`)        | No          | `your-secure-password`             |
 | `ACTIVATION_KEY`    | License / activation key for Anaphora           | No          | `xxxx-xxxx-xxxx-xxxx`              |
 | `DEBUG`             | Enable debug logging                            | No          | `false`                            |
-| `WORKER_COUNT`      | Number of concurrent Puppeteer worker instances | No          | `2`                                |
+| `WORKER_COUNT`      | Number of captures that run at the same time (browser instances, default `2`) | No          | `2`                                |
+| `SKIP_NOTIFIER`     | `true` skips every delivery (no report, mail or webhook is sent) | No          | `false`                            |
 
 :::tip Production Deployment
 For production, use a strong `DB_ENCRYPTION_KEY` and set `PUBLIC_URL` to your actual external URL (this is used for
@@ -48,7 +49,6 @@ callback URLs in SSO configurations).
 For production deployments, use Docker Compose with persistent storage:
 
 ```yaml
-version: '3.8'
 services:
   anaphora:
     image: beshultd/anaphora

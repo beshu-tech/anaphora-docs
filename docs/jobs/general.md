@@ -10,14 +10,14 @@ The General tab defines how often a job runs, how noisy it is allowed to be, and
 
 ## Configuration Fields
 
-| Field                | Description                               | Required |
-|----------------------|-------------------------------------------|----------|
-| Name                 | Job identifier shown in lists and reports | Yes      |
-| Description          | Notes about the job's purpose             | No       |
-| Frequency            | How often to run (simple or CRON)         | Yes      |
-| Max Notify Frequency | Minimum time between notifications        | No       |
-| Retry Policy         | Behavior on capture failures              | No       |
-| Housekeeping         | Automatic cleanup of old runs/reports     | No       |
+| Field            | Description                                                       | Required |
+|------------------|-------------------------------------------------------------------|----------|
+| Name             | Job identifier shown in lists and reports                         | Yes      |
+| Description      | Notes about the job's purpose                                     | No       |
+| Frequency        | How often to run (simple or CRON)                                 | Yes      |
+| Max Notify Freq  | Minimum time between notifications                                | No       |
+| Retry on failure | Number of retries after a failed run (default: 3)                 | No       |
+| Run Expire Time  | Age at which old runs and reports are deleted (default: 6 months) | No       |
 
 ## Scheduling
 
@@ -27,7 +27,7 @@ Set how often the job should run using natural intervals.
 
 ### Advanced (CRON)
 
-Toggle **Advanced** to use CRON expressions for precise scheduling:
+Turn on the **Advanced** switch to type a CRON expression in the **Cron** field:
 
 | CRON Expression | Description              |
 |-----------------|--------------------------|
@@ -40,8 +40,11 @@ Toggle **Advanced** to use CRON expressions for precise scheduling:
 
 ## Notification Throttling
 
-**Max Notify Frequency** controls the maximum notification rate regardless of how often the job runs. This is especially
-important for high-frequency alerting jobs.
+**Max Notify Freq** sets the minimum time between two delivered reports, whatever the job frequency. A run inside this
+time still runs, but sends nothing. This is important for high-frequency alerting jobs.
+
+Select the checkbox to turn on throttling. The default is 3 hours. If the job runs more often than once a day and
+throttling is off, the General tab shows a **Throttle Frequency** button that sets the default.
 
 ### Why Throttling Matters
 
@@ -89,12 +92,16 @@ High-frequency sampling + throttling creates an alerting-style workflow:
 
 ## Retry Policy
 
-Enable retries to retry failed runs automatically after failures.
-When enabled, set how many times the run should be retried before giving up.
+Select the **Retry on failure** checkbox to retry a failed run automatically. Then set the number of retries, from 1
+to 10. New jobs use 3 retries.
+
+Anaphora retries in increasing intervals: 5 minutes, 15 minutes, 30 minutes, 1 hour, 2 hours, 4 hours, 12 hours,
+1 day, 2 days, and 3 days after the initial failure.
 
 ## Housekeeping (Data Retention)
 
-Enable run expire time to automatically delete old runs and reports after a specified period.
+Select the **Run Expire Time** checkbox to delete old runs and their reports automatically after the time you set
+(months, days, and hours). New jobs use 6 months. Clear the checkbox to keep runs forever (**Never expire**).
 This helps manage storage usage over time.
 
 :::warning Storage Impact
@@ -130,7 +137,7 @@ Housekeeping: 14 days (less storage needed)
 ```yaml
 Frequency: Weekly or monthly
 Throttling: None
-Retry: 5 attempts (ensure success)
+Retry: 5 attempts (make sure it succeeds)
 Housekeeping: Never
 ```
 

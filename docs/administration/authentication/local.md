@@ -22,39 +22,41 @@ Local authentication provides:
 
 ### Adding Users
 
-1. Navigate to **Settings** > **System Settings** > **Auth** > **Local**
-2. Click **Add New User**
-3. Enter username, email, and password
-4. Assign roles
-5. Choose user type: Normal user or system user
-6. Save
+1. Go to **Settings** > **System** > **Auth** > **Local**
+2. Click **Add new User**
+3. Enter the **Username**, the **Password** and the **Confirmation**
+4. Click **Add new Role** to add roles
+5. Select the **System role**: `user` or `system`
+6. Click **Save**
 
 ### User Properties
 
-| Field       | Description                     | Required |
-|-------------|---------------------------------|----------|
-| Username    | Unique login identifier         | Yes      |
-| Password    | Initial password                | Yes      |
-| Roles       | Assigned permission groups      | No       |
-| System Role | User or system user designation | Yes      |
+| Field        | Description                                                                 | Required |
+|--------------|-----------------------------------------------------------------------------|----------|
+| Username     | Unique login identifier                                                     | Yes      |
+| Password     | Initial password. For an existing user, the field is **New password**       | Yes      |
+| Confirmation | The same password again                                                     | Yes      |
+| Roles        | Roles that you assign to spaces to give permissions                         | No       |
+| System role  | `user` or `system`. Default: `user`                                         | Yes      |
 
 ### System Role
 
-The **System Role** controls access to system-wide settings:
+The **System role** controls access to system-wide settings:
 
 | Role       | Description                                                                    |
 |------------|--------------------------------------------------------------------------------|
 | **user**   | Normal user, cannot access system settings                                     |
-| **system** | Can access and modify system settings. Has automatically access to all spaces. |
+| **system** | Can access and modify system settings. Gets Admin access to all spaces.        |
 
 :::note
 System settings include authentication configuration, space configuration, backup settings, and other global options.
-Most users should have the `user` role.
+Most users must have the `user` role. At least one local user must have the `system` role.
+In the Free edition, all local users are system users, and the **Roles** and **System role** fields do not show.
 :::
 
 ### Managing Local Users
 
-All local users will be managed by the system user alone. Users cannot modify their own accounts.
+Only system users manage local users. Users cannot change their own accounts.
 System users can change the password or add roles to existing users. The system user can also delete the local users.
 
 :::warning

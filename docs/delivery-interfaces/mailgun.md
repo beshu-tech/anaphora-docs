@@ -23,8 +23,8 @@ Send reports via the Mailgun email API.
 |-----------------|-------------------------------------------------------------------------|----------|
 | Name            | Interface identifier                                                    | Yes      |
 | Sender email    | Use your MailGun domain with any name e.g. myname@my-mailgun-domain.com | Yes      |
-| Sender name     | Use any name that should be displayed as sender                         | No       |
-| Mailgun API key | API authentication                                                      | Yes      |
+| Sender name     | Use any name that should be displayed as sender                         | Yes      |
+| Mailgun Api Key | Mailgun API key (at least 10 characters)                                | Yes      |
 
 ## Setup Steps
 
@@ -37,11 +37,12 @@ Send reports via the Mailgun email API.
 
 ## Domain Verification
 
-Ensure your Mailgun domain is verified for best deliverability:
+Make sure your Mailgun domain is verified for best deliverability:
 
 - Add DNS records as instructed by Mailgun
 - Verify SPF and DKIM are configured
 
 ## Testing
 
-Send a test email to verify configuration before using in jobs.
+Click **Test**, enter a **Test email** address (and optionally a **Test subject** and **Test body**), then click
+**Send test email**. Do this before you use the interface in jobs.

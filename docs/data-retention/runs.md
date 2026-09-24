@@ -12,7 +12,7 @@ The Runs section shows the execution history of your jobs, including successful 
 
 ## Overview
 
-Every time a job executes, a **run** record is created. This allows you to:
+Each time a job runs, Anaphora makes a **run** record. Use it to:
 
 - Track job execution history
 - Identify and debug failures
@@ -21,9 +21,9 @@ Every time a job executes, a **run** record is created. This allows you to:
 
 ## Run Statuses
 
-| Status          | Description                                                           |
-|-----------------|-----------------------------------------------------------------------|
-| Success         | Job completed and report delivered                                    |
-| Delivery issues | The report was created but could not be delivered to all destinations |
-| Failed          | Job execution failed                                                  |
-| Skipped         | Conditions not met, no report sent                                    |
+| Status         | Description                                                             |
+|----------------|-------------------------------------------------------------------------|
+| Success        | Job completed and report delivered                                      |
+| Delivery issue | Anaphora made the report but could not deliver it to all destinations   |
+| Error          | Job execution failed                                                    |
+| Cancelled      | Conditions not met, no report sent                                      |

@@ -6,21 +6,24 @@ keywords: [ SMTP configuration, email delivery, SSL email, Gmail SMTP, Office 36
 
 # SMTP
 
-Send reports via your own SMTP email server. Supports SSL, STARTLS, plain
+Send reports through your own SMTP server, with plain, STARTTLS or SSL connections.
 
-![SMTP delivery interface configuration showing host, port, credentials, SSL settings, and certificate options](images/smtp.png)
+![The SMTP delivery interface: sender, host, connection security, port and the client certificate fields](images/smtp.png)
 
 ## Configuration
 
-| Field        | Description                  | Required    |
-|--------------|------------------------------|-------------|
-| Name         | Interface identifier         | Yes         |
-| Host         | SMTP server hostname         | Yes         |
-| Port         | SMTP port (25, 465, 587)     | Yes         |
-| Username     | SMTP authentication user     | Usually     |
-| Password     | SMTP authentication password | Usually     |
-| From Address | Sender email address         | Yes         |
-| TLS/SSL      | Encryption mode              | Recommended |
+| Field               | Description                                                                 | Required |
+|---------------------|-----------------------------------------------------------------------------|----------|
+| Name                | The name of the interface in Anaphora                                       | Yes      |
+| Username            | SMTP login, when the server needs one                                       | No       |
+| Password            | SMTP password                                                               | No       |
+| Sender email        | The From address                                                            | Yes      |
+| Sender name         | The From name                                                               | Yes      |
+| Host                | SMTP server hostname                                                        | Yes      |
+| Connection security | **Plain**, **STARTTLS** or **SSL**. Choosing one also sets the usual port.   | Yes      |
+| Port                | SMTP port (25, 587, 465)                                                    | Yes      |
+| Reject unauthorized | Refuse a server certificate that does not verify. On by default.            | No       |
+| Cert, Private key, Passphrase | A client certificate in PEM, for servers that ask for one (SSL only) | No       |
 
 ## Common Configurations
 
@@ -29,7 +32,7 @@ Send reports via your own SMTP email server. Supports SSL, STARTLS, plain
 ```
 Host: smtp.gmail.com
 Port: 587
-TLS: STARTTLS
+Connection security: STARTTLS
 ```
 
 :::note
@@ -41,7 +44,7 @@ Gmail requires an App Password if 2FA is enabled.
 ```
 Host: smtp.office365.com
 Port: 587
-TLS: STARTTLS
+Connection security: STARTTLS
 ```
 
 ### Amazon SES
@@ -49,15 +52,15 @@ TLS: STARTTLS
 ```
 Host: email-smtp.us-east-1.amazonaws.com
 Port: 587
-TLS: STARTTLS
+Connection security: STARTTLS
 ```
 
 ## Testing
 
-1. Configure the interface
-2. Click **Test**
-3. Enter a test recipient
-4. Verify email arrives
+1. Fill in the interface.
+2. Click **Test**.
+3. Enter the **Test email** address. The subject and the body are optional.
+4. Click **Send test email**, and make sure that the email arrives.
 
 ## Troubleshooting
 
@@ -65,4 +68,4 @@ TLS: STARTTLS
 |-----------------------|-----------------------------------------|
 | Connection refused    | Check firewall, verify port             |
 | Authentication failed | Verify credentials, check app passwords |
-| TLS error             | Try different TLS mode                  |
+| TLS error             | Try another connection security mode    |
