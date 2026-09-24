@@ -4,16 +4,16 @@ description: Anaphora release notes and changelog. New features, enhancements, b
 keywords: [ Anaphora changelog, release notes, new features, updates, version history ]
 ---
 
-# Changelog - Anaphora Release Notes
+# Changelog: Anaphora release notes
 
 All notable changes to Anaphora are documented here.
 
 ## Legend
 
-- 🚨 **Security Fix** - Security vulnerability patches
-- 🚀 **New Feature** - New functionality
-- 🧐 **Enhancement** - Improvements to existing features, platform and quality work
-- 🐞 **Fix** - Bug fixes
+- 🚨 **Security fix**: security vulnerability patches
+- 🚀 **New feature**: new functionality
+- 🧐 **Enhancement**: improvements to existing features, platform and quality work
+- 🐞 **Fix**: bug fixes
 
 ---
 
@@ -47,7 +47,7 @@ What you see after the upgrade:
 `HealEmptyReportTemplates` rewrites stored report templates in place and
 cannot be reversed. It does two things, both described under Fixes: it gives a
 template with no page one default page, and it trims a row that holds more
-cells than its column count says. Two behaviour changes come with it — a job
+cells than its column count says. Two behaviour changes come with it: a job
 or template write that carries no page is now refused, and a legacy JSON
 import that carries one is refused in "safe" mode; pick "autofix" to have it
 repaired on the way in.
@@ -73,7 +73,7 @@ repaired on the way in.
 
   - **Tiles that share a title are no longer merged.** A dashboard tile is
     identified by the platform's own id, or, when it has none, by a hash of
-    its title — so two panels both called "Error rate" got the same id. On a
+    its title, so two panels both called "Error rate" got the same id. On a
     12-tile page, 12 tiles were captured and 8 reached the model; the other
     four were silently swallowed, and a template that pointed at one of them
     was pointing at an ambiguous thing. Every tile now gets its own id. The
@@ -362,9 +362,9 @@ repaired on the way in.
   page can still be hidden, renamed or cloned: the page is repaired on the way
   through rather than the write being refused.
 - **Kibana hit counts over 999 are read whole.** Kibana prints the count
-  grouped by thousands ("1,470,592"), and Anaphora kept only the first group,
-  1. Every alert or conditional report that compared hits above 999 compared
-     the wrong value. The count is now read whole, in any grouping style.
+  grouped by thousands ("1,470,592"), and Anaphora kept only the first
+  group, 1. Every alert or conditional report that compared hits above 999
+  compared the wrong value. The count is now read whole, in any grouping style.
 - **A cron the scheduler cannot run no longer takes Anaphora down.** A
   pattern such as `0 */25 * * *` passed the form but crashed the scheduler
   at start, and the scheduler serves the login page. Such a pattern is now
@@ -429,14 +429,14 @@ repaired on the way in.
   at a failed scheduled one, hid that run's pending retries. A restart or an
   edit then dropped them, and the job waited silently for its next cron slot.
 - **The job monitor keeps reporting.** A stalled health check could block the
-  monitor — and the licence alert with it — for the life of the process. The
+  monitor (and the licence alert with it) for the life of the process. The
   call now times out.
 - **Migration timestamps stay put on a host that is not on UTC.** A datetime
   read during a migration was parsed as local time, so on a host with `TZ` set
   (for example `Europe/Luxembourg`) values shifted by the offset on the way
   through. Note for installs upgraded before this release: the `ai_provider`
   table's `created_at` and `updated_at` may hold values shifted that way. No
-  feature reads those two columns and there is no backfill — a shifted value
+  feature reads those two columns and there is no backfill: a shifted value
   cannot be told apart from a correct one.
 - Cloning selected templates clones those templates only. Before, every
   built-in template came along as a copy, and a copy of an edited built-in
@@ -511,8 +511,6 @@ repaired on the way in.
 
 ---
 
----
-
 ## [0.15.0] - 2026-09-08: Dark mode
 
 ### 🚀 New
@@ -547,8 +545,8 @@ repaired on the way in.
 ### 🚨 Security
 
 - Testing an AI provider could send another space's API key to an address of
-  your choosing. The two buttons that reach an AI provider — the connection test
-  and the model list — accepted a provider identifier and an endpoint from the
+  your choosing. The two buttons that reach an AI provider (the connection test
+  and the model list) accepted a provider identifier and an endpoint from the
   browser, read the stored key for that identifier, and sent it to that endpoint.
   Neither checked who was asking. Both now check your access to the space that
   owns the stored provider, and answer an identifier you may not read the same
@@ -566,7 +564,7 @@ repaired on the way in.
   server for half a minute on every read of that job. Equations now run when you
   save a job, and when a run reaches the step.
 - The limit on equation size now also covers the operations whose cost grows
-  faster than their result — matrix multiplication, matrix powers, determinants
+  faster than their result: matrix multiplication, matrix powers, determinants
   and inverses. An equation whose every value was inside the size limit could
   still occupy the server for tens of seconds.
 
@@ -653,7 +651,7 @@ repaired on the way in.
 
 ### 🧐 Quality
 
-- The automated test suite has grown to more than four hundred tests. They
+- The automated test suite grew to more than four hundred tests. They
   guard the run pipeline, report delivery, report file layout, equation
   validation, and every access check listed above. A coverage gate fails a
   build that lowers test coverage.
@@ -664,7 +662,7 @@ repaired on the way in.
 
 ### 🚨 Security
 
-- Cleared **every critical and high** dependency vulnerability, in the app
+- Cleared every critical and high dependency vulnerability, in the app
   and in the developer tooling. `npm audit` now reports zero high or
   critical advisories.
 - Untrusted HTML in job variables can no longer run on the app origin.
@@ -693,18 +691,17 @@ repaired on the way in.
 
 ## [0.10.0] - 2026-03-04
 
-### 🚀 Enhancement: Create Delivery Interfaces Directly from Job Configuration
+### 🚀 Enhancement: Create delivery interfaces directly from job configuration
 
 <details>  
 <summary>Enables creating delivery interfaces inside job configuration without navigation</summary>
 
 When setting up a job's delivery configuration, you can now create new delivery interfaces directly within the job
-configuration flow. This eliminates the need to navigate to the separate Delivery Interfaces page, streamlining
-the setup process.
+configuration flow. You no longer need to go to the separate Delivery Interfaces page during setup.
 
 </details>  
 
-### 🚀 Feature: License Expiration Warning
+### 🚀 Feature: License expiration warning
 
 <details>  
 <summary>Display warning when license is close to expiration and send notification</summary>  
@@ -712,48 +709,48 @@ the setup process.
 When the Anaphora license is nearing its expiration date, a warning message is now displayed in the Anaphora Web UI.
 
 If health alerts are configured, a notification will also be sent to the defined channel. This enables administrators to
-renew the license in time and prevent any potential service interruption.
+renew the license in time and prevent a service interruption.
 
 </details>  
 
-### 🐞 Fix: Kibana Discover Hits Variable Could Not Be Used in Reports
+### 🐞 Fix: Kibana Discover hits variable could not be used in reports
 
 <details>  
 <summary>Fixed issue where Kibana Discover hits variable was not available in report composition</summary>  
 
 The Kibana Discover hits variable, which returns the number of results from a Discover query, was not available during
-report composition. This issue has been resolved, and the variable can now be used to dynamically include hit counts
-within reports.
+report composition. This issue is fixed. You can now use the variable to include hit counts dynamically
+in reports.
 
 </details>  
 
-### 🚨 Security Fix: Removal of YAML Import/Export for System Settings
+### 🚨 Security fix: Removal of YAML import/export for system settings
 
 <details>  
 <summary>Removed YAML import/export of system settings to prevent corrupted data</summary>  
 
-The YAML import/export functionality for system settings has been removed. This capability is no longer required due to
+The YAML import/export functionality for system settings is removed. This capability is no longer required because of
 the new Import/Export feature available under `/settings/data`.
 
 The updated approach supports exporting and importing all relevant data at once (including settings, jobs, delivery
-interfaces, and more). It also properly handles version changes, preventing data corruption and ensuring that exports
-created in older versions remain compatible with newer versions of Anaphora.
+interfaces, and more). It also handles version changes correctly. This prevents data corruption and makes sure that exports
+created in older versions stay compatible with newer versions of Anaphora.
 
 </details>
 
-### 🧐 Enhancement: Storage Optimization
+### 🧐 Enhancement: Storage optimization
 
 <details>
 <summary>Optimized database to reduce storage usage</summary>
 
-We implemented storage optimizations in the Anaphora database, resulting in reduced disk usage for large datasets.
+We optimized storage in the Anaphora database. This reduces disk usage for large datasets.
 
 - Deletions will now free up space more effectively
-- Removement of unnecessary internal data will immediately reduce storage usage
+- Removal of unnecessary internal data will immediately reduce storage usage
 
 </details>
 
-### 🧐 Enhancement: Performance Improvements
+### 🧐 Enhancement: Performance improvements
 
 <details>
 <summary>Optimized loading and saving times for Anaphora instances with large numbers of runs</summary>
@@ -767,13 +764,12 @@ times.
 
 ## [0.9.0] - 2026-01-15
 
-### 🚀 New Feature: Grafana Connector
+### 🚀 New feature: Grafana connector
 
 <details>
 <summary>Capture and report on Grafana dashboards</summary>
 
-With the new Grafana connector, Anaphora supports an out-of-the-box experience for capturing Grafana dashboards.
-Features include:
+The new Grafana connector lets Anaphora capture Grafana dashboards out of the box. It supports:
 
 - Configurable authentication using the Grafana credentials
 - Capture entire dashboards with automatic waiting for panels to load

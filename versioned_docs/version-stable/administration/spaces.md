@@ -6,14 +6,14 @@ keywords: [ multi-tenancy, Spaces, workspace isolation, team separation, RBAC ]
 
 # Spaces
 
-Spaces provide multi-tenant workspace isolation in Anaphora. They act as "share-nothing" containers that completely
-separate resources between teams, projects, or tenants.
+Spaces isolate workspaces for multi-tenancy in Anaphora. Each Space is a "share-nothing" container that completely
+separates its resources from those of other teams, projects or tenants.
 
 ![](images/spaces.png)
 
 ## Overview
 
-A Space is an isolated container that includes:
+A Space is an isolated container that holds:
 
 - Jobs and schedules
 - Generated reports and run history
@@ -46,57 +46,71 @@ flowchart TB
 Users can belong to multiple Spaces with different roles.
 :::
 
-### Copying Between Spaces
+### Copying between Spaces
 
-While resources cannot be shared, they can be copied:
+Resources cannot be shared between Spaces, but you can copy them:
 
 1. In the jobs list, select the jobs to copy to another Space
-2. Click **Copy to Space**
-3. Choose target Space
-4. If applicable, select to copy associated delivery interfaces
+2. Click **Copy to other space**
+3. Choose the target Space
+4. If applicable, select what to do with each associated delivery interface, for example **Copy delivery interface**
+   or **Exclude from copy**
 
 The same process applies to delivery interfaces.
 
+To copy, you need these permissions in the Space the resource comes from:
+
+| Resource                                  | Permission needed |
+|-------------------------------------------|-------------------|
+| Job                                       | ReadWrite         |
+| Delivery interface, AI provider, template | Admin             |
+
 ## Creating Spaces
 
-1. Navigate to **Settings** > **System Settings** >  **Permissions**
+1. Go to **Settings** > **System** > **Permissions**
 2. Click **Add Space**
-3. Enter the name of the Space
+3. Enter the **Name** of the Space
+4. Click **Save**
 
-### Assignment Process
+### Assignment process
 
-1. Click **Add Permission**
-2. Select user or role
-3. Assign permission (Admin, ReadWrite, Readonly)
+1. In the Space, click **Add Permission**
+2. Select user or role, and enter the name in **Role/User**
+3. Select the **Access** (**Admin**, **Read Write**, **Read Only**)
+4. Click **Save**
 
-:::tip User Roles
-Users can have roles assigned to them. These roles can then be assigned to Spaces for easier management. So it is not
-necessary to assign each user individually.
+:::info
+System users automatically have admin permissions for all spaces.
 :::
 
-### Multi-Space Users
+:::tip User Roles
+You can assign roles to users, and then assign the roles to Spaces. This way, you do not need to assign each user
+individually.
+:::
 
-Users can belong to multiple Spaces, by direct assignment or via roles:
+### Multi-Space users
+
+Users can belong to multiple Spaces, by direct assignment or through roles:
 
 ```
 User: alice@company.com
-├── Space: Engineering → Permission: Admin
-└── Space: Marketing → Permission: Readonly
+├── Space: Engineering → Access: Admin
+└── Space: Marketing → Access: Read Only
 Role: DevOps Team
-└── Space: DevOps → Permission: ReadWrite
+└── Space: DevOps → Access: Read Write
 ```
 
 ## Switching Spaces
 
-You can switch between Spaces using the Space selector in the sidebar.
+To switch between Spaces, use the Space selector in the sidebar.
 
 ![space-selector.png](images/space-selector.png)
 
-All resources you create or manage will be scoped to the selected Space.
+All resources you create or manage are scoped to the selected Space.
 
-## Use Cases
+## Use cases
 
-### Team Separation
+### Team separation
 
 | Space       | Purpose                              |
 |-------------|--------------------------------------|
@@ -105,7 +119,7 @@ All resources you create or manage will be scoped to the selected Space.
 | Executive   | Summary reports, KPIs                |
 | DevOps      | Infrastructure monitoring, alerts    |
 
-### Client Isolation (MSP)
+### Client isolation (MSP)
 
 For managed service providers:
 
@@ -117,7 +131,7 @@ For managed service providers:
 
 Each client's data is completely isolated.
 
-### Environment Separation
+### Environment separation
 
 | Space       | Environment                  |
 |-------------|------------------------------|
@@ -132,18 +146,18 @@ Spaces.
 
 See [Authentication](authentication/index.md) for details on user roles and permissions.
 
-## Best Practices
+## Best practices
 
-### Permission Principle
+### Permission principle
 
-Assign minimal required permissions:
+Assign the minimum permissions that each user needs:
 
-- Most users: Space Readonly
-- Job creators: Space ReadWrite
+- Most users: Space Read Only
+- Job creators: Space Read Write
 - Team leads: Space Admin
 - IT/Operations: System Admin
 
-## Next Steps
+## Next steps
 
-- [Self Monitoring](./self-monitoring) - Monitor system health
-- [Backup](./backup) - Configure backup and recovery
+- [Self-monitoring](./self-monitoring): monitor system health
+- [Backup](./backup): configure backup and recovery

@@ -4,14 +4,14 @@ description: Configure report delivery - email, webhooks, and S3 archiving. Mult
 keywords: [ report delivery, email reports, webhook, S3 archiving, report distribution ]
 ---
 
-# Delivery Configuration
+# Delivery configuration
 
-The Delivery tab configures where and how reports are sent. Anaphora supports multi-channel delivery via email,
+The **Deliver** tab configures where and how reports are sent. Anaphora can deliver to multiple channels: email,
 webhooks, and S3 archiving.
 
 ## Overview
 
-After composition, the report is delivered via your configured interfaces:
+After composition, Anaphora delivers the report through the interfaces you configure:
 
 ```mermaid
 flowchart LR
@@ -26,19 +26,19 @@ flowchart LR
     report --> channels
 ```
 
-## Delivery Interfaces
+## Delivery interfaces
 
-Delivery Interfaces are reusable destination configurations. Configure them once in Settings, then select them in any
-job.
+Delivery interfaces are reusable destination configurations. Configure them once under **Delivery Interfaces** in the
+sidebar, then select them in any job. You can also select **Create new** in the job's **Delivery Interface** menu.
 
-### Available Types
+### Available types
 
-| Interface   | Best For             | Features                       |
-|-------------|----------------------|--------------------------------|
-| **SMTP**    | Corporate email      | SSL/TLS, attachments           |
-| **Mailgun** | Transactional email  | High volume, tracking          |
-| **Webhook** | Integrations         | Custom payloads, any endpoint  |
-| **S3**      | Archival, compliance | Historical records, versioning |
+| Interface             | Best for             | Features                       |
+|-----------------------|----------------------|--------------------------------|
+| **SMTP**              | Corporate email      | SSL/TLS, attachments           |
+| **Mailgun**           | Transactional email  | High volume, tracking          |
+| **Webhook**           | Integrations         | Custom payloads, any endpoint  |
+| **S3 Object Storage** | Archival, compliance | Historical records, versioning |
 
 ### Reusability
 
@@ -46,70 +46,76 @@ You can configure multiple interfaces of each type:
 
 - Different SMTP servers for different teams
 - Separate S3 buckets for different retention periods
-- Various webhooks for different integrations
+- Several webhooks for different integrations
 
-## S3 Archiving
+## S3 archiving
 
-S3 is particularly valuable for historical archives and compliance workflows.
+S3 is useful for historical archives and compliance workflows.
 
-### Use Cases
+In the job, set **File type** to **PDF Report**, **HTML Report**, or **PDF & HTML Report**.
+
+### Use cases
 
 | Scenario                     | Benefit                                        |
 |------------------------------|------------------------------------------------|
-| **Historical reference**     | "What did this dashboard look like on date X?" |
-| **Compliance evidence**      | Immutable records for audit requirements       |
-| **Long-term retention**      | Store reports beyond housekeeping limits       |
-| **Cross-system integration** | Other tools can access archived reports        |
+| Historical reference         | "What did this dashboard look like on date X?" |
+| Compliance evidence          | Immutable records for audit requirements       |
+| Long-term retention          | Store reports beyond housekeeping limits       |
+| Cross-system integration     | Other tools can access archived reports        |
 
-## Email Delivery
+## Email delivery
 
-Anaphora supports sending reports via SMTP or Mailgun.
+Anaphora sends reports by email through SMTP or Mailgun.
 
-### Email Options
+### Email options
 
-| Field            | Description                                    |
-|------------------|------------------------------------------------|
-| Attachments      | Whether to attach the PDF report to the email. |
-| Message template | Customizable email body with variables.        |
-| Recipients       | List of email addresses to send the report to. |
+| Field            | Description                                                     |
+|------------------|-----------------------------------------------------------------|
+| Attachments      | Select **Report as PDF** to attach the PDF report to the email. |
+| Message template | Customizable email body with variables.                         |
+| Recipients       | List of email addresses to send the report to.                  |
 
 :::tip Recipients
-Recipient email addresses can be either marked as single user or as group address. Emails sent to single user addresses
-will include a snooze and unsubscribe link in the footer. Group addresses will not include these links.
+Mark each recipient address as an **Individual mailbox** or a **Group address**. Click a recipient to change its type.
+Emails sent to individual mailboxes include a snooze and unsubscribe link in the footer. Group addresses do not include
+these links.
 :::
 
-## Webhook Delivery
+A snooze pauses the job's emails to that recipient for 5 minutes to 8 days. The recipient must pick a duration. The
+unsubscribe link stops the emails.
 
-Webhooks enable custom integrations with any HTTP endpoint.
+## Webhook delivery
 
-### Webhook Configuration
+Webhooks connect Anaphora to any HTTP endpoint for custom integrations.
 
-| Field              | Description                                                                                   |
-|--------------------|-----------------------------------------------------------------------------------------------|
-| Message template   | Customizable message body with variables.                                                     |
-| JSON body template | Define the JSON payload with variables. Only available when enabled in the Webhook interface. |
+### Webhook configuration
 
-### Webhook Use Cases
+| Field              | Description                                                                                                                                             |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Message template   | Customizable message body with variables.                                                                                                               |
+| JSON body template | Define the JSON payload with variables. Shown instead of **Message template** when **Define body in job instead** is selected in the Webhook interface. |
+
+### Webhook use cases
 
 | Integration           | Description                            |
 |-----------------------|----------------------------------------|
-| **Ticketing systems** | Create tickets for alerts              |
-| **Chat platforms**    | Create messages in collaboration tools |
-| **Data pipelines**    | Feed report data to analytics          |
-| **Custom dashboards** | Update external status pages           |
+| Ticketing systems     | Create tickets for alerts              |
+| Chat platforms        | Create messages in collaboration tools |
+| Data pipelines        | Feed report data to analytics          |
+| Custom dashboards     | Update external status pages           |
 
-## Multi-Channel Delivery
+## Multi-channel delivery
 
 Send the same report to multiple destinations:
 
 ### Configuration
 
-1. Click **Add Delivery**
-2. Select interface type
-3. Configure destination
+1. Click **Delivery Interface**
+2. Select an existing interface, or **Create new**
+3. Configure the destination
 4. Repeat for additional channels
 
-### Example: Alert with Archive
+### Example: alert with archive
 
 ```
 Delivery 1: Webhook e.g. Slack (immediate notification)
@@ -117,20 +123,38 @@ Delivery 2: Email (stakeholder distribution)
 Delivery 3: S3 (permanent archive)
 ```
 
-### Partial Success
+### Partial success
 
 With multi-channel delivery:
 
-- Each channel is attempted independently
+- Anaphora tries each channel independently
 - Partial success (some channels succeed, others fail) is logged
+- The run and the Jobs list show **Delivery issue**. Job health counts a report that reached nobody as failed, and a
+  report that reached some destinations as partly delivered.
 
-## Testing Delivery
+## Report links
 
-Every delivery config includes a **Test** button. Use it to verify configuration before saving the job.
-All steps during the capture and delivery process are logged for troubleshooting.
-Use debug mode to also receive a video of the capture process.
+The links in a delivered email, Slack message or webhook are private. Each run has a secret token, and the links carry
+it. The report files (PDF, HTML, images) open for a link with that token, or for a signed-in member of the run's space.
+Anyone else gets "not found".
 
-## Next Steps
+## Withheld reports
 
-- [Delivery Interfaces](../delivery-interfaces/) - Configure global interface settings
-- [Basic Examples](../basic-examples/) - See complete job examples
+When a text block of the report fails, or the report cannot be built, Anaphora does not deliver it. No recipient, bucket
+or webhook gets it. The Jobs list shows the job as **Not delivered**, and job health counts the run as failed. The run
+does not count as sent, so a throttled job sends the next run. See [Composer](./composer.md#errors-in-a-text-block).
+
+With the S3 file type **PDF & HTML Report**, nothing is uploaded when the HTML copy cannot be built.
+
+## Testing delivery
+
+Every delivery config includes a test button: **Run with test email** for SMTP and Mailgun, **Test run** for Webhook
+and S3 Object Storage. Use it to verify the configuration before you save the job. **Test run without delivery** runs the job
+and shows the output without notifying any recipients. A test withholds a report with a broken text block in the same
+way, and says so. Anaphora logs all steps of the capture and delivery process for troubleshooting.
+Select **Debug test run** in the button menu to also receive a video of the capture process.
+
+## Next steps
+
+- [Delivery interfaces](../delivery-interfaces/): configure global interface settings
+- [Basic examples](../basic-examples/): see complete job examples

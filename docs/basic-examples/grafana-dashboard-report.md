@@ -36,12 +36,12 @@ public **Demo Wind Farm** dashboard at `play.grafana.org`.
    Add `var-…` parameters to set the dashboard variables.
 3. **Authentication**: **Grafana** fills the Grafana login form with the credentials you give. **Basic** sends HTTP
    Basic credentials, for a Grafana behind a proxy. The public demo needs **None**.
-4. **Snapshot template**: **Full page** takes the whole dashboard, every panel included. **Visualizations** takes one
+4. **Snapshot template**: **Full page** takes the whole dashboard, with every panel. **Visualizations** takes one
    image per panel, to place each panel on its own in the report.
 
 ![The Capture tab: the Grafana connector, the dashboard URL with its time range, and the snapshot template](images/grafana-dashboard-report-capture.png)
 
-Anaphora waits until every panel has loaded, the ones below the fold included. A panel that shows "No data" or an
+Anaphora waits until every panel loads, including the panels below the fold. A panel that shows "No data" or an
 error is a result, and does not hold the capture.
 
 ### 4. Compose

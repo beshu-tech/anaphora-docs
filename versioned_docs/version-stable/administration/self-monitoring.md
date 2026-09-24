@@ -4,34 +4,40 @@ description: Monitor Anaphora health, performance, and job metrics. Configure al
 keywords: [ self monitoring, health check, Prometheus, metrics, job monitoring, performance, Anaphora monitoring ]
 ---
 
-# Self Monitoring
+# Self-monitoring
 
-Monitor Anaphora's health, job and delivery success.
+Monitor the health of Anaphora and the success of its jobs and deliveries.
 ![](images/self-monitoring.png)
 
-## Health Monitoring
+## Health monitoring
 
 Access the monitoring settings at **Settings** > **Application** > **Health Monitoring**.
 
-### Setup Health Alerts
+### Set up health alerts
 
-Configure email alerts when the system detects changes in job health status.
+Get alerts when Anaphora detects changes in job success rates.
 
-1. Enable **Health Alerts**.
-2. Select a delivery interface and recipient email.
+1. Under **Operator notifications** > **Delivery**, select a **Delivery Interface**. For an SMTP or Mailgun interface,
+   also add the **Recipients**. A webhook with **Define body in job instead** is not available.
+2. Select **Job Health Alerts**.
 3. Set **Health Check Frequency**: how often to check job health.
-4. Set **Maximum Notification Frequency**: minimum time between alerts (Optional).
-5. Click **Save**.
+4. Set **Maximum Notification Frequency**: minimum time between alerts (optional).
+5. Optionally, click **Test** to send the current health status.
+6. Click **Save**.
+
+:::info
+The same delivery settings also receive the token budget alerts of the AI providers.
+:::
 
 ## Health API
 
-Query Anaphora's health status programmatically:
+To get the health status of Anaphora through the API, call this endpoint:
 
 ```
 GET /guest/api/health
 ```
 
-### Response Format
+### Response format
 
 ```json
 {
@@ -82,7 +88,7 @@ GET /guest/api/health
 }
 ```
 
-### Health Status Values
+### Health status values
 
 | Status     | Meaning                    |
 |------------|----------------------------|
@@ -91,6 +97,24 @@ GET /guest/api/health
 | **red**    | All recent runs failed     |
 | **gray**   | No recent activity         |
 
-## Next Steps
+### Run states
 
-- [Backup](./backup) - Configure backups
+Each entry of `recentRuns` has a `state`:
+
+| State       | Meaning                                                                            |
+|-------------|------------------------------------------------------------------------------------|
+| `success`   | The run succeeded and its report was delivered                                     |
+| `partial`   | The report reached some delivery interfaces or recipients, but not all            |
+| `failed`    | The capture failed, or the report reached nobody (for example a withheld report)  |
+
+A job is green when its last five runs are all `success`, and red when they are all `failed`. A `partial` run makes the
+job yellow, not red: one address that refuses the mail keeps the job yellow.
+
+### AI budget alerts
+
+The delivery interface of the health alerts also carries the [AI token budget](./ai-providers.md#budget-alerts) alerts.
+You can set it without switching health monitoring on.
+
+## Next steps
+
+- [Backup](./backup): configure backups

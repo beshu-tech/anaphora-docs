@@ -4,25 +4,25 @@ description: Configure Anaphora capture settings - Kibana, Grafana, and generic 
 keywords: [ Kibana capture, Grafana capture, headless browser, web scraping, dashboard capture, authentication ]
 ---
 
-# Capture Configuration
+# Capture configuration
 
 The Capture tab defines what data to collect and how. Anaphora's headless Chrome-based connector can navigate,
 authenticate, and capture any web application.
 
-## Capture Modes
+## Capture modes
 
-### Basic Mode
+### Basic mode
 
 Simple single-URL capture:
 
-1. Select a connector (Kibana, Grafana, Generic URL)
+1. Select a **Connector** (**Web**, **Kibana**, **Grafana**)
 2. Enter the URL
-3. Configure authentication (if needed)
-4. Capture
+3. Set **Authentication** (if needed)
+4. Select a **Snapshot template**
 
-Best for: Quick dashboard snapshots, simple reports.
+Best for quick dashboard snapshots and simple reports.
 
-### Advanced Mode
+### Advanced mode
 
 Multi-step browser automation:
 
@@ -31,70 +31,73 @@ Multi-step browser automation:
 3. Evaluate conditions
 4. Build complex workflows
 
-Toggle **Advanced** to switch modes.
+Turn on the **Advanced** switch to change modes.
 
 ## Connectors
 
-### Kibana Connector
+### Kibana connector
 
-Use the Kibana connector to use Anaphora's built-in support for Kibana pages.
+The Kibana connector uses Anaphora's built-in support for Kibana pages.
 
-**Supported Page Types:**
+Supported page types:
 
 - Dashboards
 - Canvas workpads
 - Discover views
 
-**Authentication:**
-Login to Kibana using the ReadonlyREST login access.
+To authenticate, log in to Kibana with the ReadonlyREST login form. Select **ReadonlyREST**, or **ReadonlyREST Enterprise** to also
+select a **Tenancy**.
 
-**Time Range Configuration:**
-Either set the time range in the Kibana UI before copying the URL, or set it in Anaphora using a similar syntax to
-Kibana's time picker.
+To configure the time range, either set it in the Kibana UI before you copy the URL, or set it in Anaphora with the
+**Time select** field, which uses a syntax similar to Kibana's time picker. **Time select** applies to dashboards and Discover views.
+For a Canvas workpad, set the **Page** number.
 
-**Capture Options:**
-| Mode | Description |
-|------|-------------|
-| **Entire dashboard** | One snapshot of the full dashboard |
-| **Per visualization** | Separate snapshot for each panel |
+Capture options:
+| Snapshot template  | Description                        |
+|--------------------|------------------------------------|
+| **Full page**      | One snapshot of the full dashboard |
+| **Visualizations** | Separate snapshot for each panel   |
 
-:::tip Per-Visualization Capture
-Capturing each visualization separately gives you more control in the Composer — arrange panels in custom layouts,
-exclude certain visualizations, or combine with other content.
+For a Discover view, the templates are **Logs** and **Histogram**. Select **Deliver report only when condition is met**
+to send the report only when the hit count meets a condition (**Hits are** greater than, less than, or equal to a value).
+
+:::tip Per-visualization capture
+When you capture each visualization separately, you get more control in the **Compose** tab. You can arrange panels in
+custom layouts, exclude some visualizations, or combine them with other content.
 :::
 
-### Grafana Connector
+### Grafana connector
 
-Use the Grafana connector to use Anaphora's built-in support for Grafana pages.
+The Grafana connector uses Anaphora's built-in support for Grafana pages.
 
-**Authentication:**
-Login with a Grafana user. Works for Grafana Cloud and self-hosted Grafana instances.
+To authenticate, select **Grafana** and log in with a Grafana user. This works for Grafana Cloud and self-hosted
+Grafana instances.
 
-**Capture Options:**
+Capture options:
 
-- Full dashboard capture
-- Panel-level capture (similar to Kibana per-visualization)
+- **Full page**: full dashboard capture
+- **Visualizations**: panel-level capture (similar to Kibana)
 
-### Generic Web Connector
+### Generic web connector
 
-For any web page — if a human can reach it, Anaphora can capture it.
+Select the **Web** connector for any web page. If a human can reach it, Anaphora can capture it.
 
-**Use Cases:**
+Use cases:
 
 - Internal tools and dashboards
 - SaaS applications
 - Custom web applications
 
-**Authentication:**
+Authentication:
 
-- Natively supports Basic Auth headers
+- Natively supports HTTP Basic authentication (select **Basic**)
 - Use Advanced mode to script login flows
 
-## Advanced Capture Workflows
+## Advanced capture workflows
 
-Advanced mode enables multi-step browser automation for complex scenarios.
+Advanced mode runs multi-step browser automation for complex scenarios.
 
-### Workflow Structure
+### Workflow structure
 
 ```mermaid
 flowchart LR
@@ -102,38 +105,41 @@ flowchart LR
     B --> C["Capture (snapshot to var)"]
 ```
 
-### Browser Actions
+### Browser actions
 
-| Action               | Description      | Example                    |
-|----------------------|------------------|----------------------------|
-| **Navigate**         | Go to a URL      | Open dashboard             |
-| **Click**            | Click an element | Expand menu, select filter |
-| **Type**             | Enter text       | Search box, form field     |
-| **Wait for visible** | Wait for element | Dashboard loading complete |
-| **Wait**             | Pause execution  | Allow animations to finish |
-| **Reload**           | Refresh page     | Clear cached state         |
+| Action                   | Description                             | Example                    |
+|--------------------------|-----------------------------------------|----------------------------|
+| **Navigate**             | Go to a URL                             | Open dashboard             |
+| **Click**                | Click an element                        | Expand menu, select filter |
+| **Type text**            | Enter text                              | Search box, form field     |
+| **Enter**                | Press Enter in an element               | Submit a search or form    |
+| **Wait for visible**     | Wait for element                        | Dashboard loading complete |
+| **Wait before continue** | Pause execution for a number of seconds | Allow animations to finish |
+| **Reload**               | Refresh page                            | Clear cached state         |
 
-### Data Extraction Actions
+### Data extraction actions
 
 | Action               | Description                    | Example                  |
 |----------------------|--------------------------------|--------------------------|
 | **Capture value**    | Extract text into variable     | Error count, status text |
 | **Capture snapshot** | Screenshot element to variable | Chart, panel, full page  |
 | **Calculate**        | Arithmetic on variables        | `errors / total * 100`   |
+| **AI**               | Process captured data with AI  | Summarize a dashboard    |
 
 :::note Equation limits
-An equation in a **Calculate** action runs with a time limit and a memory limit. It cannot create a matrix with more
-than one million cells. The job editor checks equations when you save the job.
+An equation in a **Calculate** action runs in a separate process, with 256 MB of memory and 5 seconds of time. It
+cannot create a matrix with more than one million cells. When a limit is reached, only that process stops, and the
+action fails. The job editor checks equations when you save the job.
 :::
 
-### Control Flow Actions
+### Control flow actions
 
-| Action                | Description          | Example                          |
-|-----------------------|----------------------|----------------------------------|
-| **Conditional block** | If/else logic        | Only notify if errors > 0        |
-| **Break**             | Stop without sending | Skip report if threshold not met |
+| Action                | Description                                                        | Example                          |
+|-----------------------|--------------------------------------------------------------------|----------------------------------|
+| **Conditional block** | Run nested actions when a variable meets a condition (or does not) | Only notify if errors > 0        |
+| **Break**             | Stop without sending                                               | Skip report if threshold not met |
 
-### Example: Multi-Source Report
+### Example: multi-source report
 
 Capture from multiple dashboards in one job:
 
@@ -147,11 +153,11 @@ Capture from multiple dashboards in one job:
 7. Capture snapshot → internal_report
 ```
 
-Result: Three snapshots available in Composer as `dashboard_a`, `dashboard_b`, `internal_report`.
+Result: three snapshots are available in the **Compose** tab as `dashboard_a`, `dashboard_b`, and `internal_report`.
 
-### Example: Conditional Alert
+### Example: conditional alert
 
-Only send notification when error threshold is exceeded:
+Send a notification only when the error count exceeds a threshold:
 
 ```
 1. Navigate → Error Dashboard
@@ -162,9 +168,9 @@ Only send notification when error threshold is exceeded:
 4. Capture snapshot → error_dashboard
 ```
 
-## Authentication Best Practices
+## Authentication best practices
 
-### Service Accounts
+### Service accounts
 
 For production jobs:
 
@@ -173,27 +179,34 @@ For production jobs:
 
 ### Kibana with ReadonlyREST
 
-Anaphora has first-class support for ReadonlyREST authentication:
+Anaphora has built-in support for ReadonlyREST authentication:
 
-- Simple username/password login
-- Tenancy selection for multi-tenant Kibana
-- Enterprise SSO integration
+- Username/password login (**ReadonlyREST**)
+- Username/password login with tenancy selection for multi-tenant Kibana (**ReadonlyREST Enterprise**)
 
-## Reliability Tips
+## Reliability tips
 
-### Stable Captures
+### Stable captures
 
 For reliable automation:
 
 - Use stable dashboard URLs (avoid temporary/session-based URLs)
-- Prefer consistent layouts — dynamic dashboards may produce varying results
-- Add wait actions when necessary to ensure content is fully loaded
-- If possible use element-specific captures rather than full-page when possible
+- Prefer consistent layouts. Dynamic dashboards can produce different results
+- Add wait actions when necessary to make sure content is fully loaded
+- Use element-specific captures instead of full-page captures when possible
 
-### Handling Failures
+### Handling failures
 
-- Configure retry policies in General tab
+- Set **Retry on failure** in the General tab
 - Test captures manually before scheduling
+
+Anaphora stops a capture in these cases:
+
+| Case                                                       | Result                                                        |
+|------------------------------------------------------------|---------------------------------------------------------------|
+| The capture runs longer than 30 minutes                    | The run fails and is retried                                  |
+| A Kibana page does not show Kibana after 5 minutes (for example a login or error page) | The run fails. A missing panel or a spinner that does not stop only logs a warning. |
+| The job has no valid URL                                   | The run fails with "Found no valid URL to navigate to"        |
 
 ## Testing
 
@@ -205,12 +218,14 @@ Click **Test capture** to:
 4. Check variable values
 5. Debug any issues
 
-:::tip Debug Workflow
-Use Test frequently while building Advanced workflows. Each action's result is visible, making it easy to identify where
-issues occur.
+Select **Debug test capture** in the button menu to also record a video of the capture.
+
+:::tip Debug workflow
+Use Test often while you build Advanced workflows. The result of each action is visible, so you can see where a problem
+occurs.
 :::
 
-## Next Steps
+## Next steps
 
-- [Composer](./composer) - Arrange captured content into reports
-- [Delivery](./delivery) - Configure where reports are sent
+- [Composer](./composer): arrange captured content into reports
+- [Delivery](./delivery): configure where reports are sent

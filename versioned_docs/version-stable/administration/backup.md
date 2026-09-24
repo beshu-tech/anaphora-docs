@@ -6,35 +6,34 @@ keywords: [ Anaphora backup, configuration backup, disaster recovery, data prote
 
 # Backup
 
-Protect your Anaphora configuration and data with backups. There are three ways to back up your Anaphora instance:
+There are three ways to back up an Anaphora instance:
 
-1. **UI Export** - Use the UI to create and download backup files.
-2. **API Export** - Use the API to programmatically export data.
-3. **Docker Volume Backup** - For Docker deployments, back up the data volume directly.
+1. UI export: create and download backup files in the UI.
+2. API export: export the data through the API.
+3. Docker volume backup: for Docker deployments, back up the data volume directly.
 
 :::note System role required
 Only a system user can export or import data, in the UI and through the API. An import replaces the current data.
 :::
 
 :::tip
-**UI Export** and **API Export** will only back up the configuration and data stored within Anaphora.
-Report files are not included in these backups. So having a docker volume backup is recommended for complete data
-protection.
+A UI export or an API export backs up only the configuration and data stored in Anaphora. These backups do not
+include report files. For complete data protection, we recommend a Docker volume backup.
 :::
 
-## UI Backup
+## UI backup
 
-1. Access the **Settings** > **Data**.
+1. Go to **Settings** > **Data**.
 2. Click **Export to file** to download a backup of the current configuration and data.
 3. Store the backup file securely.
 
-### UI Import
+### UI import
 
 1. Go to **Settings** > **Data**
 2. Click **Import from file**
 3. Upload the backup file
 
-### Legacy Import and Export
+### Legacy import and export
 
 The **Legacy** tab under **Settings** > **Data** reads and writes the older `.json` format. This tab will be removed in
 the future. A legacy import has three modes:
@@ -45,9 +44,18 @@ the future. A legacy import has three modes:
 | Validate the imported file but autofix when possible            | Repairs what it can                         |
 | Do not validate the imported file (Use at own risk)             | Imports the file as it is                   |
 
-## Docker Volume Backup
+The first option refuses a file with a template that has no page. To repair such a file during the import, pick the
+autofix option. A refused import names the template and the field.
 
-For Docker deployments, back up the data volume:
+## Automatic database backup before an upgrade
+
+Before a new version changes the database, Anaphora writes a copy of it to `storage/backups/`. It keeps the three
+newest copies. See [Upgrading](../getting-started/upgrading.md#automatic-database-backups).
+
+## Docker volume backup
+
+If you mount host folders, as in the [Docker Compose](../getting-started/installation.md#docker-compose) example, back
+up the `storage/` and `content/` folders. For named Docker volumes, back up the data volume:
 
 ```bash
 docker run --rm \
@@ -57,7 +65,7 @@ docker run --rm \
   alpine tar czf /backup/anaphora-backup.tar.gz /data
 ```
 
-### Docker Volume Import
+### Docker volume import
 
 ```bash
 docker run --rm \
@@ -67,30 +75,30 @@ docker run --rm \
   alpine tar xzf /backup/anaphora-backup.tar.gz -C /
 ```
 
-## API Backup
+## API backup
 
-**Authentication**: Use basic auth headers with a system user.
+Use basic auth headers with a system user.
 
-Get the backup via the following endpoint:
+To get the backup, call this endpoint:
 
 ```
 GET /guest/api/export
 ```
 
-**Response**: A downloadable backup file in `.ana` format.
+The response is a downloadable backup file in `.ana` format.
 
-### API Import
+### API import
 
-**Authentication**: Use basic auth headers with a system user.
+Use basic auth headers with a system user.
 
-Upload the backup file via the following endpoint:
+To upload the backup file, call this endpoint:
 
 ```
 POST /guest/api/import
 ```
 
-**Request Body**: `.ana` backup file as binary data.
+The request body is the `.ana` backup file as binary data.
 
-## Next Steps
+## Next steps
 
-- [Data Retention](../data-retention/) - Manage stored data
+- [Data retention](../data-retention/): manage stored data

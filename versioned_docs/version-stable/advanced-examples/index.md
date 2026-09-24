@@ -4,11 +4,11 @@ description: Advanced Anaphora examples - multi-source reports, statistical aler
 keywords: [ advanced Kibana reports, multi-source dashboards, statistical alerts, branded reports, AI report generation ]
 ---
 
-# Advanced Examples - Enterprise Reporting Scenarios
+# Advanced examples: enterprise reporting scenarios
 
-Complex reporting scenarios demonstrating Anaphora's full capabilities.
+These examples show more complex reporting scenarios.
 
-## Available Examples
+## Available examples
 
 | Example                                                          | Description                                         |
 |------------------------------------------------------------------|-----------------------------------------------------|
@@ -18,10 +18,10 @@ Complex reporting scenarios demonstrating Anaphora's full capabilities.
 
 ## Prerequisites
 
-These examples assume familiarity with:
+These examples assume that you know:
 
 - Basic Anaphora job creation
 - Advanced capture mode
 - Variables and conditions
 
-If you're new to Anaphora, start with [Basic Examples](./basic-examples/) first.
+If you are new to Anaphora, start with [Basic Examples](./basic-examples/).

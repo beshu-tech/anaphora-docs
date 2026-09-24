@@ -6,44 +6,40 @@ keywords: [ SAML, SSO, Single Sign-On, Okta, Azure AD, OneLogin, identity provid
 
 # SAML / Single Sign-On
 
-Integrate with SAML 2.0 identity providers for enterprise single sign-on. Users authenticate through your corporate IdP and are automatically provisioned in Anaphora.
+Anaphora supports single sign-on through SAML 2.0 identity providers. Users log in through your corporate IdP, and Anaphora creates their accounts automatically.
 ![](images/saml.png)
 ## Overview
 
-SAML SSO provides:
+With SAML SSO, users have one login for all applications, and you manage them in your IdP. Anaphora creates each user
+at the first login and maps IdP groups to Anaphora roles.
 
-- **Single Sign-On** — One login for all applications
-- **Centralized access control** — Manage users in your IdP
-- **Automatic provisioning** — Users created on first login
-- **Group-based roles** — Map IdP groups to Anaphora roles
-
-## Supported Identity Providers
+## Supported identity providers
 
 | Provider | Status | Notes |
 |----------|--------|-------|
-| **Okta** | Tested | Full support |
-| **Azure AD** | Tested | Full support |
-| **OneLogin** | Tested | Full support |
-| **Google Workspace** | Tested | SAML app required |
-| **PingFederate** | Compatible | Standard SAML 2.0 |
-| **ADFS** | Compatible | Standard SAML 2.0 |
-| **Keycloak** | Compatible | Standard SAML 2.0 |
-| **Custom IdP** | Compatible | Any SAML 2.0 compliant |
+| Okta | Tested | Full support |
+| Azure AD | Tested | Full support |
+| OneLogin | Tested | Full support |
+| Google Workspace | Tested | SAML app required |
+| PingFederate | Compatible | Standard SAML 2.0 |
+| ADFS | Compatible | Standard SAML 2.0 |
+| Keycloak | Compatible | Standard SAML 2.0 |
+| Custom IdP | Compatible | Any SAML 2.0 compliant |
 
-## Configuration Steps
+## Configuration steps
 
-### Step 1: Download SP Metadata
+### Step 1: Collect the SP values
 
-1. Go to **Settings** > **Authentication** > **SAML**
-2. Click **Download SP Metadata**
-3. Save the XML file — you'll upload this to your IdP
+Anaphora does not supply an SP metadata file. Enter these values in your IdP by hand. `<anaphora-external-url>` is the
+public URL of Anaphora (`NEXT_PUBLIC_SITE_URL`).
 
-The metadata contains:
-- Entity ID (SP identifier)
-- Assertion Consumer Service URL
-- Signing certificate
+| Value                                         | URL or value                                           |
+|-----------------------------------------------|--------------------------------------------------------|
+| Assertion Consumer Service (ACS) URL          | `https://<anaphora-external-url>/auth/login-saml/callback` |
+| Entity ID (SP identifier, Audience)           | The value of **Issuer** in Anaphora, for example `anaphora` |
+| Single Logout URL                             | `https://<anaphora-external-url>/auth/logout-saml`      |
 
-### Step 2: Configure Your IdP
+### Step 2: Configure your IdP
 
 Create a new SAML application in your identity provider.
 
@@ -51,9 +47,9 @@ Create a new SAML application in your identity provider.
 
 1. Admin Console > Applications > Create App Integration
 2. Select SAML 2.0
-3. Upload Anaphora SP metadata or enter manually:
-   - Single Sign On URL: `https://anaphora.company.com/saml/acs`
-   - Audience URI: `https://anaphora.company.com/saml/metadata`
+3. Enter these values by hand:
+   - Single Sign On URL: `https://anaphora.company.com/auth/login-saml/callback`
+   - Audience URI: the value of **Issuer** in Anaphora
 4. Configure attribute statements (see below)
 5. Assign users/groups
 
@@ -62,9 +58,9 @@ Create a new SAML application in your identity provider.
 1. Azure Portal > Enterprise Applications > New Application
 2. Create your own application > Non-gallery
 3. Single sign-on > SAML
-4. Upload metadata file or enter:
-   - Identifier: `https://anaphora.company.com/saml/metadata`
-   - Reply URL: `https://anaphora.company.com/saml/acs`
+4. Enter:
+   - Identifier: the value of **Issuer** in Anaphora
+   - Reply URL: `https://anaphora.company.com/auth/login-saml/callback`
 5. Configure claims mapping
 6. Assign users/groups
 
@@ -72,26 +68,38 @@ Create a new SAML application in your identity provider.
 
 1. Applications > Add App > SAML Custom Connector
 2. Configuration tab:
-   - ACS URL: `https://anaphora.company.com/saml/acs`
-   - Audience: `https://anaphora.company.com/saml/metadata`
+   - ACS URL: `https://anaphora.company.com/auth/login-saml/callback`
+   - Audience: the value of **Issuer** in Anaphora
 3. Parameters tab: Add attribute mappings
 4. Access tab: Assign roles
 
-### Step 3: Enter IdP Metadata
+### Step 3: Enter the IdP values
 
 Back in Anaphora:
 
-1. Go to **Settings** > **Authentication** > **SAML**
-2. Choose one method:
-   - **Metadata URL**: Enter your IdP's metadata URL (recommended)
-   - **Metadata XML**: Upload/paste the IdP metadata file
+1. Go to **Settings** > **System** > **Auth** > **SAML**
+2. Fill in the fields:
+
+| Field                  | Description                                                              | Required |
+|------------------------|--------------------------------------------------------------------------|----------|
+| Entry point            | IdP entry point URL, for example `https://keycloak.server/realms/yourRealm/protocol/saml` | Yes      |
+| Issuer                 | Issuer string for the IdP. For Keycloak, this is the Client ID           | Yes      |
+| Certificate            | IdP signing certificate (see below)                                      | Yes      |
+| Logout callback URL    | Full logout callback URL, for example `https://anaphora.company.com/auth/logout-saml` | Yes      |
+| Decryption PVK         | Private key to decrypt assertions (stored encrypted)                     | Yes      |
+| Accepted clock skew ms | Allowed clock difference in milliseconds. Default: `-1`                  | No       |
+| Username parameter     | SAML attribute for the username. Default: `nameID`                       | No       |
+| Groups parameter       | SAML attribute for the groups/roles. Default: `Role`                     | No       |
+| Extra config           | YAML object with more SAML options (see below)                           | No       |
+
 3. Click **Save**
+4. To activate SAML, add `saml` to **Strategies** in **Settings** > **System** > **General**
 
-### Signing Certificate
+### Signing certificate
 
-The **Certificate** field contains the IdP's signing certificate for validating SAML assertions. This is the X.509 certificate found in your IdP's SAML metadata as `<ds:X509Certificate>`.
+The **Certificate** field holds the IdP signing certificate that validates SAML assertions. It is the X.509 certificate in the SAML metadata of your IdP, in `<ds:X509Certificate>`.
 
-**Keycloak:** The metadata URL is:
+For Keycloak, the metadata URL is:
 ```
 https://<keycloak-host>/realms/<your-realm>/protocol/saml/descriptor
 ```
@@ -102,32 +110,30 @@ MIICizCCAfQCCQCET8tKaMc0BMjANBgkqh...g=
 ```
 
 :::tip
-When using **Metadata URL**, the certificate is automatically extracted. Manual entry is only needed when configuring without metadata.
+Anaphora does not read the IdP metadata. Copy the certificate from the metadata into **Certificate**.
 :::
 
-### Step 4: Map Attributes
+### Step 4: Map attributes
 
-Configure how IdP claims map to Anaphora user fields.
+Configure how IdP claims map to the Anaphora user fields.
 
-## Attribute Mapping
+## Attribute mapping
 
-### Required Claims
-
-| Anaphora Field | SAML Claim | Description |
-|----------------|------------|-------------|
-| Username | `NameID` | Unique user identifier |
-| Email | `email` or `mail` | User email address |
-
-### Optional Claims
+### Required claims
 
 | Anaphora Field | SAML Claim | Description |
 |----------------|------------|-------------|
-| Display Name | `displayName` | Shown in UI |
-| Groups | `groups` or `memberOf` | For role mapping |
-| First Name | `firstName` | User's first name |
-| Last Name | `lastName` | User's last name |
+| Username | `nameID` (set in **Username parameter**) | Unique user identifier |
 
-### Okta Attribute Statements
+### Optional claims
+
+| Anaphora Field | SAML Claim | Description |
+|----------------|------------|-------------|
+| Groups | `Role` (set in **Groups parameter**) | For role mapping |
+
+Anaphora reads no other attributes.
+
+### Okta attribute statements
 
 ```
 Name: email
@@ -143,7 +149,9 @@ Name: groups
 Value: (Group membership attribute)
 ```
 
-### Azure AD Claims
+Set **Groups parameter** to the attribute name, in this example `groups`.
+
+### Azure AD claims
 
 ```
 Claim name: email
@@ -156,58 +164,63 @@ Claim name: groups
 Source attribute: user.groups
 ```
 
-## Group-Based Roles
+## Group-based roles
 
-Map IdP groups to Anaphora roles for automatic permission assignment.
+Map IdP groups to Anaphora roles to assign permissions automatically.
 
-### Groups Attribute Configuration
+### Groups attribute configuration
 
-The **Groups Parameter** setting specifies which SAML attribute contains group/role information. Default: `Role`
+The **Groups parameter** setting is the SAML attribute that contains the group or role information. Default: `Role`
 
 :::warning Important: Single Role Attribute
-You must enable **Single Role Attribute** (also called *Single Role Attribute Mapping* or *Roles as Claims* depending on your IdP) in your identity provider. Without this, group claims may not be sent correctly.
+You must enable **Single Role Attribute** in your identity provider. Some IdPs call it *Single Role Attribute Mapping* or *Roles as Claims*. If it is not enabled, the IdP may not send the group claims correctly.
 
-**Keycloak setup:**
-1. Go to **Client Scopes** → **role_list**
-2. Select **Mappers** → **role_list**
+Anaphora reads the roles only when the attribute has more than one value. An attribute with one value gives no roles.
+
+In Keycloak:
+1. Go to **Client Scopes** > **role_list**
+2. Select **Mappers** > **role_list**
 3. Enable **Single Role Attribute**
 :::
 
-### Role Mapping
+### Role mapping
 
-1. Go to **Settings** > **Authentication** > **SAML** > **Role Mapping**
-2. Add group mappings:
+Each IdP group becomes an Anaphora role with the same name.
 
-| IdP Group | Anaphora Role |
-|-----------|---------------|
+1. Go to **Settings** > **System** > **Permissions**
+2. In a space, add a permission for the role, and set its access:
+
+| IdP Group | Access |
+|-----------|--------|
 | `Anaphora-Admins` | Admin |
-| `Anaphora-Editors` | Editor |
-| `Anaphora-Viewers` | Viewer |
+| `Anaphora-Editors` | Read Write |
+| `Anaphora-Viewers` | Read Only |
 
-### Space Mapping
+### Space mapping
 
-Map groups to Space memberships:
+Give each group access to one or more spaces:
 
-| IdP Group | Space | Role |
-|-----------|-------|------|
-| `Team-Alpha` | Alpha Reports | Editor |
-| `Team-Beta` | Beta Reports | Editor |
-| `All-Staff` | Company Dashboards | Viewer |
+| IdP Group | Space | Access |
+|-----------|-------|--------|
+| `Team-Alpha` | Alpha Reports | Read Write |
+| `Team-Beta` | Beta Reports | Read Write |
+| `All-Staff` | Company Dashboards | Read Only |
 
-## Advanced Settings
+## Advanced settings
 
-### SAML Configuration Options
+### SAML configuration options
 
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Sign Requests | Sign authentication requests | Enabled |
-| Require Signed Assertions | Require IdP to sign assertions | Enabled |
-| Require Encrypted Assertions | Require assertion encryption | Disabled |
-| Allow IdP-Initiated SSO | Allow login initiated from IdP | Enabled |
+Anaphora sets these node-saml options. Change them in **Extra config**.
 
-### Extra Configuration
+| Option | Description | Default |
+|--------|-------------|---------|
+| `wantAssertionsSigned` | Require the IdP to sign assertions | `false` |
+| `wantAuthnResponseSigned` | Require the IdP to sign the response | `false` |
+| `audience` | Expected audience of the assertion. `false` turns the check off | `false` |
 
-The **Extra Configuration** field accepts a YAML object with additional SAML strategy options. Use this to override or extend the default SAML configuration.
+### Extra configuration
+
+The **Extra config** field accepts a YAML object with more SAML strategy options. Use it to override or extend the default SAML configuration.
 
 ```yaml
 wantAssertionsSigned: true
@@ -230,66 +243,61 @@ See the full list of available options in the [node-saml documentation](https://
 Use extra configuration options with caution. Incorrect settings may break SAML authentication.
 :::
 
-### Session Settings
+### Session settings
 
-| Setting | Description |
-|---------|-------------|
-| Session Duration | How long SSO session lasts |
-| Single Logout (SLO) | Enable SAML Single Logout |
-| Force Re-authentication | Require fresh IdP login |
+| Setting | Where | Description |
+|---------|-------|-------------|
+| **Max age hours** | **Settings** > **System** > **Backend** | How long an Anaphora session lasts. Default: `60` |
+| **Logout callback URL** | **Settings** > **System** > **Auth** > **SAML** | Where the IdP sends the SAML logout |
+| `forceAuthn` | **Extra config** | Require a new IdP login each time |
 
 ## Testing
 
-### Test SAML Configuration
+### Test SAML configuration
 
-1. Click **Test SAML Login**
-2. You'll be redirected to your IdP
-3. Authenticate with IdP credentials
-4. Verify redirect back to Anaphora
-5. Check user attributes were received correctly
+1. Log out, then click **Continue with SAML** on the login page
+2. Anaphora sends you to your IdP
+3. Log in with IdP credentials
+4. Make sure that the IdP sends you back to Anaphora
+5. Make sure that the user gets the correct spaces
 
 ### Debug SAML
 
-Enable SAML debugging to see assertion details:
+Use a more detailed log level:
 
-1. Go to **Settings** > **Authentication** > **SAML**
-2. Enable **Debug Mode**
-3. Attempt login
-4. Review SAML assertion in debug output
+1. Go to **Settings** > **System** > **General**
+2. Set **Log level** to `debug` or `trace`
+3. Try to log in
+4. Read the Anaphora log
 
 ## Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
-| Redirect loop | Check ACS URL matches exactly in both systems |
-| Invalid signature | Verify IdP certificate is current in Anaphora |
-| User not provisioned | Check attribute mapping, verify email claim exists |
-| Groups not mapped | Verify groups claim is sent, check group name format |
-| Clock skew error | Ensure server times are synchronized (NTP) |
+| Redirect loop | Check that the ACS URL is exactly the same in both systems |
+| Invalid signature | Make sure the IdP certificate in Anaphora is current |
+| User has no username | Check **Username parameter**, make sure the IdP sends that attribute |
+| Groups not mapped | Make sure the IdP sends the attribute in **Groups parameter**, check group name format |
+| Clock skew error | Make sure server clocks are synchronized (NTP), or set **Accepted clock skew ms** |
 
-### Common Errors
+### Common errors
 
 **"SAML Response validation failed"**
-- Certificate mismatch: Re-download IdP metadata
-- Clock skew: Check server time synchronization
+- Certificate mismatch: copy the current certificate from the IdP metadata into **Certificate**
+- Clock skew: check server time synchronization
 
 **"NameID not found"**
-- IdP not sending NameID
+- The IdP does not send NameID
 - Check IdP configuration for NameID format
 
-**"Attribute 'email' required"**
-- Email claim not mapped in IdP
-- Add email attribute statement
+## Best practices
 
-## Best Practices
+- Update **Certificate** when the IdP rotates its signing certificate
+- Set `wantAssertionsSigned: true` in **Extra config** for security
+- Map groups to roles instead of individual users
+- Test fully before you enable SAML for all users
 
-- Use metadata URL for automatic certificate rotation
-- Enable signed assertions for security
-- Map groups to roles rather than individual users
-- Test thoroughly before enabling for all users
-- Keep IdP metadata updated when certificates rotate
+## Next steps
 
-## Next Steps
-
-- [OIDC](./oidc) - Alternative: OpenID Connect
-- [Spaces](../spaces) - Configure Space-based access
+- [OIDC](./oidc): OpenID Connect, an alternative to SAML
+- [Spaces](../spaces): configure space-based access

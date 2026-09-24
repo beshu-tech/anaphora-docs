@@ -4,13 +4,13 @@ description: Configure Anaphora with environment variables for production deploy
 keywords: [ Anaphora configuration, environment variables, PUBLIC_URL, setup guide, production deployment ]
 ---
 
-# Configuration Guide
+# Configuration guide
 
 After you install Anaphora and set its environment variables, you can configure more in the admin UI.
 
-## Initial Setup
+## Initial setup
 
-On first launch:
+At the first start:
 
 1. Open `PUBLIC_URL` in your browser
 2. Log in with the admin credentials (`ADMIN_USERNAME` / `ADMIN_PASSWORD`, default `admin` / `admin`)
@@ -37,7 +37,7 @@ the same theme.
 Reports always stay on white paper. The template page, the text editor and the preview show what your recipients see,
 in both themes.
 
-## Next Steps
+## Next steps
 
-- [Features & Editions](./features) - Compare Free, PRO, and Enterprise
-- [Basic Examples](../basic-examples/) - Create your first report job
+- [Features & Editions](./features): compare Free, PRO, and Enterprise
+- [Basic Examples](../basic-examples/): create your first report job

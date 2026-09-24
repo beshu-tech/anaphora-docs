@@ -4,10 +4,10 @@ description: Anaphora administration guide - configure authentication (LDAP, SAM
 keywords: [ Anaphora admin, LDAP authentication, SAML SSO, multi-tenant reporting, system monitoring, backup, RBAC ]
 ---
 
-# Administration - Security, Multi-Tenancy & Operations
+# Administration: security, multi-tenancy and operations
 
-Manage Anaphora's security, multi-tenancy, monitoring, and backups. This section covers enterprise features for managing
-users, permissions, and system health.
+This section covers security, multi-tenancy, monitoring and backups in Anaphora. It describes the enterprise features
+to manage users, permissions and system health.
 
 ## Topics
 
@@ -15,19 +15,21 @@ users, permissions, and system health.
 |----------------------------------------------------|----------------------------------------|
 | [Authentication](/administration/authentication/)  | User authentication and access control |
 | [Spaces](/administration/spaces)                   | Multi-tenant workspace management      |
-| [AI Providers](/administration/ai-providers)       | Configure AI for intelligent analysis  |
-| [Self Monitoring](/administration/self-monitoring) | System health and metrics              |
+| [AI providers](/administration/ai-providers)       | Configure AI for report analysis       |
+| [API for AI agents](./agent-api.md)     | Let an AI agent build jobs via the API |
+| [Self-monitoring](/administration/self-monitoring) | System health and metrics              |
 | [Backup](/administration/backup)                   | Data backup and recovery               |
 
-## System User
+## System user
 
 The first user created during setup is the system administrator with full privileges. Only system admins can access and
-manage the global settings. 
+manage the global settings.
 
-## Next Steps
+## Next steps
 
-- [Authentication](/administration/authentication/) - Configure identity providers
-- [Spaces](/administration/spaces) - Set up multi-tenant workspaces
-- [AI Providers](/administration/ai-providers) - Configure AI for intelligent analysis
-- [Self Monitoring](/administration/self-monitoring) - Monitor system health
-- [Backup](/administration/backup) - Configure backup and recovery
+- [Authentication](/administration/authentication/): configure identity providers
+- [Spaces](/administration/spaces): set up multi-tenant workspaces
+- [AI providers](/administration/ai-providers): configure AI for report analysis
+- [API for AI agents](./agent-api.md): let an AI agent build jobs through the API
+- [Self-monitoring](/administration/self-monitoring): monitor system health
+- [Backup](/administration/backup): configure backup and recovery

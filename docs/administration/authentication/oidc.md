@@ -6,34 +6,30 @@ keywords: [ OpenID Connect, OIDC, OAuth, Google login, Auth0, Keycloak, OAuth 2.
 
 # OpenID Connect (OIDC)
 
-Integrate with OAuth 2.0 / OpenID Connect providers for modern authentication. OIDC provides a simpler setup than SAML while offering similar enterprise features.
+Anaphora supports login through OAuth 2.0 / OpenID Connect providers. OIDC is simpler to set up than SAML and has similar enterprise features.
 
 ![](images/oidc.png)
 ## Overview
 
-OIDC integration provides:
+OIDC is built on OAuth 2.0 and has fewer settings than SAML. Anaphora discovers the provider configuration
+automatically through the well-known endpoint. Sessions are token-based, with secure, stateless authentication.
 
-- **Modern authentication** — Built on OAuth 2.0
-- **Simple configuration** — Fewer settings than SAML
-- **Automatic discovery** — Provider configuration via well-known endpoint
-- **Token-based sessions** — Secure, stateless authentication
-
-## Supported Providers
+## Supported providers
 
 | Provider | Issuer URL | Notes |
 |----------|------------|-------|
-| **Google** | `https://accounts.google.com` | Google Workspace or personal |
-| **Auth0** | `https://your-tenant.auth0.com` | Full-featured IdP |
-| **Keycloak** | `https://keycloak.company.com/realms/your-realm` | Self-hosted option |
-| **Okta** | `https://your-org.okta.com` | Enterprise IdP |
-| **Azure AD** | `https://login.microsoftonline.com/{tenant}/v2.0` | Microsoft cloud |
-| **OneLogin** | `https://your-domain.onelogin.com/oidc/2` | Enterprise SSO |
-| **Ping Identity** | `https://auth.pingone.com/{env-id}/as` | Enterprise |
-| **Custom** | Any OIDC-compliant issuer | Must support discovery |
+| Google | `https://accounts.google.com` | Google Workspace or personal |
+| Auth0 | `https://your-tenant.auth0.com` | Full-featured IdP |
+| Keycloak | `https://keycloak.company.com/realms/your-realm` | Self-hosted option |
+| Okta | `https://your-org.okta.com` | Enterprise IdP |
+| Azure AD | `https://login.microsoftonline.com/{tenant}/v2.0` | Microsoft cloud |
+| OneLogin | `https://your-domain.onelogin.com/oidc/2` | Enterprise SSO |
+| Ping Identity | `https://auth.pingone.com/{env-id}/as` | Enterprise |
+| Custom | Any OIDC-compliant issuer | Must support discovery |
 
 ## Configuration
 
-### Step 1: Create OAuth Application
+### Step 1: Create an OAuth application
 
 Create an OAuth/OIDC application in your identity provider.
 
@@ -78,7 +74,7 @@ Create an OAuth/OIDC application in your identity provider.
 3. Certificates & secrets > New client secret
 4. Copy Application (client) ID and secret value
 
-### Step 2: Configure in Anaphora
+### Step 2: Configure Anaphora
 
 1. Go to **Settings** > **System** > **Auth** > **OIDC**
 2. Enter the configuration:
@@ -110,42 +106,42 @@ the database. See the Anaphora Quick Start guide.
 
 ### Callback URL
 
-The **Callback URL** is where the IdP redirects users after authentication.
+The IdP redirects users to the **Callback URL** after authentication.
 
 Default: `https://<anaphora-external-url>/auth/login-oidc/callback`
 
-Register this URL in your IdP's allowed redirect URIs:
+Add this URL to the allowed redirect URIs of your IdP:
 
-| Provider | Setting Location |
+| Provider | Setting location |
 |----------|------------------|
-| **Google** | Authorized redirect URIs |
-| **Auth0** | Allowed Callback URLs |
-| **Keycloak** | Client Settings → Valid Redirect URIs |
-| **Okta** | Sign-in redirect URIs |
-| **Azure AD** | Redirect URIs |
+| Google | Authorized redirect URIs |
+| Auth0 | Allowed Callback URLs |
+| Keycloak | Client Settings > Valid Redirect URIs |
+| Okta | Sign-in redirect URIs |
+| Azure AD | Redirect URIs |
 
 :::tip Keycloak
-In Keycloak, go to **Clients** → your client → **Settings** → **Valid Redirect URIs** and add the callback URL.
+In Keycloak, go to **Clients** > your client > **Settings** > **Valid Redirect URIs** and add the callback URL.
 :::
 
-### Step 3: Configure Scopes
+### Step 3: Configure scopes
 
 Set the **Scope** field to the scopes you need.
 
 Default: `openid`, `profile`, `email`
 
-| Scope | Data Returned |
+| Scope | Data returned |
 |-------|---------------|
 | `openid` | Required for OIDC |
 | `email` | User email address |
 | `profile` | Name, picture, etc. |
 | `groups` | Group memberships (provider-specific) |
 
-:::caution Custom Scopes
-Be careful with custom scopes. Adding non-existing scopes may cause authentication errors, such as redirect loops back to the login URL after authorization.
+:::caution Custom scopes
+Be careful with custom scopes. A scope that does not exist can cause authentication errors, such as redirect loops back to the login URL after authorization.
 :::
 
-## Configure from the Environment
+## Configure from the environment
 
 Instead of the settings page, you can configure OIDC with environment variables. This is an Enterprise feature.
 
@@ -179,23 +175,23 @@ When the browser reaches Keycloak at a public URL and the Anaphora container rea
 server. Keycloak must publish the browser endpoints under the public URL (`KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true`).
 :::
 
-## Claim Mapping
+## Claim mapping
 
-Map OIDC claims to Anaphora user fields.
+Map OIDC claims to the Anaphora user fields.
 
-### Standard Claims
+### Standard claims
 
-| Anaphora Field | OIDC Claim | Description |
+| Anaphora field | OIDC claim | Description |
 |----------------|------------|-------------|
 | Username | `preferred_username` (set in **Username parameter**) | Unique identifier |
 | Email | `email` | User email |
-| Display Name | `name` | Full name |
+| Display name | `name` | Full name |
 
-### Group Claims
+### Group claims
 
-Group claim names vary by provider:
+The group claim name is different for each provider:
 
-| Provider | Groups Claim |
+| Provider | Groups claim |
 |----------|--------------|
 | Google | `groups` (requires Workspace) |
 | Auth0 | `https://your-app/roles` (custom) |
@@ -203,7 +199,7 @@ Group claim names vary by provider:
 | Okta | `groups` |
 | Azure AD | `groups` |
 
-### Custom Claim Mapping
+### Custom claim mapping
 
 1. Go to **Settings** > **System** > **Auth** > **OIDC**
 2. Set the claim names:
@@ -213,38 +209,38 @@ Username parameter: preferred_username
 Groups parameter: groups
 ```
 
-## Group-Based Roles
+## Group-based roles
 
 Map IdP groups to Anaphora roles.
 
-### Groups Parameter
+### Groups parameter
 
-The **Groups parameter** specifies the claim that contains group/role information. Default: `groups`.
+The **Groups parameter** is the claim that contains the group or role information. Default: `groups`.
 The claim must be a list. Anaphora ignores a claim with a single string value.
 
 :::warning Important: Add Roles to ID Token
 You must configure your IdP to include roles/groups in the ID token.
 
-**Keycloak setup:**
-1. Go to **Client Scopes** → **profile**
-2. Select **Mappers** → **Add mapper** → **From predefined...**
+In Keycloak:
+1. Go to **Client Scopes** > **profile**
+2. Select **Mappers** > **Add mapper** > **From predefined...**
 3. Add the **groups** mapping
 :::
 
-### Role Mapping
+### Role mapping
 
 Each IdP group becomes an Anaphora role with the same name.
 
 1. Go to **Settings** > **System** > **Permissions**
 2. In a space, add a permission for the role, and set its access:
 
-| IdP Group/Role | Access |
+| IdP group/role | Access |
 |----------------|--------|
 | `anaphora-admins` | Admin |
 | `anaphora-editors` | Read Write |
 | `anaphora-viewers` | Read Only |
 
-### Auth0 Roles Example
+### Auth0 roles example
 
 In Auth0, use Rules or Actions to add roles to tokens:
 
@@ -260,39 +256,39 @@ Then, in Anaphora:
 - Set **Groups parameter** to `roles`
 - In **Settings** > **System** > **Permissions**, give `admin` the Admin access and `editor` the Read Write access
 
-## Advanced Settings
+## Advanced settings
 
-### Auth Method
+### Auth method
 
-The **Auth method** specifies how credentials are sent to the token endpoint.
+The **Auth method** sets how Anaphora sends the credentials to the token endpoint.
 
 Default: `client_secret_basic`
 
 | Method | Description |
 |--------|-------------|
-| `client_secret_basic` | Client ID and secret sent in Authorization header (URL-encoded). Standard method for most providers. |
-| `client_secret_post` | Client ID and secret sent in request body (not encoded). Use when your provider cannot decode encoded values (e.g., LemonLDAP). |
+| `client_secret_basic` | Sends the client ID and secret in the Authorization header (URL-encoded). The standard method for most providers. |
+| `client_secret_post` | Sends the client ID and secret in the request body (not encoded). Use it when your provider cannot decode encoded values (for example, LemonLDAP). |
 
-### User Info Source
+### User info source
 
-The **User info source** specifies where Anaphora gets the user profile information.
+The **User info source** sets where Anaphora gets the user profile information.
 
 Default: `user_info_endpoint`
 
 | Source | Description |
 |--------|-------------|
-| `user_info_endpoint` | Makes an additional call to the userInfo endpoint for the most up-to-date profile data. |
-| `access_token` | Extracts profile information directly from the access token. |
-| `id_token` | Extracts profile information directly from the ID token. |
+| `user_info_endpoint` | Makes one more call to the userInfo endpoint to get the latest profile data. |
+| `access_token` | Reads the profile information from the access token. |
+| `id_token` | Reads the profile information from the ID token. |
 
-### Extra Configuration
+### Extra configuration
 
 The **Extra config** field accepts a YAML object with two optional sections:
 
 | Section | Description |
 |---------|-------------|
-| `issuerAdditionalParameters` | Customize OIDC issuer discovery behavior |
-| `clientAdditionalParameters` | Customize OIDC client configuration |
+| `issuerAdditionalParameters` | Change the OIDC issuer discovery |
+| `clientAdditionalParameters` | Change the OIDC client configuration |
 
 ```yaml
 issuerAdditionalParameters:
@@ -304,7 +300,7 @@ clientAdditionalParameters:
     default_max_age: 0
 ```
 
-See the documentation for available options:
+For the available options, see:
 - [Issuer parameters](https://github.com/panva/openid-client/tree/v5.x/docs#new-issuermetadata)
 - [Client parameters](https://github.com/panva/openid-client/tree/v5.x/docs#client)
 
@@ -312,7 +308,7 @@ See the documentation for available options:
 Use extra configuration options with caution. Incorrect settings may break OIDC authentication.
 :::
 
-### Session Settings
+### Session settings
 
 | Setting | Where | Description |
 |---------|-------|-------------|
@@ -321,14 +317,14 @@ Use extra configuration options with caution. Incorrect settings may break OIDC 
 
 For Keycloak, also add `https://<anaphora-external-url>/auth/login` to **Valid post logout redirect URIs**.
 
-### Discovery Settings
+### Discovery settings
 
 Anaphora reads the provider endpoints from `<Issuer>/.well-known/openid-configuration`. There are no separate fields
 for them. To change an endpoint, for example `jwks_uri`, use `issuerAdditionalParameters.metadata` in **Extra config**.
 
 ## Testing
 
-### Test OIDC Configuration
+### Test OIDC configuration
 
 1. Log out, then click **Continue with OIDC** on the login page
 2. Anaphora sends you to your IdP
@@ -336,7 +332,7 @@ for them. To change an endpoint, for example `jwks_uri`, use `issuerAdditionalPa
 4. Make sure that the IdP sends you back to Anaphora
 5. Make sure that the user gets the correct spaces
 
-### Debug Mode
+### Debug mode
 
 At each OIDC login, the Anaphora log shows the user profile at the `info` log level:
 
@@ -350,33 +346,33 @@ At each OIDC login, the Anaphora log shows the user profile at the `info` log le
 | Issue | Solution |
 |-------|----------|
 | Invalid redirect URI | Make sure that the callback URL is the same in both systems |
-| Invalid client | Verify Client ID and Secret |
+| Invalid client | Check the Client ID and Secret |
 | Discovery failed | Check **Issuer**, make sure that /.well-known/openid-configuration is accessible |
 | Groups not received | Check **Scope**, **Groups parameter** and the IdP configuration |
 | Token expired | Check clock synchronization (NTP) |
 
-### Common Errors
+### Common errors
 
 **"invalid_client"**
-- Client ID or Secret is incorrect
-- Client Secret may have expired (regenerate)
+- The Client ID or Secret is incorrect
+- The Client Secret can be expired (make a new one)
 
 **"redirect_uri_mismatch"**
-- Callback URL in Anaphora doesn't match IdP configuration
-- Check for trailing slashes, http vs https
+- The Callback URL in Anaphora is not the same as in the IdP configuration
+- Check for trailing slashes, and for http instead of https
 
 **"invalid_scope"**
-- Requested scope not allowed by IdP
-- Remove unsupported scopes
+- The IdP does not allow a requested scope
+- Remove the unsupported scopes
 
-## Provider-Specific Notes
+## Provider-specific notes
 
 ### Google Workspace
 
 To get group memberships:
-1. Enable Directory API in Google Cloud Console
+1. Enable the Directory API in Google Cloud Console
 2. Configure domain-wide delegation
-3. Add `https://www.googleapis.com/auth/admin.directory.group.readonly` scope
+3. Add the `https://www.googleapis.com/auth/admin.directory.group.readonly` scope
 
 ### Azure AD
 
@@ -386,17 +382,17 @@ For group claims:
 
 ### Keycloak
 
-Groups are included by default. Configure client mappers for custom claims.
+Keycloak includes groups by default. Configure client mappers for custom claims.
 
-## Best Practices
+## Best practices
 
 - Use HTTPS for all endpoints
 - Store Client Secret securely (Anaphora encrypts it)
-- Request minimal scopes needed
+- Request only the scopes you need
 - Map groups to roles for scalable access management
 - Monitor token expiration and refresh behavior
 
-## Next Steps
+## Next steps
 
-- [SAML](./saml) - Alternative: SAML 2.0 SSO
-- [Spaces](../spaces) - Configure Space-based access
+- [SAML](./saml): SAML 2.0 SSO, an alternative to OIDC
+- [Spaces](../spaces): configure space-based access

@@ -4,11 +4,11 @@ description: Configure job scheduling, notification throttling, retry policies, 
 keywords: [ job scheduling, CRON, notification throttling, retry policy, housekeeping, data retention ]
 ---
 
-# General Settings
+# General settings
 
 The General tab defines how often a job runs, how noisy it is allowed to be, and how it behaves on failures.
 
-## Configuration Fields
+## Configuration fields
 
 | Field            | Description                                                       | Required |
 |------------------|-------------------------------------------------------------------|----------|
@@ -21,15 +21,15 @@ The General tab defines how often a job runs, how noisy it is allowed to be, and
 
 ## Scheduling
 
-### Simple Frequency
+### Simple frequency
 
-Set how often the job should run using natural intervals.
+Set how often the job runs, in natural intervals.
 
 ### Advanced (CRON)
 
 Turn on the **Advanced** switch to type a CRON expression in the **Cron** field:
 
-| CRON Expression | Description              |
+| CRON expression | Description              |
 |-----------------|--------------------------|
 | `0 9 * * *`     | Every day at 9:00 AM     |
 | `0 */2 * * *`   | Every 2 hours            |
@@ -41,18 +41,18 @@ Turn on the **Advanced** switch to type a CRON expression in the **Cron** field:
 Anaphora refuses to save a CRON expression that the scheduler cannot run, for example `0 */25 * * *`. A stored job with
 such an expression shows **Never runs** on the Jobs list.
 
-If Anaphora is down when a job should run, it does not run the job late. The job runs at its next scheduled time, and
-the log at start names the runs that were missed.
+If Anaphora is down when a job should run, it does not run the job late. The job runs at its next scheduled time. At
+startup, the log names the runs that were missed.
 
-## Notification Throttling
+## Notification throttling
 
 **Max Notify Freq** sets the minimum time between two delivered reports, whatever the job frequency. A run inside this
-time still runs, but sends nothing. This is important for high-frequency alerting jobs.
+time still runs, but sends nothing. Use it for high-frequency alerting jobs.
 
 Select the checkbox to turn on throttling. The default is 3 hours. If the job runs more often than once a day and
 throttling is off, the General tab shows a **Throttle Frequency** button that sets the default.
 
-### Why Throttling Matters
+### Why throttling matters
 
 ```mermaid
 flowchart TD
@@ -79,24 +79,24 @@ flowchart TD
     without ~~~ with
 ```
 
-### Example Configuration
+### Example configuration
 
-| Job Frequency    | Throttling | Result                   |
+| Job frequency    | Throttling | Result                   |
 |------------------|------------|--------------------------|
 | Every 5 minutes  | 3 hours    | Max 8 notifications/day  |
 | Every 10 minutes | 1 hour     | Max 24 notifications/day |
 | Every hour       | 6 hours    | Max 4 notifications/day  |
 | Daily            | None       | 1 notification/day       |
 
-:::tip Alerting Pattern
-High-frequency sampling + throttling creates an alerting-style workflow:
+:::tip Alerting pattern
+High-frequency sampling with throttling gives an alerting-style workflow:
 
 - Job runs every 5 minutes to detect issues quickly
 - Throttling prevents notification fatigue
 - Recipients get timely alerts without spam
   :::
 
-## Retry Policy
+## Retry policy
 
 Select the **Retry on failure** checkbox to retry a failed run automatically. Then set the number of retries, from 1
 to 10. New jobs use 3 retries.
@@ -110,23 +110,23 @@ Anaphora retries in increasing intervals: 5 minutes, 15 minutes, 30 minutes, 1 h
 - Retries are listed under the run that failed first, in its **Attempts**.
 - If you start a manual run after a scheduled run failed, the pending retries of the scheduled run still happen.
 
-## Housekeeping (Data Retention)
+## Housekeeping (data retention)
 
 Select the **Run Expire Time** checkbox to delete old runs and their reports automatically after the time you set
 (months, days, and hours). New jobs use 6 months. Clear the checkbox to keep runs forever (**Never expire**).
 An hourly clean-up deletes the expired runs and their report files.
 
-:::warning Storage Impact
-High-frequency jobs generate more data. Without housekeeping:
+:::warning Storage impact
+High-frequency jobs make more data. Without housekeeping:
 
 - 10-minute job = 144 runs/day = 4,320 runs/month
 - Each run may include snapshots and reports
-- Storage can grow rapidly without retention limits
+- Without retention limits, storage can grow fast
 :::
 
-## Best Practices
+## Best practices
 
-### For Scheduled Reports
+### For scheduled reports
 
 ```yaml
 Frequency: Daily at 9 AM (0 9 * * *)
@@ -135,7 +135,7 @@ Retry: 3 attempts
 Housekeeping: 90 days
 ```
 
-### For Alerting Jobs
+### For alerting jobs
 
 ```yaml
 Frequency: Every 5-10 minutes
@@ -144,7 +144,7 @@ Retry: Job runs often enough; retries usually not needed
 Housekeeping: 14 days (less storage needed)
 ```
 
-### For Compliance/Archival
+### For compliance/archival
 
 ```yaml
 Frequency: Weekly or monthly
@@ -153,8 +153,8 @@ Retry: 5 attempts (make sure it succeeds)
 Housekeeping: Never
 ```
 
-## Next Steps
+## Next steps
 
-- [Capture](./capture) - Configure what to capture
-- [Composer](./composer) - Design your report layout
-- [Delivery](./delivery) - Set up delivery destinations
+- [Capture](./capture): configure what to capture
+- [Composer](./composer): design your report layout
+- [Delivery](./delivery): set up delivery destinations

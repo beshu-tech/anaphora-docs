@@ -8,23 +8,23 @@ keywords: [ Slack integration, webhook delivery, Slack notifications, report del
 
 Deliver reports directly to Slack channels. Use the webhook delivery interface to send Slack messages.
 
-## Setup Steps
+## Setup steps
 
-### 1. Create Slack Webhook
+### 1. Create a Slack webhook
 
 1. Go to [Slack Docs](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/)
 2. Follow the instructions to create an **Incoming Webhook**
 
 ### 2. Configure in Anaphora
 
-1. Go to **Delivery Interfaces**
-2. Add new **Webhook** interface
-3. Paste the Webhook URL
-4. Set the method to **POST** and body type to **JSON**
-5. Add the JSON body:
+1. In the sidebar, click **Delivery Interfaces**
+2. Click **Create Delivery Interface** and select the **Webhook** type
+3. Paste the webhook URL into **URL**
+4. Set **Method** to `POST` and **Body type** to `json`
+5. Add the **JSON body**:
    ```json
     {
-      "text": "Hello, world."
+      "text": "$MESSAGE"
     }
    ```
-6. Test and save
+6. Click **Test**, then click **Save**

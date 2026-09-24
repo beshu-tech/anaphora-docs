@@ -15,7 +15,7 @@ an alert with the count and the list of errors. Send it at most once every 12 ho
 
 ## Concept
 
-In Anaphora, **an alert is a report with a condition**:
+In Anaphora, an alert is a report with a condition:
 
 1. Anaphora opens a Kibana Discover search and reads its hit count.
 2. It compares the count with your threshold.

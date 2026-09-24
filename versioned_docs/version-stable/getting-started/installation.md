@@ -4,18 +4,18 @@ description: Install Anaphora with Docker or Docker Compose. Quick setup guide f
 keywords: [ Anaphora installation, Docker setup, Kibana reporting tool, Grafana reporting tool, automated reports installation ]
 ---
 
-# Installation Guide
+# Installation guide
 
-Get Anaphora up and running in your environment.
+Install and start Anaphora in your environment.
 
 ## Requirements
 
 - Docker and Docker Compose (recommended)
 - Network access to your Kibana/Grafana instances
 
-## Quick Start with Docker
+## Quick start with Docker
 
-The fastest way to get started is using Docker:
+The fastest way to start is with Docker:
 
 ```bash
 docker run -p 3000:3000 \
@@ -26,38 +26,53 @@ docker run -p 3000:3000 \
 
 Then open [http://localhost:3000](http://localhost:3000) in your browser and log in with `admin` / `admin`.
 
-### Environment Variables
+### Environment variables
 
 | Variable            | Description                                                                                  | Required    | Example                            |
 |---------------------|----------------------------------------------------------------------------------------------|-------------|------------------------------------|
-| `PUBLIC_URL`        | External URL where Anaphora is accessible                                                    | Yes         | `http://anaphora.example.com:3000` |
-| `DB_ENCRYPTION_KEY` | Key that encrypts the database. Without it, a built-in default key is used.                  | Recommended | `your-encryption-key`              |
-| `ADMIN_USERNAME`    | Initial admin username                                                                       | No          | `admin`                            |
-| `ADMIN_PASSWORD`    | Initial admin password                                                                       | No          | `your-secure-password`             |
+| `PUBLIC_URL`        | External URL where you can reach Anaphora                                                    | Yes         | `http://anaphora.example.com:3000` |
+| `DB_ENCRYPTION_KEY` | Key that encrypts the database. Without it, a published default key is used.                 | Recommended | `your-encryption-key`              |
+| `ADMIN_USERNAME`    | Initial admin username (default `admin`)                                                     | No          | `admin`                            |
+| `ADMIN_PASSWORD`    | Initial admin password (default `admin`)                                                     | No          | `your-secure-password`             |
 | `ACTIVATION_KEY`    | License / activation key for Anaphora                                                        | No          | `xxxx-xxxx-xxxx-xxxx`              |
+| `ANAPHORA_TAG`      | The image version that `docker-compose.yaml` runs. The upgrade script sets it in `.env`.      | No          | `latest`                           |
 | `DEBUG`             | Enable debug logging                                                                         | No          | `false`                            |
-| `WORKER_COUNT`      | Number of concurrent Puppeteer worker instances                                              | No          | `2`                                |
-| `SKIP_NOTIFIER`     | Set to `true` to send no notifications at all. Every delivery is skipped, as in a test run.  | No          | `false`                            |
-| `AI_PROVIDER`       | Adds an AI provider when the database is created: `openai`, `deepseek` or `custom`           | No          | `deepseek`                         |
-| `AI_MODEL`          | Model of that AI provider                                                                    | No          | `deepseek-chat`                    |
-| `AI_API_KEY`        | API key of that AI provider                                                                  | No          | `sk-...`                           |
+| `WORKER_COUNT`      | How many captures run at the same time (browser instances)                                   | No          | `2`                                |
+| `SKIP_NOTIFIER`     | Set to `true` to send no report, mail or webhook. Every delivery is skipped, as in a test run. | No        | `false`                            |
 
-:::tip Production Deployment
-For production, use a strong `DB_ENCRYPTION_KEY` and set `PUBLIC_URL` to your actual external URL (this is used for
-callback URLs in SSO configurations).
+More variables configure [OpenID Connect](../administration/authentication/oidc.md#configure-from-the-environment),
+an [AI provider](#ai-provider-from-the-environment) and [demo data](#demo-data).
+
+:::tip Production deployment
+For production, use a strong `DB_ENCRYPTION_KEY` and set `PUBLIC_URL` to your external URL. SSO configurations use it
+for callback URLs.
 :::
 
 :::warning Keep the database key
-Set `DB_ENCRYPTION_KEY` before the first start and keep it. The database does not open with another key.
+Set `DB_ENCRYPTION_KEY` before the first start and keep it. The database does not open with another key, and the
+automatic database backups use the same key. Without the variable, Anaphora uses a default key that is in the public
+source, and it says so in the log at start. Anaphora has no command to change the key of an existing database.
 :::
 
-### AI Provider from the Environment
+`WORKER_COUNT` also limits report rendering: at most two report templates or equations per worker run at the same
+time. Each one runs in a separate process with 256 MB of memory.
 
-`AI_PROVIDER`, `AI_MODEL` and `AI_API_KEY` add one AI provider, named **Default Provider**, to the default space.
-Anaphora reads them once, when it creates the database. Set all three, or none. After that, manage the provider on the
-[AI Providers](../administration/ai-providers.md) page.
+### AI provider from the environment
 
-### Demo Data
+The environment can own one AI provider. Anaphora creates it at the first start, in the default space, and updates it
+at every start to match the environment.
+
+| Variable      | Required     | Description                                          |
+|---------------|--------------|------------------------------------------------------|
+| `AI_PROVIDER` | Yes          | `openai`, `deepseek` or `custom` (OpenAI-compatible) |
+| `AI_MODEL`    | Yes          | The model name                                       |
+| `AI_API_KEY`  | Yes          | The API key                                          |
+| `AI_ENDPOINT` | For `custom` | The base URL of the OpenAI-compatible service        |
+| `AI_NAME`     | No           | The name in the AI Providers list. Default: **Default Provider** |
+
+A partial or invalid set logs a warning and creates nothing. See [AI Providers](../administration/ai-providers.md).
+
+### Demo data
 
 For a preview or evaluation instance, Anaphora can fill an empty database with demo content:
 
@@ -68,61 +83,84 @@ For a preview or evaluation instance, Anaphora can fill an empty database with d
 
 `DEMO_USERS` works without `SEED_DEMO`. An entry with an error is skipped and logged.
 
-### Docker Compose
+## Docker Compose
 
-For production deployments, use Docker Compose with persistent storage:
+For production deployments, use Docker Compose with folders on the host for persistent storage.
 
-```yaml
-version: '3.8'
-services:
-  anaphora:
-    image: beshultd/anaphora
-    init: true # reaps finished browser processes
-    ports:
-      - "3000:3000"
-    volumes:
-      - anaphora-storage:/usr/src/app/storage
-      - anaphora-content:/usr/src/app/content
-    environment:
-      - PUBLIC_URL=https://anaphora.example.com
-      - DB_ENCRYPTION_KEY=${DB_ENCRYPTION_KEY}
-      - ADMIN_USERNAME=admin
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
-      - ACTIVATION_KEY=${ACTIVATION_KEY}
-      - DEBUG=false
-      - WORKER_COUNT=2
+1. Create a folder for Anaphora, and the folders it writes to. They must belong to user id `996`, the user that runs
+   Anaphora in the container:
 
-volumes:
-  anaphora-storage:
-  anaphora-content:
-```
+   ```bash
+   mkdir -p ~/anaphora/content ~/anaphora/storage ~/anaphora/tmp
+   cd ~/anaphora
+   sudo chown 996:996 content storage tmp
+   ```
 
-:::tip 🎁 Get a Free Trial Key
+2. Create a `.env` file in that folder:
+
+   ```dotenv
+   ADMIN_PASSWORD=your-secure-password
+   DB_ENCRYPTION_KEY=your-encryption-key
+   ACTIVATION_KEY=your-activation-key
+   ANAPHORA_TAG=latest
+   ```
+
+3. Create `docker-compose.yaml` in the same folder:
+
+   ```yaml
+   services:
+     anaphora:
+       container_name: anaphora
+       restart: always
+       # the version lives in .env (ANAPHORA_TAG), where the upgrade script sets it
+       image: beshultd/anaphora:${ANAPHORA_TAG:-latest}
+       init: true
+       env_file: '.env'
+       environment:
+         - ADMIN_USERNAME=admin
+         - PUBLIC_URL=https://anaphora.example.com
+       volumes:
+         - ./content/:/usr/src/app/content/:rw
+         - ./storage/:/usr/src/app/storage/:rw
+         - ./tmp/:/tmp/:rw
+       ports:
+         - '3000:3000'
+       user: '996'
+   ```
+
+4. Start Anaphora:
+
+   ```bash
+   docker compose up -d
+   ```
+
+The `storage/` folder holds the database. The `content/` folder holds the report files.
+
+:::info Container user
+Without a `user:` setting, the container starts as root, makes `storage/` and `content/` writable for its own user
+(`pptruser`, uid 996), and then drops all privileges. With `user:` set, the container skips that step. If a folder is not
+writable, the container stops and prints the `chown` command to run.
+:::
+
+:::tip Get a free trial key
 The `ACTIVATION_KEY` unlocks PRO or Enterprise features.
-**[Request your free trial key →](https://portal.anaphora.it/trial)** — instant activation, no credit card required.
+[Request your free trial key](https://portal.anaphora.it/trial). Activation is instant, and you do not need a credit card.
 :::
 
-## Updating Anaphora
+## Upgrading Anaphora
 
-Before you update, [back up](../administration/backup.md) your data. Then pull the new image and start the container
-again:
+Use the upgrade script that comes in every image. It tests the new version on a copy of your database first, and it can
+roll back. See [Upgrading](./upgrading.md).
 
-```bash
-docker compose pull
-docker compose up -d
-```
+## Need help?
 
-If you use `docker run`, run `docker pull beshultd/anaphora:latest`, then remove the old container and start a new one
-with the same options.
-
-## Need Help?
-
-:::note 💬 Join the Community
-Having trouble? **[Ask on the Anaphora Forum →](https://forum.anaphora.it)** — Get help from the team and other users.
+:::note Join the community
+If you have a problem, [ask on the Anaphora Forum](https://forum.anaphora.it). The team and other users can help.
 :::
 
-## Next Steps
+## Next steps
 
-- [Features & Editions](./features) - Compare Free, PRO, and Enterprise editions
-- [Configuration](./configuration) - Configure Anaphora settings
-- [Basic Examples](../basic-examples/) - Create your first report job
+- [Upgrading](./upgrading.md): move to a new version safely
+- [Features & Editions](./features): compare Free, PRO, and Enterprise editions
+- [Configuration](./configuration): configure Anaphora settings
+- [Basic Examples](../basic-examples/): create your first report job

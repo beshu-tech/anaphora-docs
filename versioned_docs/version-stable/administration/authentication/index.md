@@ -6,10 +6,10 @@ keywords: [ authentication, LDAP, SAML, SSO, OpenID Connect, OIDC, session manag
 
 # Authentication
 
-Configure user authentication and access control for Anaphora. The platform supports enterprise-standard authentication
-methods for secure access.
+This section describes how to configure user authentication and access control for Anaphora. Anaphora supports the
+authentication methods below.
 
-## Authentication Methods
+## Authentication methods
 
 | Method                                        | Description                  | Best For                        |
 |-----------------------------------------------|------------------------------|---------------------------------|
@@ -18,33 +18,38 @@ methods for secure access.
 | [SAML](/administration/authentication/saml)   | Single Sign-On via SAML 2.0  | Okta, Azure AD, OneLogin        |
 | [OIDC](/administration/authentication/oidc)   | OpenID Connect providers     | Google, Auth0, Keycloak         |
 
-## Roles and Permissions
+:::note
+LDAP, SAML and OIDC need the Enterprise edition. The Free and Pro editions use Local authentication only. In the Free
+edition, all local users are system users.
+:::
+
+## Roles and permissions
 
 Anaphora uses role-based access control (RBAC).
 
 ### User types
 
-Anaphora has two main user types: System users and normal users. System users will have global access and can manage the
-Anaphora instance. While normal users will be assigned to specific spaces with permissions scoped to those spaces.
+Anaphora has two main user types: system users and normal users. System users have global access and manage the
+Anaphora instance. Normal users get access to specific spaces, with permissions for those spaces only.
 
-| User Type       | Description                                | Methods |
+| User type       | Description                                | Methods |
 |-----------------|--------------------------------------------|---------|
 | **System user** | Full global access, manage system settings | Local   |
 | **Normal user** | Access and manage resources within spaces  | All     |
 
-### Space Permissions
+### Space permissions
 
-Users are assigned permissions within specific spaces:
+Each user gets permissions in specific spaces:
 
-| Permission    | Description                        |
-|---------------|------------------------------------|
-| **Admin**     | Full access within assigned spaces |
-| **ReadWrite** | Create and edit jobs, run reports  |
-| **Readonly**  | View reports and job status only   |
+| Permission     | Description                        |
+|----------------|------------------------------------|
+| **Admin**      | Full access within assigned spaces |
+| **Read Write** | Create and edit jobs, run reports  |
+| **Read Only**  | View reports and job status only   |
 
-### Permission Details
+### Permission details
 
-| Rights                     | System User | Space Admin | Space ReadWrite | Space Readonly |
+| Rights                     | System User | Space Admin | Space Read Write | Space Read Only |
 |----------------------------|-------------|-------------|-----------------|----------------|
 | View reports               | Yes         | Yes         | Yes             | Yes            |
 | View runs                  | Yes         | Yes         | Yes             | Yes            |
@@ -55,22 +60,29 @@ Users are assigned permissions within specific spaces:
 | Manage spaces              | Yes         | No          | No              | No             |
 | Global settings            | Yes         | No          | No              | No             |
 | Export and import data     | Yes         | No          | No              | No             |
+| Read authentication config | Yes         | No          | No              | No             |
+| List and end sessions      | Yes         | No          | No              | No             |
+| Read capture passwords     | Yes         | Yes         | Yes             | No             |
 
 Every action on jobs, templates, delivery interfaces and AI providers checks your access to the space that holds them.
+
+- Only a system user can read the authentication configuration (it holds the session secret and the LDAP, SAML and
+  OIDC credentials), list and end sessions, and use the password and secret tools of the settings.
+- A user with Readonly access sees the jobs and templates without the login passwords of their captures.
 
 :::note Free edition
 In the Free edition, every account has the System role.
 :::
 
-### Add User Permissions
+### Add user permissions
 
-See the [Spaces](/administration/spaces) documentation for details on assigning users to spaces with specific
-permissions.
+Assign users and roles to spaces in **Settings** > **System** > **Permissions**. See the
+[Spaces](/administration/spaces) documentation for details.
 
-## Next Steps
+## Next steps
 
-- [Local Authentication](/administration/authentication/local) - Built-in user management
-- [LDAP](/administration/authentication/ldap) - Active Directory integration
-- [SAML](/administration/authentication/saml) - Single Sign-On configuration
-- [OIDC](/administration/authentication/oidc) - OpenID Connect setup
-- [Spaces](/administration/spaces) - Configure multi-tenant workspaces
+- [Local Authentication](/administration/authentication/local): built-in user management
+- [LDAP](/administration/authentication/ldap): Active Directory integration
+- [SAML](/administration/authentication/saml): Single Sign-On configuration
+- [OIDC](/administration/authentication/oidc): OpenID Connect setup
+- [Spaces](/administration/spaces): configure multi-tenant workspaces
