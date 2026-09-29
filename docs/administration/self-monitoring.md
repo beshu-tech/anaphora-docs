@@ -7,7 +7,7 @@ keywords: [ self monitoring, health check, Prometheus, metrics, job monitoring, 
 # Self-monitoring
 
 Monitor the health of Anaphora and the success of its jobs and deliveries.
-![](images/self-monitoring.png)
+![Self-monitoring health status page in Anaphora](images/self-monitoring.png)
 
 ## Health monitoring
 

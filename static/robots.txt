@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+Disallow: /pre-release/
+
+# AI and LLM crawlers are welcome. The docs are public.
+User-agent: GPTBot
+Allow: /
+Disallow: /pre-release/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /pre-release/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /pre-release/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /pre-release/
+
+Sitemap: https://docs.anaphora.it/sitemap.xml

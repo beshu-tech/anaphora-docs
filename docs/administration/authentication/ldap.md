@@ -8,7 +8,7 @@ keywords: [ LDAP, Active Directory, AD, directory integration, enterprise authen
 
 Connect Anaphora to your enterprise directory to manage users in one place. Anaphora supports Microsoft Active
 Directory, OpenLDAP, and other LDAP-compliant directories.
-![](images/ldap.png)
+![LDAP and Active Directory settings in Anaphora](images/ldap.png)
 
 ## Overview
 

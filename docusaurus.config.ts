@@ -18,7 +18,21 @@ const config: Config = {
       onBrokenMarkdownLinks: 'throw',
     },
   },
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: [
+    '@docusaurus/theme-mermaid',
+    [
+      '@easyops-cn/docusaurus-search-local',
+      {
+        hashed: true,
+        indexBlog: false,
+        docsRouteBasePath: '/',
+        language: ['en'],
+        highlightSearchTermsOnTargetPage: true,
+        explicitSearchResultPath: true,
+      },
+    ],
+  ],
+  plugins: ['./plugins/llms.ts'],
 
   // Production URL
   url: 'https://docs.anaphora.it',
@@ -33,6 +47,21 @@ const config: Config = {
 
   // SEO: Add head tags for social sharing and SEO
   headTags: [
+    {
+      tagName: 'script',
+      attributes: {type: 'application/ld+json'},
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Anaphora Documentation',
+        url: 'https://docs.anaphora.it',
+        publisher: {'@type': 'Organization', name: 'Beshu Tech', url: 'https://beshu.tech'},
+      }),
+    },
+    {
+      tagName: 'link',
+      attributes: {rel: 'alternate', type: 'text/plain', href: '/llms.txt', title: 'LLM index'},
+    },
     {
       tagName: 'meta',
       attributes: {
@@ -84,17 +113,25 @@ const config: Config = {
           editUrl: 'https://github.com/beshu-tech/anaphora-docs/tree/main/',
           routeBasePath: '/',
           lastVersion: 'stable',
+          showLastUpdateTime: true,
           versions: {
             current: {
               label: 'Pre-release',
               path: 'pre-release',
               banner: 'unreleased',
+              noIndex: true, // keep unreleased docs out of search engines and the sitemap
             },
             stable: {
               label: 'Stable',
               path: '',
             },
           },
+        },
+        sitemap: {
+          lastmod: 'date',
+          changefreq: null,
+          priority: null,
+          ignorePatterns: ['/pre-release/**'],
         },
         blog: false, // Disable blog
         theme: {
@@ -129,7 +166,7 @@ const config: Config = {
       logo: {
         alt: 'Anaphora Logo',
         src: 'img/logo.png',
-        href: '/getting-started/',
+        href: '/getting-started',
       },
       items: [
         {
@@ -181,7 +218,7 @@ const config: Config = {
           items: [
             {
               label: 'Getting Started',
-              to: '/getting-started/',
+              to: '/getting-started',
             },
             {
               label: 'Features & Editions',
@@ -189,11 +226,11 @@ const config: Config = {
             },
             {
               label: 'Basic Examples',
-              to: '/basic-examples/',
+              to: '/basic-examples',
             },
             {
               label: 'Jobs Configuration',
-              to: '/jobs/',
+              to: '/jobs',
             },
           ],
         },

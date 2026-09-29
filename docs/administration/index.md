@@ -13,7 +13,7 @@ to manage users, permissions and system health.
 
 | Topic                                              | Description                            |
 |----------------------------------------------------|----------------------------------------|
-| [Authentication](/administration/authentication/)  | User authentication and access control |
+| [Authentication](/administration/authentication)  | User authentication and access control |
 | [Spaces](/administration/spaces)                   | Multi-tenant workspace management      |
 | [AI providers](/administration/ai-providers)       | Configure AI for report analysis       |
 | [API for AI agents](./agent-api.md)     | Let an AI agent build jobs via the API |
@@ -27,7 +27,7 @@ manage the global settings.
 
 ## Next steps
 
-- [Authentication](/administration/authentication/): configure identity providers
+- [Authentication](/administration/authentication): configure identity providers
 - [Spaces](/administration/spaces): set up multi-tenant workspaces
 - [AI providers](/administration/ai-providers): configure AI for report analysis
 - [API for AI agents](./agent-api.md): let an AI agent build jobs through the API

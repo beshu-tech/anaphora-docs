@@ -9,7 +9,7 @@ keywords: [ multi-tenancy, Spaces, workspace isolation, team separation, RBAC ]
 Spaces isolate workspaces for multi-tenancy in Anaphora. Each Space is a "share-nothing" container that completely
 separates its resources from those of other teams, projects or tenants.
 
-![](images/spaces.png)
+![Spaces list in the Anaphora Administration section](images/spaces.png)
 
 ## Overview
 

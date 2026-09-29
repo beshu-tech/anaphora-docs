@@ -6,7 +6,7 @@ keywords: [ local authentication, user management, password policy, built-in use
 
 # Local authentication
 
-![](images/local.png)
+![Local authentication settings in the Anaphora Administration section](images/local.png)
 Local authentication is the default. It uses Anaphora's built-in user database. It suits small teams, testing
 environments, and deployments without an enterprise identity provider.
 

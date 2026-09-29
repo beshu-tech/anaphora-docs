@@ -7,7 +7,7 @@ keywords: [ SAML, SSO, Single Sign-On, Okta, Azure AD, OneLogin, identity provid
 # SAML / Single Sign-On
 
 Anaphora supports single sign-on through SAML 2.0 identity providers. Users log in through your corporate IdP, and Anaphora creates their accounts automatically.
-![](images/saml.png)
+![SAML single sign-on settings in Anaphora](images/saml.png)
 ## Overview
 
 With SAML SSO, users have one login for all applications, and you manage them in your IdP. Anaphora creates each user

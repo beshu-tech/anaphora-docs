@@ -128,7 +128,7 @@ Option 2, in the admin UI:
 3. Enter your activation key
 4. Click **Activate**
 
-![](images/activationkey.png)
+![Anaphora settings page for entering a PRO or Enterprise activation key](images/activationkey.png)
 
 ### Activation key properties
 

@@ -8,7 +8,7 @@ keywords: [ OpenID Connect, OIDC, OAuth, Google login, Auth0, Keycloak, OAuth 2.
 
 Anaphora supports login through OAuth 2.0 / OpenID Connect providers. OIDC is simpler to set up than SAML and has similar enterprise features.
 
-![](images/oidc.png)
+![OpenID Connect authentication settings in Anaphora](images/oidc.png)
 ## Overview
 
 OIDC is built on OAuth 2.0 and has fewer settings than SAML. Anaphora discovers the provider configuration
