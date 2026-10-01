@@ -37,10 +37,62 @@ To get the health status of Anaphora through the API, call this endpoint:
 GET /guest/api/health
 ```
 
+What the answer contains depends on the credentials that you send:
+
+| You send                                                    | You get                                                                                                   |
+|-------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| Nothing                                                     | The worst colour (`status`), the `counts` per colour, and one `healthStatus` per job and delivery interface. No names. |
+| An observer key: `Authorization: Bearer <key>`              | Every job and delivery interface by name, with its schedule, its recent runs and its delivery counts. No error texts. |
+| The credentials of a system user: `Authorization: Basic …` | All of the above, and the delivery error texts of the last 24 hours.                                      |
+
+The answer is always HTTP 200, except for an observer key that is revoked or mistyped: that gets HTTP 401, so your
+monitor raises an alert.
+
+### Observer keys
+
+Use an observer key for a monitoring tool (Centreon, Zabbix, Nagios, Prometheus blackbox exporter). The key reads the
+health status only, and you can revoke it without changing a user's password.
+
+1. Go to **Settings** > **Application** > **API Keys**.
+2. Click **New key** and give it the name of the monitor that uses it.
+3. Copy the key. Anaphora shows it once and keeps only a hash of it.
+4. Configure the monitor to send the key in the `Authorization` header:
+
+```bash
+curl -H "Authorization: Bearer ana_obs_..." https://anaphora.example.com/guest/api/health
+```
+
+The list shows when each key was last used. To revoke a key, click **Revoke** next to it.
+
+Send the key in the header only. Anaphora does not read a key from the query string, because query strings are written
+to proxy logs.
+
 ### Response format
+
+Without credentials:
 
 ```json
 {
+  "status": "yellow",
+  "counts": {
+    "jobs": { "red": 0, "yellow": 1, "green": 1, "gray": 0 },
+    "deliveryInterfaces": { "red": 0, "yellow": 0, "green": 1, "gray": 1 }
+  },
+  "jobs": [{ "healthStatus": "yellow" }, { "healthStatus": "green" }],
+  "deliveryInterfaces": [{ "healthStatus": "green" }, { "healthStatus": "gray" }]
+}
+```
+
+With an observer key, the answer also names every job and delivery interface. A system user also gets the
+`summary24Hours.errors` list of each delivery interface, which an observer key does not get:
+
+```json
+{
+  "status": "green",
+  "counts": {
+    "jobs": { "red": 0, "yellow": 0, "green": 1, "gray": 0 },
+    "deliveryInterfaces": { "red": 0, "yellow": 0, "green": 1, "gray": 0 }
+  },
   "jobs": [
     {
       "id": "79cf54b6-df32-4b09-84f4-708ecc72b7bc",
