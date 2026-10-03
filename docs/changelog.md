@@ -17,10 +17,146 @@ All notable changes to Anaphora are documented here.
 
 ---
 
-## Next release (unreleased): An API for agents, OIDC, and private report links
+## Next release (unreleased): Observer keys, AI triage, and single sign-on admins
 
-This release carries four database migrations (`AddReportTokenToRuns`,
-`AddAiUsageAndBudgets`, `HealEmptyReportTemplates`, `LinkOrphanedRetryRuns`).
+This release carries three database migrations. `AddApiKeys` adds a table.
+`SamlClockSkewChecked` and `OidcSettingsExplicit` come with Authfish 1.0.166,
+the sign-in service, and change saved SAML and OIDC settings (see below).
+Anaphora now runs Authfish 1.0.172. Some of the sign-in changes can stop a login
+or a logout that worked before. Read
+[After the upgrade from 0.16.0](./getting-started/upgrading.md#after-the-upgrade-from-0160)
+before you upgrade.
+
+### 🚀 New
+
+- **Kibana AI Triage, a built-in template that reasons before it pages.**
+  It counts the 5xx errors of the last hour and of the hour before, counts
+  the traffic, takes the overview dashboard, and asks the AI provider for a
+  severity from 0 to 10, with the rules an on-call engineer applies: load is
+  not a failure, a silent source is. Below 7 the run stops and nobody is
+  notified. At 7 and above a second AI action writes the briefing that goes
+  with the report. When the space has exactly one AI provider, the new job
+  uses it. With several or none, the form asks which. See
+  [AI providers](./administration/ai-providers.md#the-kibana-ai-triage-template).
+- **A monitor reads job health with a key of its own.** **Settings** >
+  **Application** > **API Keys** creates an observer key. The monitor sends it
+  in the header `Authorization: Bearer <key>` to `/guest/api/health` and reads
+  every job and delivery interface by name, with its schedule, its recent runs
+  and the delivery counts of the last 24 hours. Error texts stay out: they can
+  quote captured data. Before, the names needed the password of a system user,
+  stored in the monitor. The key is shown once; Anaphora keeps only a hash. The
+  list shows when each key was last used, and revokes a key. A revoked or
+  mistyped key gets 401, so the monitor raises an alert instead of reading the
+  anonymous answer, where every job looks the same. A key in the query string
+  is not read: query strings end up in proxy logs. See
+  [Self-monitoring](./administration/self-monitoring.md#observer-keys).
+- **A ready curl test for an observer key.** **Settings** > **Application** >
+  **API Keys** shows a curl command that calls the health API with the key,
+  right after the key is created, and one that asks for the key without
+  putting it in the command or the shell history. A wrong key makes curl fail
+  with 401 instead of printing the anonymous answer. Application Settings also
+  fits narrow screens now.
+- **Single sign-on users can manage the settings.** A user who signs in with
+  OIDC, SAML or LDAP gets the system role (the **Settings** menu) when one of
+  their groups is in the system groups of that method: `OIDC_SYSTEM_GROUPS`
+  for OIDC from the environment, or **System groups** in the section of the
+  method under **Settings**. Names match whole and with case. Use a name that
+  is unique at the provider (an LDAP group DN, a Keycloak realm role or full
+  group path). Before, only a local user could have the role. A change applies
+  at the next request of the user. SAML users of a provider that sends one
+  attribute per role now get every role, not only the first, and LDAP users get
+  each name of a group that has several: check the space permissions that
+  match these roles. See
+  [System groups](./administration/authentication/index.md#system-groups).
+
+### 🧐 Enhancements
+
+- **Every health answer carries `status` and `counts`.** The listing of the
+  system user now has them too, so a monitor keeps every field it reads when it
+  moves from no credentials to a key.
+
+### 🚨 Security
+
+- **OIDC checks the TLS certificate of the issuer at every address.** Anaphora
+  0.16 and older checked neither the certificate nor the name in it when the
+  issuer URL (`OIDC_INTERNAL_ISSUER` when set, else `OIDC_ISSUER`) was `https`
+  on an IPv4 address, `localhost`, a `*.localhost` name or `[::1]`. Such an
+  issuer now needs a certificate that names that address and a trusted CA, or
+  OIDC sign-in stops: the start log says `OIDC issuer discovery failed:` and
+  the reason, and the upgrade script shows it. `OIDC_TLS_CA_CERT` gives the CA
+  as PEM and keeps the check on: use it if you can.
+  `OIDC_TLS_INSECURE_SKIP_VERIFY=true` turns the check off, and anyone on the
+  network path to the issuer can then sign in as any user.
+  `OIDC_CLOCK_TOLERANCE_SECONDS` lets the ID and logout tokens be that many
+  seconds off the clock of the provider (default 0). A bad value in one of
+  these leaves OIDC off. OIDC set up in the settings page needs no action: the
+  upgrade turns the switch on where the old rule skipped the check, and the
+  start log warns about it. See
+  [The TLS certificate of the issuer](./administration/authentication/oidc.md#the-tls-certificate-of-the-issuer).
+  A correction to the 0.16.0 notes: Authfish keeps a copy of the OIDC settings
+  from the environment in its database, the client secret included.
+- **SAML and OIDC sign-in follow the rules of ReadonlyREST (Authfish 1.0.166).**
+  Some of these changes can stop a login or a logout that worked before:
+  - SAML checks the Audience. An identity provider that sends another
+    Audience, or none, fails every login: set `extraConfig.audience`.
+  - A SAML login that starts at the portal of the identity provider is
+    refused. `extraConfig.validateInResponseTo: never` accepts it again.
+  - A logout that the SAML provider starts must be signed. Unsigned, it
+    leaves the Anaphora session open. Keycloak: turn on "Sign documents" in
+    the client.
+  - A saved SAML clock skew of `-1` (no time check, the old default) becomes
+    `0`. A server clock behind the clock of the provider then fails with "SAML
+    assertion not yet valid": sync the clocks, or set
+    `accepted_clock_skew_ms`.
+  - A user whose provider sends exactly one group now gets that role. Before,
+    the user got no role.
+  - A SAML assertion or an OIDC profile without the username attribute is
+    refused. Before, the user signed in as `undefined`.
+  - OIDC logout goes to the logout endpoint that the provider publishes,
+    unless `OIDC_INTERNAL_ISSUER` is set (then it keeps the Keycloak logout
+    path on `OIDC_ISSUER`). A logout at the provider ends the Anaphora session
+    too when the back-channel logout URL of the provider is
+    `<PUBLIC_URL>/auth/logout-oidc/backchannel`.
+- **The session cookie is `Secure` behind a TLS proxy.** When the reverse
+  proxy says that the request came over https (`X-Forwarded-Proto`), the cookie
+  is `Secure`. Over plain http it stays as before. You do not set anything.
+  The start log now warns when the certificate of an `ldaps://` server is not
+  checked (Authfish 1.0.167).
+- **Security updates.** Next.js 16.3.8 closes a critical remote code
+  execution in `next/og` (GHSA-vcvr-r3jv-pc5j); `brace-expansion` closes two
+  denial-of-service advisories (CVE-2026-102276, CVE-2026-102278); `moment`
+  2.31.0 (CVE-2026-17495), `serialize-javascript` 7.1.2
+  (GHSA-gfhx-hw2g-v5hg) and `fast-uri` 3.1.8 (GHSA-hrr3-gc8f-f4qj); the image
+  moves to the Debian snapshot of 1 October 2026, which brings `libexpat1`
+  2.5.0-1+deb12u4 (six CVEs) and `xz-utils` 5.4.1-1+deb12u2.
+
+### 🐞 Fixes
+
+- **An `if` can test a number that an AI action returns.** The form refused
+  it as an invalid variable. The answer must be a bare number, or hold exactly
+  one number ("Severity: 7", "7/10"). Any other answer fails the run, so a
+  branch never runs on an answer that nobody can read. Before, a wordy answer
+  compared as not-a-number and an empty one as 0.
+- **A failed sign-in at the provider lands on the login page.** An expired
+  Keycloak login answered 500 with the stack trace of the server. The login
+  page now says why. A session that is already signed in goes on to the app.
+  No error shows a stack trace (Authfish 1.0.165).
+- **The login page works behind a proxy with small header limits.** It set a
+  5 KB cookie with its branding and themes. nginx answered 502 on login after
+  the 0.16.0 upgrade, and browsers drop cookies over 4 KB. The page now reads
+  that configuration from the server (Authfish 1.0.164).
+- **The upgrade script shows its question before it waits.** On Debian and
+  Ubuntu the question appeared only after the answer was typed, so the script
+  looked hung. It now ends with `Upgrade complete: Anaphora runs <image>.`
+
+---
+
+## [0.16.0] - 2026-09-24: An API for agents, OIDC, and private report links
+
+This release carries nine database migrations (`AddReportTokenToRuns`,
+`AddAiUsageAndBudgets`, `HealEmptyReportTemplates`, `LinkOrphanedRetryRuns`,
+`DropStaleLogins`, `MoveBackgroundImagesToTable`, `HealBooleanRunValues`,
+`KeepStoredReplacementsAsRegex`, `ClearStaleWebhookBodyFlags`).
 The previous version refuses to start on the upgraded database, so a rollback
 needs the database from before. Anaphora now keeps that copy itself: before it
 applies a migration it writes one to `storage/backups/`. To upgrade, use the
@@ -51,6 +187,23 @@ cells than its column count says. Two behaviour changes come with it: a job
 or template write that carries no page is now refused, and a legacy JSON
 import that carries one is refused in "safe" mode; pick "autofix" to have it
 repaired on the way in.
+
+Five more migrations rewrite stored data in place. None changes what a job
+does:
+
+- `DropStaleLogins` removes the user name and password that a capture kept
+  after its authentication was set to "none". Nothing read them; they were
+  still in the database and in every export.
+- `MoveBackgroundImagesToTable` moves the report background images out of the
+  storage row into a table of their own (see Fixes).
+- `HealBooleanRunValues` stores 1 or 0 where a run holds `true` or `false`
+  (see Fixes).
+- `KeepStoredReplacementsAsRegex` marks every text replacement saved before
+  this release as a regular expression, which is how it always ran. The
+  "Use regex" switch now works for new replacements (see Fixes).
+- `ClearStaleWebhookBodyFlags` clears the "user-defined body" flag on
+  webhooks that are not a JSON POST, and copies the JSON body template of
+  each job on such a webhook into its message, so the job sends what it sent.
 
 ### 🚀 New
 
@@ -142,8 +295,10 @@ repaired on the way in.
 - Sign-in through OpenID Connect can be set from the environment:
   `OIDC_ISSUER`, `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET` switch it on, and
   `OIDC_INTERNAL_ISSUER` names an issuer address that is reachable from
-  inside your deployment when the public one is not. The client secret stays
-  in memory and is never written to the database. Enterprise only.
+  inside your deployment when the public one is not. Authfish, the sign-in
+  service, keeps a copy of these settings in its database, the client secret
+  included. Enterprise only. (A first version of these notes said that the
+  client secret is never written to the database. That was wrong.)
 - An AI provider can be set from the environment too: `AI_PROVIDER`,
   `AI_MODEL` and `AI_API_KEY`, plus `AI_ENDPOINT` for an OpenAI-compatible
   service and `AI_NAME` for the name you see. The provider follows the
@@ -154,6 +309,85 @@ repaired on the way in.
 
 ### 🚨 Security
 
+- **Password guessing is limited.** A user name that fails 10 times from one
+  address in 15 minutes, or an address that fails 100 times, gets 429 until
+  the window ends; the basic-auth API routes pass the 429 on with
+  `Retry-After`. **Behind a reverse proxy, set `AF_TRUSTED_PROXIES` to the
+  proxy's address**, or every browser shares the proxy's address and the
+  start-up log warns. See [Failed sign-in limits](./getting-started/installation.md#failed-sign-in-limits).
+- **The capture extension talks only to the Anaphora you trust.** Any web page
+  that carried Anaphora's meta tag could read the extension's last recording,
+  typed passwords included, and start or stop a recording. The extension (1.2)
+  now answers only the addresses you trust, hands a recording only to the
+  Anaphora that started it (one started from the extension popup goes to any
+  trusted Anaphora), and takes only messages the page sends to itself.
+  **Download the extension again from the job editor and load it once more.**
+  On first use, open the extension popup on your Anaphora page and click
+  "Trust this Anaphora and reload"; the options page lists the trusted
+  addresses. Recordings are not masked: a replay needs the typed login.
+- **`/guest/api/health` tells an anonymous caller only colours and
+  counts.** It listed every job and delivery interface of every space, with
+  names, descriptions, schedules and the delivery error texts of the last 24
+  hours; a template error can quote captured data there. Without credentials
+  it now answers 200 with `status` (the worst colour), `counts` per colour,
+  and one `{ healthStatus }` entry per job and per interface, worst first. A
+  monitor that checks the status code, counts `jobs` or reads
+  `jobs[*].healthStatus` keeps working. **The full listing now needs the
+  system role:** send `Authorization: Basic` with the credentials the export
+  uses. Other credentials (a proxy gate's, for example) get the summary.
+- **A basic-auth call no longer leaves a session behind.** Each call to the
+  guest export or import route logged in and kept a two-month
+  session; the session now ends when the call ends.
+- **The API refuses calls from other origins, sibling subdomains included.**
+  It refused only `Sec-Fetch-Site: cross-site`. It now accepts a browser call
+  only from the app's own origin: `Sec-Fetch-Site: same-site` is refused, and
+  a browser that sends no `Sec-Fetch-Site` must send an `Origin` or `Referer`
+  on the app's host. A script that sends none of these headers (curl, the
+  documented import and export calls) is not affected.
+- **A read-only member no longer receives a job's login password.** The runs,
+  reports and home pages, and the runs API, sent every run with its whole
+  job, the login password of the capture included, to every member of the
+  space. They now send it redacted. The Debug Files zip redacts the job too,
+  and the log line that each capture action writes no longer carries the
+  password. **Container logs from before the upgrade can hold job login
+  passwords in clear: delete them, or change those passwords.**
+- **The log names a leftover `storage/storage.json`.** Installs from before
+  the database era keep this file: a plain-text copy of the old storage,
+  outside the encrypted database, that can hold job passwords in clear.
+  Anaphora reads it only to fill an empty database, so while your data is in
+  the database nothing reads it; but a new, empty database gets its stale
+  data. Anaphora does not delete it. When the file is still there, each start
+  and each import now log a warning. An import of an old export writes the
+  file again. **Back the file up elsewhere if you want to keep it, then delete
+  it.**
+- **A password in a capture URL is refused.** A URL such as
+  `https://user:secret@kibana.example.com` showed the password to every reader
+  of the job and wrote it to the logs. A job or template write that carries one
+  is now refused, with a message that points to the Authentication field. A job
+  saved before keeps running; its readers, its logs and its run errors show the
+  password as `********`. Move the login to Authentication when you next edit it.
+- **The sign-in secrets are encrypted with your database key.** Authfish
+  encrypted the OIDC client secret, the LDAP bind password and the SAML
+  decryption key with a constant from its public source, not with
+  `DB_ENCRYPTION_KEY`. Secrets saved before the upgrade still work. A save in
+  the Authfish settings now encrypts them with `DB_ENCRYPTION_KEY`. After that
+  save, two things need care. A change of the key (`PRAGMA rekey`) needs the
+  secrets entered again. A rollback needs the database from before the
+  upgrade, which the upgrade script restores.
+- **The LDAP client TLS key and its passphrase are stored encrypted too.**
+  They were saved in clear, and a TLS key in the wrong format went to the
+  debug log whole. The same holds for a `client_secret` in the OIDC
+  "extraConfig" and for `privateKey` and `decryptionPvk` in the SAML
+  "extraConfig": they are encrypted on save and work again. At the trace log
+  level, the LDAP client wrote each bind password to the log; it now logs at
+  debug at most. **Container logs from an install that ran LDAP at the trace
+  level can hold passwords in clear: delete them.** A value saved in clear
+  before keeps working. In the Authfish settings, show a hidden text such as
+  the TLS key before you edit it.
+- **Authfish no longer ships a private key.** Its package carried a default
+  HTTPS key pair, the same for every install. Anaphora never enabled
+  Authfish's HTTPS server, so no install used it; the pair is gone from the
+  image.
 - **Only a system user sees the settings' secrets.** Any signed-in account
   could read the whole authentication configuration through the settings
   interface, with every secret in clear: the session signing secret, and the
@@ -254,6 +488,56 @@ repaired on the way in.
   compare did not take a constant time.
 - A demo user entry with two fields no longer prints its password in the log
   as if it were the user name.
+- **A report can no longer reach your internal network.** The report
+  renderer loaded every address that a text block or a captured HTML
+  fragment named. An `<iframe>` of `http://169.254.169.254/` (cloud metadata),
+  `localhost` or an internal Kibana printed the answer into the PDF that went
+  to the recipients. The renderer now refuses loopback, private, link-local and
+  other internal addresses, and fails the render when a host that looked
+  public answers from an internal address. **A report that shows a logo from an
+  intranet server needs that host in `REPORT_ALLOWED_HOSTS`.** Behind an HTTP
+  proxy, the proxy must refuse internal addresses. See
+  [Installation](./getting-started/installation.md#report-images-from-internal-hosts).
+  Captures are not affected: they can still open internal dashboards.
+- **The renderer's internal token goes with the report's own files only.** A
+  text block with `<img src="/content/reports/…">` could put another space's
+  report files into its PDF. Reports also run no script: `/content` serves
+  them in a sandbox.
+- **A job opens http and https pages only.** A writer could save a job on
+  `file:///etc/passwd` and read the file back as a screenshot. Such a URL is
+  refused on save; a stored one fails its run.
+- **Basic-auth credentials stay with their host.** The capture answered every
+  later login prompt, from any site the page loaded, with the job's basic-auth
+  credentials. They now go only to the host of the navigation.
+- **A job delivers only through a delivery interface of its own space.** A
+  writer of one space could name another space's interface and send reports
+  with its SMTP, S3 or webhook credentials. Such a job is refused on save, and
+  a stored one fails that delivery with a message.
+- **Every page of a space checks the membership.** A member removed from a
+  space kept reading its jobs, runs and reports until a full reload.
+- **The live-update stream needs a login.** `/scheduler/events` was open to
+  anyone and had no limit on connections. It now needs a session, takes at
+  most 1000 streams, and pings every 30 seconds.
+- **The server decides every new id.** A create or a copy of a delivery
+  interface, a template or an AI provider kept an id that the browser sent,
+  so a crafted call could overwrite a row of another space. Copies now get
+  new ids on the server, and edits and deletes act on the row of their own
+  space only. A copy of an interface you may not copy is refused with the
+  reason, instead of giving the job the dummy interface in silence.
+- **The free edition's limits hold on the server too.** A direct call could
+  create a webhook, Slack or S3 interface, a template with capture actions,
+  or a clone of a job with more than three actions. Two creates at the last
+  free slot could both pass. Each is now refused, with the licence message.
+- **The snooze and unsubscribe pages get the job name only.** They carried
+  the whole job, credentials included, in the page source. A snooze link with
+  no recipient is refused.
+- **An action id must be a UUID.** A crafted id such as `../../x` wrote a
+  screenshot outside the run folder, and one such run broke every run list
+  of its space. Stored runs still read.
+- **An upload is capped at 20 MB** and must be a PNG, JPEG, GIF, WebP or SVG
+  image.
+- **The database import refuses calls from other sites**, and `/llms.txt`
+  no longer repeats text from its address.
 - The published image is reproducible: the base image, every Debian package,
   Chromium and the build tooling are pinned to exact versions, so two builds
   of the same commit give the same image. The vulnerability scan also covers
@@ -361,9 +645,17 @@ repaired on the way in.
   refused with a message that names the field. A template that already has no
   page can still be hidden, renamed or cloned: the page is repaired on the way
   through rather than the write being refused.
+- **Grafana 12 and 13 dashboards are captured again.** The capture waited for
+  every panel to draw, but Grafana draws a panel only when it comes into view,
+  and it now scrolls the dashboard inside the page: the panels below the fold
+  never drew, and the capture failed after a minute. Each panel is now brought
+  into view in turn. A whole-dashboard snapshot held only the first screen;
+  it now holds every panel. A panel that shows "No data" no longer holds the
+  capture, and a dashboard that does not exist fails at once with "The Grafana
+  dashboard was not found".
 - **Kibana hit counts over 999 are read whole.** Kibana prints the count
-  grouped by thousands ("1,470,592"), and Anaphora kept only the first
-  group, 1. Every alert or conditional report that compared hits above 999
+  grouped by thousands ("1,470,592"), and Anaphora kept only the first group
+  (here, 1). Every alert or conditional report that compared hits above 999
   compared the wrong value. The count is now read whole, in any grouping style.
 - **A cron the scheduler cannot run no longer takes Anaphora down.** A
   pattern such as `0 */25 * * *` passed the form but crashed the scheduler
@@ -471,6 +763,65 @@ repaired on the way in.
   stopping at it.
 - Mail sent through Mailgun now carries the sender as `Name <address>`,
   the form Mailgun documents; it went out as `Name address` before.
+- **No write is lost any more.** Two database writes that overlapped could
+  run in one transaction, and a rollback of one took the other with it while
+  both reported success. Every write now waits its turn.
+- **A calculate that gives true or false no longer breaks the Runs page.**
+  Such a run could not be read back, so the runs, reports, overview and jobs
+  pages of its space failed until the run was removed by hand. The value is
+  stored as 1 or 0, the migration repairs the runs already stored, and a run
+  is checked before it is stored.
+- **A text replacement with "Use regex" off replaces the text as typed.**
+  Every search ran as a regular expression, so `.` matched any character and
+  `(net)` kept its brackets. Replacements saved before the upgrade keep
+  working as they did (see the migrations above).
+- **Capture fixes.** An `if` on a variable with no value is false, not a
+  compare with an empty text. A cloned `if` block gets new ids, so its
+  snapshots no longer share one image. An Enter step can be followed by a
+  navigation. A ROR or Grafana path that contains "login" (a space called
+  `login-audit`, a dashboard called `login-attempts`) no longer fails every
+  run. A scroll that runs out of time goes on instead of failing. One dialog
+  handler per page, not one per navigation. A Grafana `redirectTo` with `%`
+  in it is decoded once.
+- **Delivery fixes.** Two S3 uploads at 08:00 and 20:00 no longer write one
+  object: the key uses a 24-hour clock. A form-encoded webhook message is
+  encoded once. **A receiver that decoded it twice to work around the old
+  bug now gets the plain value.** A webhook message keeps `$&` and `$1` as
+  written. Your own `Content-Type` header wins over Anaphora's in any letter
+  case. PDF attachment names no longer contain colons, which Windows
+  refuses. Rich-text mails keep the editor's alignment, fonts and paragraph
+  spacing.
+- **Operator alerts never go to a webhook with a custom JSON body.** The
+  health report, licence alert and AI budget alert sent plain text to such a
+  webhook; they now refuse it with a warning, as the picker does.
+- **Background images no longer slow down Anaphora.** Every read of the
+  settings parsed every uploaded image: about 220 ms per read after ten
+  uploads. The images now live in a table of their own.
+- **A job copied to another space starts at once**, not after a restart.
+  Copies and jobs made from a template get their own delivery ids, so a
+  snooze or an unsubscribe on the original no longer silences the copy.
+- **Snooze and unsubscribe links survive a `PUBLIC_URL` change.** Links
+  already in mailboxes keep working while `PUBLIC_URL` stays the same.
+- **The scheduler keeps running.** A restore longer than five minutes no
+  longer answers "Import failed" halfway. A scheduled task that fails no
+  longer stops the scheduler. A job deleted during its run is logged, not
+  retried.
+- **Two imports at once are refused.** A second import while one runs
+  answers 409; before, the two shared a rollback file and the live database
+  could be lost. An import that runs past one hour answers 504 and the log
+  says when the restore ends.
+- A space whose name has a dash or a capital letter keeps the page when you
+  switch spaces.
+- A deleted delivery interface no longer crashes the Deliver tab, and one
+  that a template still uses cannot be deleted.
+- A run whose author name holds a backslash (`DOMAIN\alice`) no longer
+  crashes the Runs page or the Deliver tab.
+- Server actions work behind a proxy that rewrites the `Host` header.
+- The SAML and OIDC settings pages, and the Calculate editor, no longer
+  crash in the light theme.
+- The capture extension loads 0.2 MB into a page instead of 1.1 MB: its
+  interface loads only in the recording window.
+- The demo seed's alert throttle is 3 hours, not 3 milliseconds.
 
 ### 🧐 Dependencies
 
@@ -485,7 +836,7 @@ repaired on the way in.
   Multiple Ciphers 2.4. Existing databases open unchanged and no schema
   migration runs for this. The SQLite engine now arrives prebuilt for every
   supported platform, so an install compiles nothing.
-- The authentication layer (Authfish 1.0.154) moves with it: the same
+- The authentication layer (Authfish 1.0.163) moves with it: the same
   TypeORM and SQLite driver, the same Node 24, the YAML library's next
   major, and a stricter command line for the activation-key tool, where an
   extra argument is an error instead of being ignored.
@@ -504,7 +855,7 @@ repaired on the way in.
 
 - The capture engine, the scheduler's run lifecycle, report delivery and the
   browser connectors are under test. The suite grew from about 880 to more
-  than 2000 tests, and the scheduler suites pass in every time zone.
+  than 2300 tests, and the scheduler suites pass in every time zone.
 - Dead files, dead exports and import cycles fail the build; every workspace
   is linted with the same rules, which found and fixed twelve unhandled
   failures.

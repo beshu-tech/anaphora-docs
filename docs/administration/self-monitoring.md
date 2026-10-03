@@ -46,7 +46,8 @@ What the answer contains depends on the credentials that you send:
 | The credentials of a system user: `Authorization: Basic …` | All of the above, and the delivery error texts of the last 24 hours.                                      |
 
 The answer is always HTTP 200, except for an observer key that is revoked or mistyped: that gets HTTP 401, so your
-monitor raises an alert.
+monitor raises an alert. Anaphora keys start with `ana_`. A bearer token that does not, for example the token of a
+proxy in front of Anaphora, gets the answer without names.
 
 ### Observer keys
 
@@ -54,15 +55,26 @@ Use an observer key for a monitoring tool (Centreon, Zabbix, Nagios, Prometheus 
 health status only, and you can revoke it without changing a user's password.
 
 1. Go to **Settings** > **Application** > **API Keys**.
-2. Click **New key** and give it the name of the monitor that uses it.
+2. Click **New key**. Give the key the name of the monitor that uses it, and click **Create**.
 3. Copy the key. Anaphora shows it once and keeps only a hash of it.
-4. Configure the monitor to send the key in the `Authorization` header:
+4. To test the key, run the curl command that Anaphora shows under the key.
+5. Configure the monitor to send the key in the `Authorization` header:
 
 ```bash
-curl -H "Authorization: Bearer ana_obs_..." https://anaphora.example.com/guest/api/health
+curl -fsS -H "Authorization: Bearer ana_obs_..." 'https://anaphora.example.com/guest/api/health'
 ```
 
-The list shows when each key was last used. To revoke a key, click **Revoke** next to it.
+With `-f`, curl fails with error 401 when the key is wrong, and does not print the answer without names.
+
+To test a key later, use the command at the top of the **API Keys** page. It asks for the key, so the key does not go
+into the command or the shell history. Paste the key and press Enter. The key stays hidden:
+
+```bash
+read -rs ANAPHORA_API_KEY && curl -fsS -H "Authorization: Bearer $ANAPHORA_API_KEY" 'https://anaphora.example.com/guest/api/health'
+```
+
+The list shows when each key was last used. To revoke a key, click **Revoke** next to it, and confirm. From then on, a
+monitor that sends the key gets 401.
 
 Send the key in the header only. Anaphora does not read a key from the query string, because query strings are written
 to proxy logs.

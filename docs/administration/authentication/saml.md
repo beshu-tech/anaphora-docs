@@ -30,14 +30,23 @@ at the first login and maps IdP groups to Anaphora roles.
 
 ### Step 1: Collect the SP values
 
-Anaphora does not supply an SP metadata file. Enter these values in your IdP by hand. `<anaphora-external-url>` is the
-public URL of Anaphora (`NEXT_PUBLIC_SITE_URL`).
+Your IdP needs these values. `<anaphora-external-url>` is the public URL of Anaphora (`NEXT_PUBLIC_SITE_URL`).
 
 | Value                                         | URL or value                                           |
 |-----------------------------------------------|--------------------------------------------------------|
 | Assertion Consumer Service (ACS) URL          | `https://<anaphora-external-url>/auth/login-saml/callback` |
 | Entity ID (SP identifier, Audience)           | The value of **Issuer** in Anaphora, for example `anaphora` |
 | Single Logout URL                             | `https://<anaphora-external-url>/auth/logout-saml`      |
+
+When SAML is active (see [Step 3](#step-3-enter-the-idp-values)), Anaphora also publishes these values as SP metadata:
+
+```
+https://<anaphora-external-url>/auth/saml/metadata.xml
+```
+
+The metadata names the entity (**Issuer**), the ACS URL and the **Logout callback URL**. Set **Decryption cert** (the
+certificate of **Decryption PVK**) to publish the encryption key. Set `extraConfig.publicCert` (the certificate of
+`extraConfig.privateKey`) to publish the signing key. If your IdP cannot read SP metadata, enter the values by hand.
 
 ### Step 2: Configure your IdP
 
@@ -86,10 +95,13 @@ Back in Anaphora:
 | Issuer                 | Issuer string for the IdP. For Keycloak, this is the Client ID           | Yes      |
 | Certificate            | IdP signing certificate (see below)                                      | Yes      |
 | Logout callback URL    | Full logout callback URL, for example `https://anaphora.company.com/auth/logout-saml` | Yes      |
+| Logout URL             | Where the logout request goes. Empty sends it to **Entry point**         | No       |
 | Decryption PVK         | Private key to decrypt assertions (stored encrypted)                     | Yes      |
-| Accepted clock skew ms | Allowed clock difference in milliseconds. Default: `-1`                  | No       |
+| Decryption cert        | Certificate of **Decryption PVK**, published in the SP metadata          | No       |
+| Accepted clock skew ms | Allowed clock difference in milliseconds. Default: `0`. `-1` turns the time check off | No       |
 | Username parameter     | SAML attribute for the username. Default: `nameID`                       | No       |
 | Groups parameter       | SAML attribute for the groups/roles. Default: `Role`                     | No       |
+| System groups          | Groups whose users get the system role (see [System groups](./index.md#system-groups)) | No       |
 | Extra config           | YAML object with more SAML options (see below)                           | No       |
 
 3. Click **Save**
@@ -124,6 +136,8 @@ Configure how IdP claims map to the Anaphora user fields.
 | Anaphora Field | SAML Claim | Description |
 |----------------|------------|-------------|
 | Username | `nameID` (set in **Username parameter**) | Unique user identifier |
+
+An assertion without the attribute in **Username parameter** is refused.
 
 ### Optional claims
 
@@ -172,16 +186,8 @@ Map IdP groups to Anaphora roles to assign permissions automatically.
 
 The **Groups parameter** setting is the SAML attribute that contains the group or role information. Default: `Role`
 
-:::warning Important: Single Role Attribute
-You must enable **Single Role Attribute** in your identity provider. Some IdPs call it *Single Role Attribute Mapping* or *Roles as Claims*. If it is not enabled, the IdP may not send the group claims correctly.
-
-Anaphora reads the roles only when the attribute has more than one value. An attribute with one value gives no roles.
-
-In Keycloak:
-1. Go to **Client Scopes** > **role_list**
-2. Select **Mappers** > **role_list**
-3. Enable **Single Role Attribute**
-:::
+Every value counts. The IdP can send one attribute with several values, or one attribute per value (in Keycloak,
+**Single Role Attribute** on or off). A user with one group gets that role.
 
 ### Role mapping
 
@@ -195,6 +201,9 @@ Each IdP group becomes an Anaphora role with the same name.
 | `Anaphora-Admins` | Admin |
 | `Anaphora-Editors` | Read Write |
 | `Anaphora-Viewers` | Read Only |
+
+A user in one of the **System groups** gets the system role: the **Settings** menu and Admin access to every space.
+See [System groups](./index.md#system-groups).
 
 ### Space mapping
 
@@ -216,7 +225,30 @@ Anaphora sets these node-saml options. Change them in **Extra config**.
 |--------|-------------|---------|
 | `wantAssertionsSigned` | Require the IdP to sign assertions | `false` |
 | `wantAuthnResponseSigned` | Require the IdP to sign the response | `false` |
-| `audience` | Expected audience of the assertion. `false` turns the check off | `false` |
+| `audience` | Expected audience of the assertion. `false` turns the check off | The value of **Issuer** |
+| `validateInResponseTo` | `always`: a response must answer a login that Anaphora started, once, within 15 minutes. `never` accepts a login that starts at the IdP portal | `always` |
+
+**Extra config** cannot change a setting that has a field of its own, for example `issuer`, `entryPoint` or
+`acceptedClockSkewMs`.
+
+### Checks on every assertion
+
+- The Audience must be the value of **Issuer**. Set `audience` in **Extra config** to the value that your IdP sends, or
+  to `false` to turn the check off.
+- NotBefore and NotOnOrAfter must hold within **Accepted clock skew ms**.
+- The response must answer a login that Anaphora started (`InResponseTo`). A login that starts at the portal of the
+  IdP is refused. Set `validateInResponseTo: never` in **Extra config** to accept it. The start log then warns, because
+  a captured response can then log in.
+
+### Logout
+
+When a user logs out of Anaphora, Anaphora sends the IdP a LogoutRequest with the NameID and the SessionIndex of the
+login, so the IdP ends its session too. The request goes to **Logout URL**, or to **Entry point** when **Logout URL** is
+empty.
+
+A logout that the IdP starts must be signed with the key of **Certificate**. A signed LogoutRequest ends the sessions
+that it names, in every browser. An unsigned one ends nothing. In Keycloak, turn on **Sign documents** in the SAML
+settings of the client.
 
 ### Extra configuration
 
@@ -276,9 +308,14 @@ Use a more detailed log level:
 |-------|----------|
 | Redirect loop | Check that the ACS URL is exactly the same in both systems |
 | Invalid signature | Make sure the IdP certificate in Anaphora is current |
-| User has no username | Check **Username parameter**, make sure the IdP sends that attribute |
+| User has no username | Check **Username parameter**, make sure the IdP sends that attribute. An assertion without it is refused |
 | Groups not mapped | Make sure the IdP sends the attribute in **Groups parameter**, check group name format |
-| Clock skew error | Make sure server clocks are synchronized (NTP), or set **Accepted clock skew ms** |
+| "SAML assertion not yet valid" or another clock skew error | Make sure server clocks are synchronized (NTP), or set **Accepted clock skew ms** |
+| "SAML assertion audience mismatch" or "SAML assertion has no AudienceRestriction" | Set `audience` in **Extra config** to the value that the IdP sends |
+| Login from the IdP portal fails | Set `validateInResponseTo: never` in **Extra config** |
+| Logout at the IdP leaves the Anaphora session open | Make the IdP sign its LogoutRequest |
+
+When the sign-in at the IdP fails, the browser goes back to the Anaphora login page, which shows the reason.
 
 ### Common errors
 

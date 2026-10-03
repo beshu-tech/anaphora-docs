@@ -34,7 +34,7 @@ Anaphora instance. Normal users get access to specific spaces, with permissions 
 
 | User type       | Description                                | Methods |
 |-----------------|--------------------------------------------|---------|
-| **System user** | Full global access, manage system settings | Local   |
+| **System user** | Full global access, manage system settings | Local, and LDAP, SAML and OIDC through [system groups](#system-groups) |
 | **Normal user** | Access and manage resources within spaces  | All     |
 
 ### Space permissions
@@ -78,6 +78,32 @@ In the Free edition, every account has the System role.
 
 Assign users and roles to spaces in **Settings** > **System** > **Permissions**. See the
 [Spaces](/administration/spaces) documentation for details.
+
+## System groups
+
+A local user has the system role when its **System role** is `system`. An LDAP, SAML or OIDC user has the system role
+when one of its roles is in the **System groups** of that method. Set **System groups** in **Settings** > **System** >
+**Auth**, in the section of the method. For OIDC from the environment, use `OIDC_SYSTEM_GROUPS` (see
+[OIDC](./oidc.md#system-role-from-the-environment)).
+
+- The names are the roles that the method reads: the **Groups parameter** for SAML and OIDC, the
+  **Group name property** for LDAP. They match whole and with case, never as a pattern, in the same way as space
+  permissions match them.
+- Use names that are unique at the identity provider. For LDAP, use the group DN (**Group name property** `dn`): a
+  directory can hold a second `CN=Domain Admins` in another OU, and anyone who can make a group there gets the role.
+  For Keycloak, use a realm role or the full group path, because Keycloak sends `admins` for `/a/admins` and
+  `/b/admins` alike unless its group mapper sends the full path.
+- Each method has its own list. A group with the same name at another identity provider gives nothing. A method that
+  is not in **Strategies** gives nothing.
+- A change of **System groups** applies at the next request of each session, with no new login. The roles come from
+  the login: a user that you remove from a group at the identity provider keeps the role until the session ends.
+- When **System groups** is empty (the default), no user of the method gets the system role.
+- `/auth/userinfo` shows the `roles` and the `system_role` of the user that is logged in.
+
+:::warning Keep a local system user
+Keep at least one local user with the `system` role. It is the way in when the identity provider is down or the list
+is wrong.
+:::
 
 ## Next steps
 

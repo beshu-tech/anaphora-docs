@@ -100,8 +100,8 @@ Create an OAuth/OIDC application in your identity provider.
 :::note Settings from the environment
 You can also set OIDC with the environment variables `OIDC_ISSUER`, `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET`
 (required), and `OIDC_INTERNAL_ISSUER`, `OIDC_SCOPES`, `OIDC_USERNAME_CLAIM` and `OIDC_GROUPS_CLAIM` (optional). Then the
-environment owns the OIDC settings, and the settings page cannot change them. The client secret is never written to
-the database. See the Anaphora Quick Start guide.
+environment owns the OIDC settings, and the settings page cannot change them. Authfish, the sign-in service, keeps a
+copy of them in its database, the client secret included. See [Configure from the environment](#configure-from-the-environment).
 :::
 
 ### Callback URL
@@ -159,8 +159,8 @@ Instead of the settings page, you can configure OIDC with environment variables.
 - The identity provider must allow the callback `<PUBLIC_URL>/auth/login-oidc/callback`.
 - The identity provider must send the user's roles (`admin`, `user`, `superuser`) in the claim that
   `OIDC_GROUPS_CLAIM` names.
-- The environment owns these settings. The settings page cannot change them, and the client secret stays in memory. It
-  is never written to the database.
+- The environment owns these settings. The settings page cannot change them. Authfish, the sign-in service, keeps a
+  copy of them in its database, the client secret included.
 - A new installation starts with OIDC in its list of sign-in methods. On an existing installation, switch OIDC on under
   **Settings**, in the list of sign-in methods.
 - Anaphora reads the variables at every start.
