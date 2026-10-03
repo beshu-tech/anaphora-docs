@@ -37,7 +37,33 @@ To get the health status of Anaphora through the API, call this endpoint:
 GET /guest/api/health
 ```
 
+What the answer contains depends on the credentials that you send:
+
+| You send                                                    | You get                                                                                                   |
+|-------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| Nothing                                                     | The worst colour (`status`), the `counts` per colour, and one `healthStatus` per job and delivery interface. No names. |
+| The credentials of a system user: `Authorization: Basic …` | Every job and delivery interface by name, with its schedule, its recent runs and the delivery errors of the last 24 hours. |
+
+The answer is always HTTP 200. Credentials that are wrong, or that belong to a user without the system role, get the
+answer without names.
+
 ### Response format
+
+Without credentials:
+
+```json
+{
+  "status": "yellow",
+  "counts": {
+    "jobs": { "red": 0, "yellow": 1, "green": 1, "gray": 0 },
+    "deliveryInterfaces": { "red": 0, "yellow": 0, "green": 1, "gray": 1 }
+  },
+  "jobs": [{ "healthStatus": "yellow" }, { "healthStatus": "green" }],
+  "deliveryInterfaces": [{ "healthStatus": "green" }, { "healthStatus": "gray" }]
+}
+```
+
+With the credentials of a system user:
 
 ```json
 {

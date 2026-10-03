@@ -54,6 +54,9 @@ For secure connections use LDAPS (port 636):
 | LDAPS    | 636  | SSL/TLS encrypted             |
 | StartTLS | 389  | Upgraded to TLS               |
 
+For `ldaps://`, Anaphora does not check the certificate of the server unless **Reject unauthorized** is on. To turn the
+check on, paste the CA of the server in **Ca** and turn on **Reject unauthorized**.
+
 If your LDAP server requires TLS client authentication, fill in **Ca**, **Key** and **Certificate** under
 **TLS Options**. Paste the contents of the certificate or key file.
 

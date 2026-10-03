@@ -115,6 +115,19 @@ You can combine visual snapshots with AI-generated summaries in one report.
 4. Test the job: click **Test capture** in the **Capture** tab, or a test run button in the **Deliver** tab
 5. Click **Save**. A new job is active by default. Use the **Active** switch in the job list to suspend it or activate it again
 
+### Built-in templates
+
+**Create Job** offers these templates next to **Create New**. Each one uses the public Kibana demo at
+`demo.elastic.co`: change the URLs to your own Kibana.
+
+| Template                                  | What the job does                                                                 | See                                                                        |
+|-------------------------------------------|-----------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| **Kibana Dashboard Snapshot**             | Takes a snapshot of a dashboard                                                   | [Kibana Dashboard Report](../basic-examples/kibana-dashboard-report.md)    |
+| **Conditional Kibana Dashboard Snapshot** | Takes a snapshot only when the query hits match                                   | [Kibana Conditional Report](../basic-examples/kibana-conditional-report.md) |
+| **Kibana Anomaly Detection**              | Sends an alert when the number of Discover results changes                        | [Kibana Anomaly Alert](../advanced-examples/kibana-anomaly-alert.md)       |
+
+All the templates except **Kibana Dashboard Snapshot** are advanced templates: the Free edition does not have them.
+
 ## Next steps
 
 - [General settings](./jobs/general): scheduling and throttling

@@ -23,7 +23,8 @@ to manage users, permissions and system health.
 ## System user
 
 The first user created during setup is the system administrator with full privileges. Only system admins can access and
-manage the global settings.
+manage the global settings. An LDAP, SAML or OIDC user can get the system role through
+[system groups](./authentication/index.md#system-groups).
 
 ## Next steps
 
