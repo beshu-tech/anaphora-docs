@@ -163,8 +163,7 @@ does:
   `OIDC_INTERNAL_ISSUER` names an issuer address that is reachable from
   inside your deployment when the public one is not. Authfish, the sign-in
   service, keeps a copy of these settings in its database, the client secret
-  included. Enterprise only. (A first version of these notes said that the
-  client secret is never written to the database. That was wrong.)
+  included. Enterprise only.
 - An AI provider can be set from the environment too: `AI_PROVIDER`,
   `AI_MODEL` and `AI_API_KEY`, plus `AI_ENDPOINT` for an OpenAI-compatible
   service and `AI_NAME` for the name you see. The provider follows the
@@ -180,7 +179,7 @@ does:
   the window ends; the basic-auth API routes pass the 429 on with
   `Retry-After`. **Behind a reverse proxy, set `AF_TRUSTED_PROXIES` to the
   proxy's address**, or every browser shares the proxy's address and the
-  start-up log warns.
+  start-up log warns. See [Failed sign-in limits](./getting-started/installation.md#failed-sign-in-limits).
 - **The capture extension talks only to the Anaphora you trust.** Any web page
   that carried Anaphora's meta tag could read the extension's last recording,
   typed passwords included, and start or stop a recording. The extension (1.2)
@@ -362,7 +361,8 @@ does:
   other internal addresses, and fails the render when a host that looked
   public answers from an internal address. **A report that shows a logo from an
   intranet server needs that host in `REPORT_ALLOWED_HOSTS`.** Behind an HTTP
-  proxy, the proxy must refuse internal addresses.
+  proxy, the proxy must refuse internal addresses. See
+  [Installation](./getting-started/installation.md#report-images-from-internal-hosts).
   Captures are not affected: they can still open internal dashboards.
 - **The renderer's internal token goes with the report's own files only.** A
   text block with `<img src="/content/reports/…">` could put another space's

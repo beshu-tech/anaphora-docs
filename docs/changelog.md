@@ -59,8 +59,9 @@ before you upgrade.
 - **Single sign-on users can manage the settings.** A user who signs in with
   OIDC, SAML or LDAP gets the system role (the **Settings** menu) when one of
   their groups is in the system groups of that method: `OIDC_SYSTEM_GROUPS`
-  for OIDC from the environment, or **System groups** in the section of the
-  method under **Settings**. Names match whole and with case. Use a name that
+  for OIDC from the environment, or **System groups** in **Settings** >
+  **System** > **Auth** > **OIDC**, **SAML** or **LDAP**. Names match whole and
+  with case. Use a name that
   is unique at the provider (an LDAP group DN, a Keycloak realm role or full
   group path). Before, only a local user could have the role. A change applies
   at the next request of the user. SAML users of a provider that sends one
@@ -297,8 +298,7 @@ does:
   `OIDC_INTERNAL_ISSUER` names an issuer address that is reachable from
   inside your deployment when the public one is not. Authfish, the sign-in
   service, keeps a copy of these settings in its database, the client secret
-  included. Enterprise only. (A first version of these notes said that the
-  client secret is never written to the database. That was wrong.)
+  included. Enterprise only.
 - An AI provider can be set from the environment too: `AI_PROVIDER`,
   `AI_MODEL` and `AI_API_KEY`, plus `AI_ENDPOINT` for an OpenAI-compatible
   service and `AI_NAME` for the name you see. The provider follows the

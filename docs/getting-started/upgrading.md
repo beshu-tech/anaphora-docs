@@ -112,20 +112,23 @@ login or a logout that worked before:
   environment uses such an issuer with a certificate from a private CA or a self-signed one, OIDC sign-in stops, and
   the log says `OIDC issuer discovery failed:`. Local users can still sign in. See
   [The TLS certificate of the issuer](../administration/authentication/oidc.md#the-tls-certificate-of-the-issuer).
-  OIDC that you set up in the settings page needs no action: the upgrade turns on **Tls insecure skip verify** where
-  the old rule skipped the check, and the start log warns about it. Set **Tls CA cert** instead.
+  OIDC that you set up in the settings page needs no action: the upgrade turns on **Tls insecure skip verify** in
+  **Settings** > **System** > **Auth** > **OIDC** where the old rule skipped the check, and the start log warns about
+  it. Set **Tls CA cert** on the same page instead.
 - **SAML Audience.** SAML checks the Audience of each assertion. An identity provider that sends another Audience, or
   none, fails every login. Set `extraConfig.audience` to the value that the provider sends.
 - **SAML login from the portal of the identity provider.** Such a login is refused. Set
   `extraConfig.validateInResponseTo: never` to accept it again.
 - **SAML logout from the identity provider.** The provider must sign it. An unsigned one leaves the Anaphora session
   open. In Keycloak, turn on **Sign documents** in the client.
-- **SAML clock skew.** A saved **Accepted clock skew ms** of `-1` (no time check, the old default) becomes `0`. If the
-  clock of the server is behind the clock of the provider, the login fails with "SAML assertion not yet valid". Sync
-  the clocks, or set **Accepted clock skew ms**, for example to `60000`.
+- **SAML clock skew.** A saved **Accepted clock skew ms** (in **Settings** > **System** > **Auth** > **SAML**) of `-1`
+  (no time check, the old default) becomes `0`. If the clock of the server is behind the clock of the provider, the
+  login fails with "SAML assertion not yet valid". Sync the clocks, or set **Accepted clock skew ms**, for example to
+  `60000`.
 - **Logins in progress.** A SAML login that started before the upgrade fails once. The user signs in again.
-- **Extra config.** The SAML and OIDC **Extra config** can no longer change a setting that has a field of its own, for
-  example the SAML `issuer` or the OIDC `client_secret`. The upgrade moves such a value to its field.
+- **Extra config.** The **Extra config** in **Settings** > **System** > **Auth** > **SAML** and **OIDC** can no longer
+  change a setting that has a field of its own, for example the SAML `issuer` or the OIDC `client_secret`. The upgrade
+  moves such a value to its field.
 - **More roles.** A user whose provider sends exactly one group now gets that role. A SAML provider that sends one
   attribute per role now gives every role, not only the first. An LDAP group with more than one name gives one role
   per name. Check the [space permissions](../administration/spaces.md#how-a-permission-matches) that match these

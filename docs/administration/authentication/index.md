@@ -82,8 +82,9 @@ Assign users and roles to spaces in **Settings** > **System** > **Permissions**.
 ## System groups
 
 A local user has the system role when its **System role** is `system`. An LDAP, SAML or OIDC user has the system role
-when one of its roles is in the **System groups** of that method. Set **System groups** in **Settings** > **System** >
-**Auth**, in the section of the method. For OIDC from the environment, use `OIDC_SYSTEM_GROUPS` (see
+when one of its roles is in the **System groups** of that method. Set **System groups** on the page of the method:
+**Settings** > **System** > **Auth** > **LDAP**, **SAML** or **OIDC**. For OIDC from the environment, use
+`OIDC_SYSTEM_GROUPS` (see
 [OIDC](./oidc.md#system-role-from-the-environment)).
 
 - The names are the roles that the method reads: the **Groups parameter** for SAML and OIDC, the

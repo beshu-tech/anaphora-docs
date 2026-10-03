@@ -39,9 +39,11 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser and log
 | `DEBUG`             | Enable debug logging                                                                         | No          | `false`                            |
 | `WORKER_COUNT`      | How many captures run at the same time (browser instances)                                   | No          | `2`                                |
 | `SKIP_NOTIFIER`     | Set to `true` to send no report, mail or webhook. Every delivery is skipped, as in a test run. | No        | `false`                            |
+| `REPORT_ALLOWED_HOSTS` | Host names, separated by commas, that a report can load an image or a frame from although they have an internal address. See [Report images from internal hosts](#report-images-from-internal-hosts). | No | `intranet.example.com` |
 
 More variables configure [OpenID Connect](../administration/authentication/oidc.md#configure-from-the-environment),
-an [AI provider](#ai-provider-from-the-environment) and [demo data](#demo-data).
+an [AI provider](#ai-provider-from-the-environment), [failed sign-in limits](#failed-sign-in-limits) and
+[demo data](#demo-data).
 
 :::tip Production deployment
 For production, use a strong `DB_ENCRYPTION_KEY` and set `PUBLIC_URL` to your external URL. SSO configurations use it
@@ -56,6 +58,45 @@ source, and it says so in the log at start. Anaphora has no command to change th
 
 `WORKER_COUNT` also limits report rendering: at most two report templates or equations per worker run at the same
 time. Each one runs in a separate process with 256 MB of memory.
+
+### Report images from internal hosts
+
+The PDF renderer does not load a report image or frame from an internal address: loopback, private networks and cloud
+metadata (`169.254.169.254`). A report that shows a logo from an intranet server needs that host in
+`REPORT_ALLOWED_HOSTS`. Captures are not affected: a capture can still open an internal dashboard.
+
+Behind an HTTP proxy (`HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY`), the proxy resolves the host names. Anaphora then leaves
+a name that does not resolve in the container to the proxy, and it does not check the address that a response comes
+from. Configure the proxy to refuse internal addresses.
+
+### Behind a reverse proxy
+
+When a reverse proxy (nginx, Traefik, Coolify) ends TLS in front of Anaphora:
+
+- Set `PUBLIC_URL` to the `https` address that the browsers use.
+- Make sure that the proxy sends `X-Forwarded-For`.
+- Set `AF_TRUSTED_PROXIES` to the address of the proxy. See [Failed sign-in limits](#failed-sign-in-limits).
+- Publish only port 3000. A caller that reaches the Next.js port (3001) directly chooses its own client address.
+
+### Failed sign-in limits
+
+Anaphora stops trying a password after too many failures, and answers 429 with `Retry-After`. It counts the failures
+per user name and client address, and per client address. The counters are in memory: a restart clears them. The
+basic-auth API routes (`/guest/api/export`, `/guest/api/import`) pass the limit on as 429. The health API answers its
+anonymous summary instead.
+
+Anaphora must know the address of the client. Behind a reverse proxy, the proxy must send `X-Forwarded-For`, and
+`AF_TRUSTED_PROXIES` must list the address of the proxy. Without it, every browser seems to come from the proxy: the
+start log warns, the limit per address is off, and one guesser can lock a user name out for everyone behind that proxy.
+
+| Variable                            | Default | Description                                                                                                    |
+|-------------------------------------|---------|----------------------------------------------------------------------------------------------------------------|
+| `AF_TRUSTED_PROXIES`                |         | Proxy addresses or CIDR ranges, separated by commas. `linklocal` and `uniquelocal` work too. Loopback is always trusted. |
+| `AF_LOGIN_WINDOW_SECONDS`           | `900`   | The time window in which the failures count. `0` turns every limit off.                                       |
+| `AF_LOGIN_MAX_FAILURES_PER_USER`    | `10`    | Failures for one user name from one address. `0` turns this limit off.                                         |
+| `AF_LOGIN_MAX_FAILURES_PER_ADDRESS` | `100`   | Failures from one address, for any user name. `0` turns this limit off.                                        |
+
+List only the proxies themselves, not whole networks: each trusted proxy can name any client address.
 
 ### AI provider from the environment
 

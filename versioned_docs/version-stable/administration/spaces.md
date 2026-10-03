@@ -88,6 +88,24 @@ You can assign roles to users, and then assign the roles to Spaces. This way, yo
 individually.
 :::
 
+### How a permission matches
+
+Each permission is for one user or for one role. Click the icon in front of the name to switch between the two.
+
+- A user permission matches the username.
+- A role permission matches one of the roles of the user. A local user has the **Roles** of its account. An LDAP, SAML
+  or OIDC user has the groups that the identity provider sends: the **Groups parameter** for SAML and OIDC, the
+  **Group name property** for LDAP.
+- The name matches whole and with case. With the `.*` button on, the name is a regular expression. The expression
+  can match a part of the name: use `^` and `$` to match the whole name.
+- A permission with an empty name matches every user.
+- When more than one permission matches, the user gets the highest access.
+- A system user gets Admin access to every space, with or without a permission. A system user is a local user whose
+  **System role** is `system`.
+
+A change of the permissions applies at the next request of the user. The roles of an LDAP, SAML or OIDC user come from
+the login: a change of the groups at the identity provider applies at the next login.
+
 ### Multi-Space users
 
 Users can belong to multiple Spaces, by direct assignment or through roles:
