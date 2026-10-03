@@ -96,8 +96,16 @@ Each permission is for one user or for one role. Click the icon in front of the 
 - A role permission matches one of the roles of the user. A local user has the **Roles** of its account. An LDAP, SAML
   or OIDC user has the groups that the identity provider sends: the **Groups parameter** for SAML and OIDC, the
   **Group name property** for LDAP.
-- The name matches whole and with case. With the `.*` button on, the name is a regular expression. The expression
-  can match a part of the name: use `^` and `$` to match the whole name.
+- The name matches whole and with case. With the `.*` button on, the name is a regular expression, and the button
+  next to it sets what the expression must match:
+  - `^$`: the whole name. `ops.*` matches `ops` and `ops-admin`, not `devops`. A new permission uses this mode.
+  - `~`: any part of the name. `admin` also matches `notadmin`, and `@corp\.com` also matches `x@corp.com.evil.org`.
+    A permission saved before this button existed uses this mode until you change it, and the log names it at each
+    start. Before you change it, check the names it must match: `admins` matched `/team-a/admins` as a part, and as
+    the whole name needs `.*/admins`.
+- The settings page refuses an expression that is not valid. An expression that runs longer than 100 ms on a name
+  matches nobody until Anaphora restarts, and the log names it. Do not repeat a group that repeats something itself,
+  such as `(a+)+`: on some names it takes seconds.
 - A permission with an empty name matches every user.
 - When more than one permission matches, the user gets the highest access.
 - A system user gets Admin access to every space, with or without a permission. A local user is a system user when its
