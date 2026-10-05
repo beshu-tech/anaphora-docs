@@ -125,6 +125,7 @@ You can combine visual snapshots with AI-generated summaries in one report.
 | **Kibana Dashboard Snapshot**             | Takes a snapshot of a dashboard                                                   | [Kibana Dashboard Report](../basic-examples/kibana-dashboard-report.md)    |
 | **Conditional Kibana Dashboard Snapshot** | Takes a snapshot only when the query hits match                                   | [Kibana Conditional Report](../basic-examples/kibana-conditional-report.md) |
 | **Kibana Anomaly Detection**              | Sends an alert when the number of Discover results changes                        | [Kibana Anomaly Alert](../advanced-examples/kibana-anomaly-alert.md)       |
+| **Kibana AI Triage**                      | Lets an AI provider rate the severity of the 5xx errors, and notifies from 7 of 10 | [AI providers](../administration/ai-providers.md#the-kibana-ai-triage-template) |
 
 All the templates except **Kibana Dashboard Snapshot** are advanced templates: the Free edition does not have them.
 

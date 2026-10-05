@@ -47,7 +47,9 @@ The **System role** controls access to system-wide settings:
 
 :::note
 System settings include authentication configuration, space configuration, backup settings, and other global options.
-Most users must have the `user` role. At least one local user must have the `system` role.
+Most users must have the `user` role. At least one local user must have the `system` role: it is the way in when an
+identity provider is down. LDAP, SAML and OIDC users can get the system role through
+[system groups](./index.md#system-groups).
 In the Free edition, all local users are system users, and the **Roles** and **System role** fields do not show.
 :::
 
@@ -75,7 +77,7 @@ Deleting a user removes their access immediately. The jobs of the user stay.
 | Small team (under 10 users) | Local auth is sufficient     |
 | Testing/development         | Local auth for simplicity    |
 | No corporate IdP available  | Local auth as primary method |
-| System user                 | Local is required            |
+| Way in when the IdP is down | Keep one local system user   |
 | Enterprise environment      | Consider LDAP, SAML, or OIDC |
 | Compliance requirements     | Use enterprise SSO           |
 

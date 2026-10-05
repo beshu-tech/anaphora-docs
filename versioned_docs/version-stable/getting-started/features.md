@@ -32,7 +32,8 @@ For evaluation and personal projects.
 Best for: trying Anaphora, personal dashboards, small-scale reporting.
 
 :::note Free edition limits
-In the Free edition, every account is a system user, and Spaces are not available.
+In the Free edition, every account is a system user, and Spaces are not available. An install that ran on PRO or
+Enterprise is an exception: when its licence ends, only its administrators can sign in.
 When you reach a limit, the interface asks you to upgrade before you add another job, delivery interface or AI provider.
 A job with more than three capture actions cannot be saved until you upgrade.
 The server checks these limits for every write, also through the [API](../administration/agent-api.md) and for imports.

@@ -34,5 +34,5 @@ Report links are private. Every run has a secret token, and the links in a deliv
 carry it. The report files (PDF, HTML, images) open for a link with the token, or for a signed-in member of the run's
 space. Anyone else gets "not found".
 
-Runs from before the upgrade to this version keep the links that Anaphora already sent, until the runs expire or are
+Runs from before the upgrade to 0.16.0 keep the links that Anaphora already sent, until the runs expire or are
 deleted.

@@ -30,6 +30,7 @@ Go to **Settings** > **System** > **Auth** > **LDAP** to configure. To activate 
 | Group search base   | Base DN for group search       | `ou=groups,dc=example,dc=com`          | No       |
 | Group search filter | LDAP filter for groups         | `(member={{cn}})`                      | No       |
 | Group name property | Attribute for group name       | `cn` (default)                         | No       |
+| System groups       | Groups whose users get the system role | `CN=Anaphora Admins,OU=Groups,DC=example,DC=com` | No |
 | Reject unauthorized | Enforce TLS certificate checks | `false` (unchecked, default)           | No       |
 | Ca                  | Certificate authority          | PEM file contents, one or more         | No       |
 | Key                 | Client private key             | PEM file contents                      | No       |
@@ -44,6 +45,16 @@ example `{{username}}`, `{{dn}}`, `{{uid}}` or `{{cn}}`.
 Use the **Group name property** to specify the attribute that becomes the role name.
 Give these roles access to spaces in **Settings** > **System** > **Permissions**.
 
+A group whose name attribute has more than one value (`cn: [ops, operations]`) gives one role per value. A group
+without that attribute gives no role.
+
+### System role
+
+A user in one of the **System groups** gets the system role: the **Settings** menu and Admin access to every space.
+Use the group DN, with `dn` as **Group name property**: a directory can hold a second group with the same `cn` in
+another OU. Without **Group search base** and **Group search filter**, no user has a group, and the start log warns
+when **System groups** is set. See [System groups](./index.md#system-groups).
+
 ### SSL/TLS configuration
 
 For secure connections use LDAPS (port 636):
@@ -54,8 +65,9 @@ For secure connections use LDAPS (port 636):
 | LDAPS    | 636  | SSL/TLS encrypted             |
 | StartTLS | 389  | Upgraded to TLS               |
 
-For `ldaps://`, Anaphora does not check the certificate of the server unless **Reject unauthorized** is on. To turn the
-check on, paste the CA of the server in **Ca** and turn on **Reject unauthorized**.
+For `ldaps://`, Anaphora does not check the certificate of the server unless **Reject unauthorized** is on. The start
+log warns while the check is off. To turn the check on, paste the CA of the server in **Ca** and turn on
+**Reject unauthorized**.
 
 If your LDAP server requires TLS client authentication, fill in **Ca**, **Key** and **Certificate** under
 **TLS Options**. Paste the contents of the certificate or key file.
