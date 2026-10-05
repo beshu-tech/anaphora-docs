@@ -199,14 +199,14 @@ subjectAltName. The issuer URL here is `OIDC_INTERNAL_ISSUER` when it is set, el
 break. A bundle of more than one certificate is accepted, and the OpenSSL `TRUSTED CERTIFICATE` form too. A private key
 in the text is refused.
 
-`OIDC_TLS_INSECURE_SKIP_VERIFY=true` turns the check off, the name check included. Then anyone on the network path to
-the issuer can sign in as any user, so use it only for a test. When both are set, the CA wins: the check stays on, and
+`OIDC_TLS_INSECURE_SKIP_VERIFY=true` turns the check off, the name check included. The connection to the issuer is then not
+protected, so use it only for a test. When both are set, the CA wins: the check stays on, and
 the start log says that the switch is ignored. The start log line `[oidc] issuer ...` names each of these settings
 that is on.
 
 :::warning Upgrade from 0.16 or older
-Anaphora 0.16 and older did not check the certificate or the name in it when the issuer URL was `https` on an IPv4
-address, on `localhost`, on a `*.localhost` name or on `[::1]`. Such an issuer now needs one of these:
+From 0.17.0, an `https` issuer URL on an IPv4 address, on `localhost`, on a `*.localhost` name or on `[::1]` needs
+one of these:
 
 - The certificate names that address and chains to a public CA: no action.
 - The certificate names that address: set `OIDC_TLS_CA_CERT` to its CA. This is the preferred fix.
