@@ -17,13 +17,26 @@ All notable changes to Anaphora are documented here.
 
 ---
 
-## Next release (unreleased): Observer keys, AI triage, and single sign-on admins
+## Next release (unreleased): WebSocket sign-in checks
+
+This release carries no database migration. Anaphora now runs Authfish 1.0.185.
+
+### 🚨 Security
+
+- **WebSocket connections get the sign-in checks of other requests**
+  (Authfish 1.0.185, the sign-in service). Anaphora itself opens no WebSocket
+  connection.
+
+---
+
+## [0.17.0] - 2026-10-04: Observer keys, AI triage, and single sign-on admins
 
 This release carries three database migrations. `AddApiKeys` adds a table.
 `SamlClockSkewChecked` and `OidcSettingsExplicit` come with Authfish 1.0.166,
 the sign-in service, and change saved SAML and OIDC settings (see below).
-Anaphora now runs Authfish 1.0.172. Some of the sign-in changes can stop a login
-or a logout that worked before. Read
+Anaphora now runs Authfish 1.0.183. Some of the licence, LDAP and sign-in
+changes change what an existing install does, or stop a login or a logout that
+worked before. Read
 [After the upgrade from 0.16.0](./getting-started/upgrading.md#after-the-upgrade-from-0160)
 before you upgrade.
 
@@ -75,19 +88,69 @@ before you upgrade.
 - **Every health answer carries `status` and `counts`.** The listing of the
   system user now has them too, so a monitor keeps every field it reads when it
   moves from no credentials to a key.
+- **A licence that expires applies Free within the hour.** Free has its limits (two jobs, two delivery interfaces, SMTP only, one AI
+  provider). The rows past these limits stay readable.
+- **A licence that ends leaves only the administrators.** Free gives every user
+  the system role. An install that runs on Pro or Enterprise (a trial too) with
+  this release or a later one now lets only the administrators in when it goes
+  to Free: the other users are signed out, their sessions end (also a session
+  from before a restart), and the login page tells them why. An administrator
+  logs in and renews the licence in **Settings** > **System** > **Activation
+  key**, and can give the System role to the users who must keep working (the
+  role stays editable on Free). Anaphora records the paid key in
+  `storage/paid-edition-seen`: delete that file and restart to go back to Free
+  for every user. A new install on Free works as before, and so does an install
+  whose paid key ended before this release.
+- **An upgrade from Free gives each user the role saved for them.** Free gives
+  every user the system role. It now applies that role at each request and
+  saves nothing: **Settings** shows the
+  role of each user, and an upgrade applies it. A user added on Free has the
+  role User and no space roles: give them their roles after the upgrade. **An
+  install that ran on Free before this release has every local user saved as
+  System** (the first start saved it too), and nothing can tell those users
+  apart from real administrators: after the move to Pro or Enterprise, set the
+  role of each user in **Settings**. Until then, these users also pass the
+  rule above that lets only the administrators in.
+- **LDAP settings that cannot work are refused at start**, and the settings
+  page shows why: a user filter without `{{username}}`, a filter that does not
+  parse, a group filter with no user in it, a CA certificate that Node cannot read. Check the
+  LDAP settings before you upgrade: an install that runs on one of these has no
+  LDAP login after the upgrade.
+- **An LDAP login that hangs ends after 10 seconds**, and a refused LDAP login
+  shows a reference. Give it to your administrator: every log line of that login
+  carries `[login <reference>]`, with the reason (wrong password, disabled,
+  expired, locked, wrong service-account password, directory down).
 
 ### 🚨 Security
 
-- **OIDC checks the TLS certificate of the issuer at every address.** Anaphora
-  0.16 and older checked neither the certificate nor the name in it when the
-  issuer URL (`OIDC_INTERNAL_ISSUER` when set, else `OIDC_ISSUER`) was `https`
-  on an IPv4 address, `localhost`, a `*.localhost` name or `[::1]`. Such an
-  issuer now needs a certificate that names that address and a trusted CA, or
-  OIDC sign-in stops: the start log says `OIDC issuer discovery failed:` and
+- **A login from another site is refused (403).**
+- **The limit on failed logins holds.** This release closes ways around it.
+- **A request path that a browser never sends is refused (400).** Authfish
+  answers 400 to a path with `.` or `..` segments (also percent-encoded) or a
+  `\`, before a page or the app sees it. Browsers resolve such paths
+  themselves. A script that builds URLs by hand must send the resolved path.
+- **A space permission by user name no longer matches an LDAP mail address**
+  (`mail`, `proxyAddresses`, `otherMailbox`). It matches the login name and the
+  unique names of the entry (such as `sAMAccountName` and
+  `userPrincipalName`). A permission pattern that is not a valid regular
+  expression is refused on save.
+- **A regex space permission can match the whole name.** A new button next to
+  `.*` sets the mode: `^$` for the whole name, `~` for any part (the only mode
+  before). A new permission matches the whole name. A permission saved before
+  keeps matching any part, and the log names it at each start: check the names
+  that it must match before you set it to `^$`. An expression that runs longer than 100 ms on a name matches
+  nobody until a restart, and the log names it. **Do not roll back to an older
+  Anaphora** after you change a permission: older versions drop the mode, and
+  the permission matches any part again. See
+  [How a permission matches](./administration/spaces.md#how-a-permission-matches).
+- **OIDC checks the TLS certificate of the issuer at every address.** An
+  `https` issuer URL (`OIDC_INTERNAL_ISSUER` when set, else `OIDC_ISSUER`) on an
+  IPv4 address, `localhost`, a `*.localhost` name or `[::1]` now needs a
+  certificate that names that address and a trusted CA, or OIDC sign-in stops: the start log says `OIDC issuer discovery failed:` and
   the reason, and the upgrade script shows it. `OIDC_TLS_CA_CERT` gives the CA
   as PEM and keeps the check on: use it if you can.
-  `OIDC_TLS_INSECURE_SKIP_VERIFY=true` turns the check off, and anyone on the
-  network path to the issuer can then sign in as any user.
+  `OIDC_TLS_INSECURE_SKIP_VERIFY=true` turns the check off: use it only on a
+  network you trust.
   `OIDC_CLOCK_TOLERANCE_SECONDS` lets the ID and logout tokens be that many
   seconds off the clock of the provider (default 0). A bad value in one of
   these leaves OIDC off. OIDC set up in the settings page needs no action: the
@@ -112,7 +175,7 @@ before you upgrade.
   - A user whose provider sends exactly one group now gets that role. Before,
     the user got no role.
   - A SAML assertion or an OIDC profile without the username attribute is
-    refused. Before, the user signed in as `undefined`.
+    refused.
   - OIDC logout goes to the logout endpoint that the provider publishes,
     unless `OIDC_INTERNAL_ISSUER` is set (then it keeps the Keycloak logout
     path on `OIDC_ISSUER`). A logout at the provider ends the Anaphora session
@@ -139,7 +202,7 @@ before you upgrade.
   branch never runs on an answer that nobody can read. Before, a wordy answer
   compared as not-a-number and an empty one as 0.
 - **A failed sign-in at the provider lands on the login page.** An expired
-  Keycloak login answered 500 with the stack trace of the server. The login
+  Keycloak login answered 500. The login
   page now says why. A session that is already signed in goes on to the app.
   No error shows a stack trace (Authfish 1.0.165).
 - **The login page works behind a proxy with small header limits.** It set a
@@ -149,6 +212,21 @@ before you upgrade.
 - **The upgrade script shows its question before it waits.** On Debian and
   Ubuntu the question appeared only after the answer was typed, so the script
   looked hung. It now ends with `Upgrade complete: Anaphora runs <image>.`
+- **A save that the licence refuses says why.** Copying, cloning or adding past
+  a Free limit showed "Application error" or a message with no text. It now
+  names the limit.
+- **A database that is busy for a moment keeps the licence.** One failed read of
+  the stored activation key at the hourly check applied Free, which signed every
+  user out, and the next check applied the paid edition again, which signed them
+  out a second time. The licence now stays as it was until a read works.
+- **The licence end date names its time zone.** The banner, the licence emails
+  and the alerts give the end of a licence in UTC, with the time: "October 14,
+  2026 at 23:30 UTC". Before, the emails gave the day in the time zone of the
+  server (`TZ`), so an install with `TZ` set can now see another day in them.
+  The banner also stopped failing to load ("Hydration failed", React error 418)
+  for a user far from UTC near midnight. The times in the Runs and API key
+  tables and in a Kibana time range stay in the time zone of your browser. They
+  show just after the page loads.
 
 ---
 
@@ -315,10 +393,8 @@ does:
   `Retry-After`. **Behind a reverse proxy, set `AF_TRUSTED_PROXIES` to the
   proxy's address**, or every browser shares the proxy's address and the
   start-up log warns. See [Failed sign-in limits](./getting-started/installation.md#failed-sign-in-limits).
-- **The capture extension talks only to the Anaphora you trust.** Any web page
-  that carried Anaphora's meta tag could read the extension's last recording,
-  typed passwords included, and start or stop a recording. The extension (1.2)
-  now answers only the addresses you trust, hands a recording only to the
+- **The capture extension talks only to the Anaphora you trust.** The extension
+  (1.2) answers only the addresses you trust, hands a recording only to the
   Anaphora that started it (one started from the extension popup goes to any
   trusted Anaphora), and takes only messages the page sends to itself.
   **Download the extension again from the job editor and load it once more.**
@@ -326,31 +402,25 @@ does:
   "Trust this Anaphora and reload"; the options page lists the trusted
   addresses. Recordings are not masked: a replay needs the typed login.
 - **`/guest/api/health` tells an anonymous caller only colours and
-  counts.** It listed every job and delivery interface of every space, with
-  names, descriptions, schedules and the delivery error texts of the last 24
-  hours; a template error can quote captured data there. Without credentials
-  it now answers 200 with `status` (the worst colour), `counts` per colour,
-  and one `{ healthStatus }` entry per job and per interface, worst first. A
-  monitor that checks the status code, counts `jobs` or reads
-  `jobs[*].healthStatus` keeps working. **The full listing now needs the
-  system role:** send `Authorization: Basic` with the credentials the export
-  uses. Other credentials (a proxy gate's, for example) get the summary.
-- **A basic-auth call no longer leaves a session behind.** Each call to the
-  guest export or import route logged in and kept a two-month
-  session; the session now ends when the call ends.
+  counts.** Without credentials it answers 200 with `status` (the worst
+  colour), `counts` per colour, and one `{ healthStatus }` entry per job and
+  per interface, worst first. A monitor that checks the status code, counts
+  `jobs` or reads `jobs[*].healthStatus` keeps working. **The full listing now
+  needs the system role:** send `Authorization: Basic` with the credentials the
+  export uses. Other credentials (a proxy gate's, for example) get the summary.
+- **A basic-auth call no longer leaves a session behind.** The session of a
+  call to the guest export or import route ends when the call ends.
 - **The API refuses calls from other origins, sibling subdomains included.**
-  It refused only `Sec-Fetch-Site: cross-site`. It now accepts a browser call
-  only from the app's own origin: `Sec-Fetch-Site: same-site` is refused, and
-  a browser that sends no `Sec-Fetch-Site` must send an `Origin` or `Referer`
-  on the app's host. A script that sends none of these headers (curl, the
-  documented import and export calls) is not affected.
-- **A read-only member no longer receives a job's login password.** The runs,
-  reports and home pages, and the runs API, sent every run with its whole
-  job, the login password of the capture included, to every member of the
-  space. They now send it redacted. The Debug Files zip redacts the job too,
-  and the log line that each capture action writes no longer carries the
-  password. **Container logs from before the upgrade can hold job login
-  passwords in clear: delete them, or change those passwords.**
+  It accepts a browser call only from the app's own origin:
+  `Sec-Fetch-Site: same-site` is refused, and a browser that sends no
+  `Sec-Fetch-Site` must send an `Origin` or `Referer` on the app's host. A
+  script that sends none of these headers (curl, the documented import and
+  export calls) is not affected.
+- **Job login passwords reach fewer places.** The runs, reports and home
+  pages, the runs API and the Debug Files zip send a job with its capture
+  password redacted, and the log line of each capture action no longer carries
+  it. **Container logs from before the upgrade can hold job login passwords in
+  clear: delete them, or change those passwords.**
 - **The log names a leftover `storage/storage.json`.** Installs from before
   the database era keep this file: a plain-text copy of the old storage,
   outside the encrypted database, that can hold job passwords in clear.
@@ -360,106 +430,73 @@ does:
   and each import now log a warning. An import of an old export writes the
   file again. **Back the file up elsewhere if you want to keep it, then delete
   it.**
-- **A password in a capture URL is refused.** A URL such as
-  `https://user:secret@kibana.example.com` showed the password to every reader
-  of the job and wrote it to the logs. A job or template write that carries one
-  is now refused, with a message that points to the Authentication field. A job
-  saved before keeps running; its readers, its logs and its run errors show the
-  password as `********`. Move the login to Authentication when you next edit it.
-- **The sign-in secrets are encrypted with your database key.** Authfish
-  encrypted the OIDC client secret, the LDAP bind password and the SAML
-  decryption key with a constant from its public source, not with
-  `DB_ENCRYPTION_KEY`. Secrets saved before the upgrade still work. A save in
-  the Authfish settings now encrypts them with `DB_ENCRYPTION_KEY`. After that
-  save, two things need care. A change of the key (`PRAGMA rekey`) needs the
-  secrets entered again. A rollback needs the database from before the
-  upgrade, which the upgrade script restores.
-- **The LDAP client TLS key and its passphrase are stored encrypted too.**
-  They were saved in clear, and a TLS key in the wrong format went to the
-  debug log whole. The same holds for a `client_secret` in the OIDC
-  "extraConfig" and for `privateKey` and `decryptionPvk` in the SAML
-  "extraConfig": they are encrypted on save and work again. At the trace log
-  level, the LDAP client wrote each bind password to the log; it now logs at
-  debug at most. **Container logs from an install that ran LDAP at the trace
-  level can hold passwords in clear: delete them.** A value saved in clear
-  before keeps working. In the Authfish settings, show a hidden text such as
-  the TLS key before you edit it.
-- **Authfish no longer ships a private key.** Its package carried a default
-  HTTPS key pair, the same for every install. Anaphora never enabled
-  Authfish's HTTPS server, so no install used it; the pair is gone from the
-  image.
-- **Only a system user sees the settings' secrets.** Any signed-in account
-  could read the whole authentication configuration through the settings
-  interface, with every secret in clear: the session signing secret, and the
-  OIDC, LDAP and SAML credentials. With the session secret and the session of
-  a system user, that account could sign in as that user. Now only a system
-  user gets the configuration, including a past version of it, and only a
-  system user can list and end sessions or use the password and secret tools
-  of the settings. Change the session secret and the identity-provider
+- **A password in a capture URL is refused.** A job or template write with a
+  URL such as `https://user:secret@kibana.example.com` is refused, with a
+  message that points to the Authentication field. A job saved before keeps
+  running; its readers, its logs and its run errors show the password as
+  `********`. Move the login to Authentication when you next edit it.
+- **The sign-in secrets are encrypted with your database key.** A save in the
+  Authfish settings encrypts the OIDC client secret, the LDAP bind password and
+  the SAML decryption key with `DB_ENCRYPTION_KEY`. Secrets saved before the
+  upgrade still work. After that save, two things need care. A change of the
+  key (`PRAGMA rekey`) needs the secrets entered again. A rollback needs the
+  database from before the upgrade, which the upgrade script restores.
+- **More sign-in secrets are stored encrypted, and fewer reach the logs.** The
+  LDAP client TLS key and its passphrase, a `client_secret` in the OIDC
+  "extraConfig", and `privateKey` and `decryptionPvk` in the SAML
+  "extraConfig" are encrypted on save. **Container logs from an install that
+  ran LDAP at the trace log level can hold passwords in clear: delete them.** A
+  value saved in clear before keeps working. In the Authfish settings, show a
+  hidden text such as the TLS key before you edit it.
+- **The image no longer carries a default HTTPS key pair.** Anaphora never
+  turned on the HTTPS server of Authfish, so no install used it.
+- **Only a system user sees the secrets of the settings.** Only a system user
+  gets the authentication configuration, including a past version of it, and
+  only a system user can list and end sessions or use the password and secret
+  tools of the settings. Change the session secret and the identity-provider
   secrets after you upgrade if accounts you do not trust can sign in.
-- **A stored activation key is no longer lost by chance.** When the stored
-  activation key did not open with the current session secret (for example
-  after the secret changed in the settings), it stays in place, as intended.
-  Before, about one start in 300 read it as invalid and deleted it.
-- **A report template can no longer read files of the server.** The template
-  language kept its `{% include %}`, `{% render %}` and `{% layout %}` tags,
-  which read a file from the application directory. A member with write access
-  to one space could put `{% include ".env" %}` in a text block and read the
-  file in the report. The tags are gone. A template that uses one is refused
-  as a syntax error: by the editors, by every job and template write, by the
-  JSON API and by imports. No template in Anaphora needs them.
-- **A template or an equation can no longer stall or crash the server.** A
-  report template and a `calculate` equation are written by a member of one
-  space and run in the one process that serves every space. A template ran
-  with no hard limit: one filter over a huge list held the process for more
-  than a minute. An equation ran in a worker with a memory cap, but one large
-  allocation, such as `zeros(6000, 6000)`, made the whole server abort instead
-  of stopping the worker. Both now run in a separate process with its own
-  memory (256 MB) and a wall clock: 10 seconds for all the text blocks of a
-  report, 5 seconds for an equation. When the limit is reached, only that
-  process stops: the block shows why, and the equation fails its action. The
-  job editor renders its blocks and its preview in a Web Worker, one at a time,
-  each with a 6-second clock, so a slow template no longer freezes the browser
-  tab. A template also has at most 5 000 Liquid tags (each line of a
-  `{% liquid %}` tag counts as one), a render returns at most 20 million
-  characters, and so do all the text blocks of a report together. The
-  separate process may read only its libraries and may not start a program:
-  it cannot read the server's configuration or database. It keeps the time
-  zone and the language of the server, so report dates stay in your zone. At
-  most two per Puppeteer worker (`WORKER_COUNT`) run at once; the others wait.
-  An equation is also checked in a separate process when a job, a template or
-  a preview arrives through the JSON API; the job form checks it in the
-  browser. Before, that check ran in the server, and one recursive equation
-  held it for seconds on every save.
-- A member of one space could open "add job from template" with the id of a
-  template stored in another space and receive that template, login password
-  included; the read is now scoped to the space, as the edit page's was.
+- **A stored activation key is no longer lost by chance.** A rare start could
+  delete a valid stored key.
+- **A report template can no longer read files of the server.** The
+  `{% include %}`, `{% render %}` and `{% layout %}` tags are gone. A template
+  that uses one is refused as a syntax error: by the editors, by every job and
+  template write, by the JSON API and by imports. No template in Anaphora needs
+  them.
+- **A template or an equation can no longer stall or crash the server.** Both
+  run in a separate process with its own memory (256 MB) and a wall clock: 10
+  seconds for all the text blocks of a report, 5 seconds for an equation. When
+  the limit is reached, only that process stops: the block shows why, and the
+  equation fails its action. The job editor renders its blocks and its preview
+  in a Web Worker, one at a time, each with a 6-second clock, so a slow
+  template no longer freezes the browser tab. A template also has at most
+  5 000 Liquid tags (each line of a `{% liquid %}` tag counts as one), a render
+  returns at most 20 million characters, and so do all the text blocks of a
+  report together. The separate process keeps the time zone and the language
+  of the server, so report dates stay in your zone. At most two per Puppeteer
+  worker (`WORKER_COUNT`) run at once; the others wait. An equation that
+  arrives through the JSON API is checked in a separate process too; the job
+  form checks it in the browser.
+- "Add job from template" reads a template of its own space only, as the edit
+  page does.
 - The lists and menus of the Overview, Jobs, Runs and Reports pages, and the
   JSON reads of a member with read-only access (`GET .../jobs`,
   `.../jobs/{id}`, `.../blueprints`, `.../blueprints/{id}`), carry the
   captures without their login passwords. A writer still gets them as stored
   through the API and the editor, which need them.
 - Suspend and Activate from the Jobs list write the state and nothing else.
-  The bulk write accepted any job field from the browser and skipped the
-  licence guard on the number of capture actions.
 
 - Report links are private. Every new run gets a secret token; the links in
   a delivered email, Slack message or webhook carry it, and the report files
   (PDF, HTML, images) open for that token or for a signed-in member of the
-  run's space, and answer "not found" to anyone else. Before, anyone who
-  knew a report path could read it. Runs made before the upgrade keep the
-  links that were already sent, until they expire or are deleted.
-- The edition limits are enforced on the server. Before, the buttons were
-  disabled in the browser and nothing else checked: a call made directly, or
-  an import, could create jobs, delivery interfaces and AI providers past the
-  limit, and the scheduler ran them. The three-actions-per-job limit of the
-  free edition and the rule that a job starts with a navigation are checked
-  on save too.
+  run's space, and answer "not found" to anyone else. Runs made before the
+  upgrade keep the links that were already sent, until they expire or are
+  deleted.
+- The edition limits are checked on the server, for every call and import. The
+  three-actions-per-job limit of the free edition and the rule that a job
+  starts with a navigation are checked on save too.
 - Copying a delivery interface, an AI provider or a blueprint into another
   space needs admin access to the space it comes from, and copying a job
-  needs write access there. Read access was enough before, which carried
-  credentials and API keys into a space the caller controls. Found on the
-  way: cloning or copying an AI provider did not work at all.
+  needs write access there. Cloning or copying an AI provider works again.
 - The delivery-interface list and the health-monitoring form no longer
   receive credentials; the pages get the names and types they show.
 - The container no longer carries `sudo`. It starts as root, prepares the
@@ -472,68 +509,49 @@ does:
   working; a password is re-hashed the next time it is set. A fresh install
   gets a random session secret, and an install that saved the old
   placeholder is repaired on start.
-- The two processes share a secret for their internal calls; a process
-  started without it used a fixed word. It now refuses every internal call
-  instead.
+- The two processes refuse every internal call when their shared secret is
+  not set.
 - The database key is never printed in a log, a key with a quote in it no
   longer breaks the connection, and an instance running on the default
   `DB_ENCRYPTION_KEY` says so at start, once.
-- **Two leftover routes are removed.** A test route under
-  `/guest/api/test/webhook` wrote any request body to the server log, with no
-  login. It is gone, and so is the unlinked `/debug` page. If a webhook
-  delivery interface points at the test route, point it at a real receiver:
-  a webhook that answers "not found" now fails the delivery.
+- **Two leftover routes are removed:** a test route and the unlinked `/debug`
+  page. If a webhook delivery interface points at the test route
+  (`/guest/api/test/webhook`), point it at a real receiver: a webhook that
+  answers "not found" now fails the delivery.
 - The snooze and unsubscribe pages check a link as strictly as their actions
-  do. Before, a link with a malformed expiry never expired, and the signature
-  compare did not take a constant time.
-- A demo user entry with two fields no longer prints its password in the log
-  as if it were the user name.
-- **A report can no longer reach your internal network.** The report
-  renderer loaded every address that a text block or a captured HTML
-  fragment named. An `<iframe>` of `http://169.254.169.254/` (cloud metadata),
-  `localhost` or an internal Kibana printed the answer into the PDF that went
-  to the recipients. The renderer now refuses loopback, private, link-local and
-  other internal addresses, and fails the render when a host that looked
-  public answers from an internal address. **A report that shows a logo from an
-  intranet server needs that host in `REPORT_ALLOWED_HOSTS`.** Behind an HTTP
-  proxy, the proxy must refuse internal addresses. See
+  do.
+- A demo user entry with two fields no longer prints its password in the log.
+- **A report can no longer reach your internal network.** The report renderer
+  refuses loopback, private, link-local and other internal addresses, and
+  fails the render when a host that looked public answers from an internal
+  address. **A report that shows a logo from an intranet server needs that host
+  in `REPORT_ALLOWED_HOSTS`.** Behind an HTTP proxy, the proxy must refuse
+  internal addresses. See
   [Installation](./getting-started/installation.md#report-images-from-internal-hosts).
   Captures are not affected: they can still open internal dashboards.
-- **The renderer's internal token goes with the report's own files only.** A
-  text block with `<img src="/content/reports/…">` could put another space's
-  report files into its PDF. Reports also run no script: `/content` serves
-  them in a sandbox.
-- **A job opens http and https pages only.** A writer could save a job on
-  `file:///etc/passwd` and read the file back as a screenshot. Such a URL is
+- **The internal token of the renderer goes with the files of its own report
+  only.** Reports also run no script: `/content` serves them in a sandbox.
+- **A job opens http and https pages only.** A URL with another scheme is
   refused on save; a stored one fails its run.
-- **Basic-auth credentials stay with their host.** The capture answered every
-  later login prompt, from any site the page loaded, with the job's basic-auth
-  credentials. They now go only to the host of the navigation.
-- **A job delivers only through a delivery interface of its own space.** A
-  writer of one space could name another space's interface and send reports
-  with its SMTP, S3 or webhook credentials. Such a job is refused on save, and
-  a stored one fails that delivery with a message.
+- **Basic-auth credentials stay with their host.** The capture sends them only
+  to the host of the navigation.
+- **A job delivers only through a delivery interface of its own space.** A job
+  that names an interface of another space is refused on save, and a stored
+  one fails that delivery with a message.
 - **Every page of a space checks the membership.** A member removed from a
-  space kept reading its jobs, runs and reports until a full reload.
-- **The live-update stream needs a login.** `/scheduler/events` was open to
-  anyone and had no limit on connections. It now needs a session, takes at
-  most 1000 streams, and pings every 30 seconds.
-- **The server decides every new id.** A create or a copy of a delivery
-  interface, a template or an AI provider kept an id that the browser sent,
-  so a crafted call could overwrite a row of another space. Copies now get
-  new ids on the server, and edits and deletes act on the row of their own
-  space only. A copy of an interface you may not copy is refused with the
-  reason, instead of giving the job the dummy interface in silence.
-- **The free edition's limits hold on the server too.** A direct call could
-  create a webhook, Slack or S3 interface, a template with capture actions,
-  or a clone of a job with more than three actions. Two creates at the last
-  free slot could both pass. Each is now refused, with the licence message.
-- **The snooze and unsubscribe pages get the job name only.** They carried
-  the whole job, credentials included, in the page source. A snooze link with
-  no recipient is refused.
-- **An action id must be a UUID.** A crafted id such as `../../x` wrote a
-  screenshot outside the run folder, and one such run broke every run list
-  of its space. Stored runs still read.
+  space loses access at once.
+- **The live-update stream needs a login.** `/scheduler/events` needs a
+  session, takes at most 1000 streams, and pings every 30 seconds.
+- **The server decides every new id.** A copy of a delivery interface, a
+  template or an AI provider gets a new id on the server, and edits and deletes
+  act on the rows of their own space only. A copy of an interface you may not
+  copy is refused with the reason, instead of giving the job the dummy
+  interface in silence.
+- **The limits of the free edition hold on the server too.** A create past a
+  limit is refused, with the licence message.
+- **The snooze and unsubscribe pages get the job name only.** A snooze link
+  with no recipient is refused.
+- **An action id must be a UUID.** Stored runs still read.
 - **An upload is capped at 20 MB** and must be a PNG, JPEG, GIF, WebP or SVG
   image.
 - **The database import refuses calls from other sites**, and `/llms.txt`
@@ -603,9 +621,7 @@ does:
   The delivery interfaces are not blamed: their health ignores such a run. The
   run does not count as sent, so a throttled job sends the next run with the
   fixed template. A Test withholds the same way and says so. A report that
-  could not be built at all is withheld the same way: before, the error page
-  went to every recipient, quoting the internal error, and the run was a
-  success. For a job with no delivery interface, the Runs page names the row
+  could not be built at all is withheld the same way, and the run fails. For a job with no delivery interface, the Runs page names the row
   "No delivery interface" instead of "Unknown delivery config".
 - **A failed delivery shows on the job.** When a mail server, Slack or a
   webhook refused the report, the Runs page said "Delivery issue", but the
@@ -694,10 +710,7 @@ does:
   delivered report can no longer disagree about how many cells a row has.
   Dragging a block to the side of a row no longer loses it when the row's
   stored count was wrong, and "delete cell" can no longer empty a row.
-- **A colour is checked before it is used.** The colour fields took any text,
-  and text that was not a colour reached the report's `style` attributes,
-  where it could make the renderer and each recipient's mail client fetch an
-  address of the author's choosing. A colour must now be `#rrggbb`, `rgb()`,
+- **A colour is checked before it is used.** A colour must now be `#rrggbb`, `rgb()`,
   `rgba()`, `hsl()`, `hsla()` or a colour name; anything else is refused on
   save, and a value already stored is ignored when the report renders.
 - **A refused template save says what was wrong.** Hiding, renaming, cloning
@@ -895,16 +908,12 @@ does:
 
 ### 🚨 Security
 
-- Testing an AI provider could send another space's API key to an address of
-  your choosing. The two buttons that reach an AI provider (the connection test
-  and the model list) accepted a provider identifier and an endpoint from the
-  browser, read the stored key for that identifier, and sent it to that endpoint.
-  Neither checked who was asking. Both now check your access to the space that
-  owns the stored provider, and answer an identifier you may not read the same
-  way as one that does not exist.
-- Sending a test message through a delivery interface now requires admin access
-  to the space. Before, any signed-in account could make the install send mail
-  through a mail server, or a request to an address, that the account chose.
+- Testing an AI provider checks your access. The connection test and the
+  model list check your access to the space that owns the stored provider, and
+  answer an identifier you may not read the same way as one that does not
+  exist.
+- Sending a test message through a delivery interface requires admin access
+  to the space.
 
 ### 🐞 Fixes
 
@@ -930,12 +939,8 @@ does:
 
 ### 🚨 Security
 
-- The data-access modules were reachable from the browser. Every export of the
-  job, run and AI provider repositories, and of the storage modules, was
-  published as a callable endpoint that checked no session. A signed-in account
-  could read every job of every space, including the login details a capture
-  uses, and could delete the runs of another space. Every browser-callable read
-  and write now checks your access to the space first.
+- Every browser-callable read and write of jobs, runs and AI providers checks
+  your access to the space first.
 
 ### 🐞 Fixes
 
@@ -962,15 +967,12 @@ does:
 
 ### 🚨 Security
 
-- Every action on jobs, blueprints, delivery interfaces and AI providers now
-  checks your access to the space it names. Before, a signed-in account could
-  read, change, copy or delete content in a space it was not a member of, and
-  could start a run of any job.
+- Every action on jobs, blueprints, delivery interfaces and AI providers checks
+  your access to the space it names, and so does the start of a run.
 - The runs page and the job editor no longer send delivery interface
   credentials to the browser. Names and types are all the page needs.
 - Exporting and importing the database, and changing application settings,
-  now require the System role. Before, any signed-in account could download
-  the full export or replace the database.
+  require the System role.
 - Report file paths reject a user name or id that could point outside the
   reports folder.
 - Equations in a `calculate` step run with a time and memory limit, cannot

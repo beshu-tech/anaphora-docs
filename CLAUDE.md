@@ -53,6 +53,16 @@ Automatic via GitHub Actions on push to `main`:
 1. Builds with `npm run build`
 2. Deploys to GitHub Pages
 
+## Security and licence wording
+
+This repository is public. In the changelog and every page:
+
+- Name a fixed vulnerability vaguely: what area is safer now, and what the reader must do. Never how the attack
+  worked: no "before, X could Y", no example payloads, no addresses or paths to try.
+- Never write about the internals of the licence or the activation key, or about any way that a licence check
+  could be eluded.
+- The Anaphora `CHANGELOG.md` is private and can say more: rewrite each item from it to these rules, do not copy it.
+
 ## Documentation Sections
 
 Documentation is organized into these main categories (see sidebars.ts):

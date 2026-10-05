@@ -139,6 +139,9 @@ action fails. The job editor checks equations when you save the job.
 | **Conditional block** | Run nested actions when a variable meets a condition (or does not) | Only notify if errors > 0        |
 | **Break**             | Stop without sending                                               | Skip report if threshold not met |
 
+A **Conditional block** can also test the number that an **AI** action returns. See
+[A number in a condition](../administration/ai-providers.md#a-number-in-a-condition).
+
 ### Example: multi-source report
 
 Capture from multiple dashboards in one job:

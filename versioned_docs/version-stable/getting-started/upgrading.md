@@ -51,16 +51,19 @@ docker run --rm --entrypoint cat beshultd/anaphora:<version> /usr/local/bin/anap
    bash anaphora-upgrade.sh apply <version> --dry-run
    ```
 
-3. **Apply.** The script checks again and asks before it stops Anaphora. Then it copies `storage/` to
-   `anaphora-backups/<date>/`, sets `ANAPHORA_TAG` in `.env` (the old file stays as `.env.bak`), starts the new version
-   and waits until it answers. If the new version does not start, the script puts the backup back and starts the old
-   version.
+3. **Apply.** The script checks again and asks before it stops Anaphora: type `yes` and press Enter. Then it copies
+   `storage/` to `anaphora-backups/<date>/`, sets `ANAPHORA_TAG` in `.env` (the old file stays as `.env.bak`), starts
+   the new version and waits until it answers. If the new version does not start, the script puts the backup back and
+   starts the old version.
 
    ```bash
    bash anaphora-upgrade.sh apply <version>
    ```
 
    Add `--yes` to stop Anaphora without a question, for example in an unattended run.
+
+   When the new version runs, the script shows the log lines that need your attention, for example
+   `OIDC issuer discovery failed:`. Its last line is `Upgrade complete: Anaphora runs <image>.`
 
 4. **Roll back** (if necessary). The script prints the command at the end of `apply`, for example:
 
@@ -98,9 +101,58 @@ restore it:
 
 If Anaphora cannot write the copy, it applies no migration, and the database stays as it was.
 
-## After the upgrade to this version
+## After the upgrade from 0.16.0
 
-This version changes the database. After the upgrade:
+0.17.0 changes the database. `AddApiKeys` adds a table. `SamlClockSkewChecked` and `OidcSettingsExplicit` come with
+Authfish, the sign-in service, and change the saved SAML and OIDC settings. Some licence, LDAP and sign-in changes
+change what an existing install does, or stop a login or a logout that worked before:
+
+- **A licence that ends.** An install that ran on PRO or Enterprise lets only its administrators in when it goes to
+  Free. The other users are signed out. Renew the licence, or give the System role to the users who must keep working.
+- **Roles after Free.** An install that ran on Free before 0.17.0 has every local user saved as System. After the move
+  to PRO or Enterprise, set the role of each user in **Settings**.
+- **LDAP settings that cannot work.** Anaphora refuses them at start, and LDAP login stops: a user filter without
+  `{{username}}`, a filter that does not parse, a group filter with no user in it, a CA certificate that Node cannot
+  read. Check the LDAP settings before you upgrade.
+- **Regex space permissions.** A permission saved before 0.17.0 keeps matching any part of the name, and the log names
+  it at each start. After you change its mode, do not roll back to an older Anaphora: older versions drop the mode. See
+  [How a permission matches](../administration/spaces.md#how-a-permission-matches).
+
+- **OIDC with a private CA.** Anaphora now checks the TLS certificate of an `https` issuer at every address, also on an IPv4
+  address, on `localhost`, on a `*.localhost` name or on `[::1]`. If OIDC from the
+  environment uses such an issuer with a certificate from a private CA or a self-signed one, OIDC sign-in stops, and
+  the log says `OIDC issuer discovery failed:`. Local users can still sign in. See
+  [The TLS certificate of the issuer](../administration/authentication/oidc.md#the-tls-certificate-of-the-issuer).
+  OIDC that you set up in the settings page needs no action: the upgrade turns on **Tls insecure skip verify** in
+  **Settings** > **System** > **Auth** > **OIDC** where the old rule skipped the check, and the start log warns about
+  it. Set **Tls CA cert** on the same page instead.
+- **SAML Audience.** SAML checks the Audience of each assertion. An identity provider that sends another Audience, or
+  none, fails every login. Set `extraConfig.audience` to the value that the provider sends.
+- **SAML login from the portal of the identity provider.** Such a login is refused. Set
+  `extraConfig.validateInResponseTo: never` to accept it again.
+- **SAML logout from the identity provider.** The provider must sign it. An unsigned one leaves the Anaphora session
+  open. In Keycloak, turn on **Sign documents** in the client.
+- **SAML clock skew.** A saved **Accepted clock skew ms** (in **Settings** > **System** > **Auth** > **SAML**) of `-1`
+  (no time check, the old default) becomes `0`. If the clock of the server is behind the clock of the provider, the
+  login fails with "SAML assertion not yet valid". Sync the clocks, or set **Accepted clock skew ms**, for example to
+  `60000`.
+- **Logins in progress.** A SAML login that started before the upgrade fails once. The user signs in again.
+- **Extra config.** The **Extra config** in **Settings** > **System** > **Auth** > **SAML** and **OIDC** can no longer
+  change a setting that has a field of its own, for example the SAML `issuer` or the OIDC `client_secret`. The upgrade
+  moves such a value to its field.
+- **More roles.** A user whose provider sends exactly one group now gets that role. A SAML provider that sends one
+  attribute per role now gives every role, not only the first. An LDAP group with more than one name gives one role
+  per name. Check the [space permissions](../administration/spaces.md#how-a-permission-matches) that match these
+  roles, mainly the admin ones.
+- **Username.** A SAML assertion or an OIDC profile without the username attribute is refused.
+- **OIDC logout.** The logout goes to the logout endpoint that the provider publishes. See
+  [Logout](../administration/authentication/oidc.md#logout).
+- **Health monitors.** A monitor can read the job names with an observer key, instead of the password of a system
+  user. See [Self-monitoring](../administration/self-monitoring.md#observer-keys).
+
+## After the upgrade from 0.15 or older
+
+Version 0.16.0 changes the database. After the upgrade from an older version:
 
 - Every user is signed out once and logs in again.
 - The log can say that some local users "still carry the legacy sha512 password hash". Their passwords still work.
@@ -119,8 +171,7 @@ This version changes the database. After the upgrade:
 - The first health check rates the last five runs of each job with the new rules for failed deliveries. It can turn a
   job yellow or red, and send the health mail once, for a delivery that failed days ago. See
   [Self-monitoring](../administration/self-monitoring.md).
-- If accounts that you do not trust can sign in, change the session secret and the identity-provider secrets. Before
-  this version, any signed-in account could read them.
+- If accounts that you do not trust can sign in, change the session secret and the identity-provider secrets.
 
 ## Next steps
 

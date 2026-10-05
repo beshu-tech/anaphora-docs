@@ -149,6 +149,32 @@ Output: 0
 
 Use the output to add a condition in your job workflow for alerting.
 
+### A number in a condition
+
+A **Conditional block** can test the variable of an AI action with the output type `number`. The answer of the model
+must be a bare number, or hold exactly one number, for example `Severity: 7` or `7/10`. Any other answer fails the run
+with the error `The AI answer is not a number`. This way, the job never takes a branch on an answer that nobody can
+read. Ask the model for one number only, and set a small **Answer length cap**.
+
+### The Kibana AI Triage template
+
+The **Kibana AI Triage** template builds a job that asks an AI provider whether a human must look at the errors now.
+Pick it under **Jobs → Create Job**. It needs an AI provider in the space. It is an advanced template, so the Free
+edition does not have it. Every 15 minutes, the job:
+
+1. Counts the HTTP 5xx errors of the last hour and of the hour before, in Kibana Discover.
+2. Counts all the requests of the last hour.
+3. Takes a snapshot of the overview dashboard.
+4. Asks the AI provider for a severity from 0 to 10. The prompt gives the rules that an on-call engineer applies: more
+   errors with more traffic is load, not a failure, and a source that sends nothing is a 7.
+5. Stops when the severity is below 7. Nobody is notified.
+6. At 7 and above, asks the AI provider for a short briefing, which goes in the report with the counts and the
+   dashboard.
+
+The job sends the report at most once every 3 hours. When the space has exactly one AI provider, the new job uses it.
+With more than one, select the **Provider** in each AI action. With none, add an AI provider to the space first. The
+template uses the public Kibana demo: change the URLs to your own Kibana.
+
 ## Token budgets
 
 Every AI provider shows the tokens it spent in the last 24 hours and in the last 7 days (the **Tokens 24h** and

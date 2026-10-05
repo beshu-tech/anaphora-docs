@@ -103,12 +103,23 @@ If Anaphora cannot write the copy, it applies no migration, and the database sta
 
 ## After the upgrade from 0.16.0
 
-The next release changes the database. `AddApiKeys` adds a table. `SamlClockSkewChecked` and `OidcSettingsExplicit`
-come with Authfish, the sign-in service, and change the saved SAML and OIDC settings. Some sign-in changes can stop a
-login or a logout that worked before:
+0.17.0 changes the database. `AddApiKeys` adds a table. `SamlClockSkewChecked` and `OidcSettingsExplicit` come with
+Authfish, the sign-in service, and change the saved SAML and OIDC settings. Some licence, LDAP and sign-in changes
+change what an existing install does, or stop a login or a logout that worked before:
 
-- **OIDC with a private CA.** Anaphora now checks the TLS certificate of an `https` issuer at every address. Before, it
-  did not check an issuer on an IPv4 address, on `localhost`, on a `*.localhost` name or on `[::1]`. If OIDC from the
+- **A licence that ends.** An install that ran on PRO or Enterprise lets only its administrators in when it goes to
+  Free. The other users are signed out. Renew the licence, or give the System role to the users who must keep working.
+- **Roles after Free.** An install that ran on Free before 0.17.0 has every local user saved as System. After the move
+  to PRO or Enterprise, set the role of each user in **Settings**.
+- **LDAP settings that cannot work.** Anaphora refuses them at start, and LDAP login stops: a user filter without
+  `{{username}}`, a filter that does not parse, a group filter with no user in it, a CA certificate that Node cannot
+  read. Check the LDAP settings before you upgrade.
+- **Regex space permissions.** A permission saved before 0.17.0 keeps matching any part of the name, and the log names
+  it at each start. After you change its mode, do not roll back to an older Anaphora: older versions drop the mode. See
+  [How a permission matches](../administration/spaces.md#how-a-permission-matches).
+
+- **OIDC with a private CA.** Anaphora now checks the TLS certificate of an `https` issuer at every address, also on an IPv4
+  address, on `localhost`, on a `*.localhost` name or on `[::1]`. If OIDC from the
   environment uses such an issuer with a certificate from a private CA or a self-signed one, OIDC sign-in stops, and
   the log says `OIDC issuer discovery failed:`. Local users can still sign in. See
   [The TLS certificate of the issuer](../administration/authentication/oidc.md#the-tls-certificate-of-the-issuer).
@@ -133,8 +144,7 @@ login or a logout that worked before:
   attribute per role now gives every role, not only the first. An LDAP group with more than one name gives one role
   per name. Check the [space permissions](../administration/spaces.md#how-a-permission-matches) that match these
   roles, mainly the admin ones.
-- **Username.** A SAML assertion or an OIDC profile without the username attribute is refused. Before, the user signed
-  in as `undefined`.
+- **Username.** A SAML assertion or an OIDC profile without the username attribute is refused.
 - **OIDC logout.** The logout goes to the logout endpoint that the provider publishes. See
   [Logout](../administration/authentication/oidc.md#logout).
 - **Health monitors.** A monitor can read the job names with an observer key, instead of the password of a system
@@ -161,8 +171,7 @@ Version 0.16.0 changes the database. After the upgrade from an older version:
 - The first health check rates the last five runs of each job with the new rules for failed deliveries. It can turn a
   job yellow or red, and send the health mail once, for a delivery that failed days ago. See
   [Self-monitoring](../administration/self-monitoring.md).
-- If accounts that you do not trust can sign in, change the session secret and the identity-provider secrets. Before
-  0.16.0, any signed-in account could read them.
+- If accounts that you do not trust can sign in, change the session secret and the identity-provider secrets.
 
 ## Next steps
 

@@ -74,9 +74,12 @@ from. Configure the proxy to refuse internal addresses.
 When a reverse proxy (nginx, Traefik, Coolify) ends TLS in front of Anaphora:
 
 - Set `PUBLIC_URL` to the `https` address that the browsers use.
-- Make sure that the proxy sends `X-Forwarded-For`.
+- Make sure that the proxy sends `X-Forwarded-For` and `X-Forwarded-Proto`.
 - Set `AF_TRUSTED_PROXIES` to the address of the proxy. See [Failed sign-in limits](#failed-sign-in-limits).
 - Publish only port 3000. A caller that reaches the Next.js port (3001) directly chooses its own client address.
+
+When `X-Forwarded-Proto` says `https`, the session cookie is `Secure`. Over plain http, the cookie is not `Secure`. You
+do not set anything for this.
 
 ### Failed sign-in limits
 
