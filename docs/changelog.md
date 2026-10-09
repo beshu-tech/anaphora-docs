@@ -17,15 +17,44 @@ All notable changes to Anaphora are documented here.
 
 ---
 
-## Next release (unreleased): WebSocket sign-in checks
+## [0.18.0] - 2026-10-09: Safer sign-in
 
-This release carries no database migration. Anaphora now runs Authfish 1.0.185.
+A security update for the sign-in. It carries no database migration: the upgrade replaces the image, and you can go
+back to 0.17.0 the same way.
+
+### What you need to do
+
+- **Most installations: nothing.**
+- **You sign in with single sign-on only, and have no local administrator?** Create one in **Settings**. It is your
+  way in when single sign-on is off, for example after a mistake in an `OIDC_*` variable or a change of licence.
+  Without it, the first-time setup page opens again while single sign-on is off.
+- **The start log or the upgrade script says that no one can administer Anaphora yet?** Open the address it shows and
+  create the first administrator now. `ADMIN_USERNAME` and `ADMIN_PASSWORD` apply only to the very first start of an
+  empty installation, so setting them later does not close that page.
 
 ### 🚨 Security
 
-- **WebSocket connections get the sign-in checks of other requests**
-  (Authfish 1.0.185, the sign-in service). Anaphora itself opens no WebSocket
-  connection.
+- **Settings that come from your environment variables are locked.** The settings page cannot change them.
+- **The first-time setup page creates local user accounts, and nothing else.** It cannot change any other setting.
+- **The OIDC client secret from your environment stays out of the database**, and the settings page does not show it.
+- **Connections that stay open (WebSockets) get the same sign-in checks as normal page loads**, and they close when
+  the user signs out. Anaphora itself does not use them.
+- **Security fixes in the image:** `perl-base` 5.36.0-7+deb12u4 (CVE-2026-13221 and six more), `handlebars` 4.7.10
+  (CVE-2026-106445, CVE-2026-106446), `shell-quote` 1.12.0 (CVE-2026-102422), `sharp` 0.35.5 (GHSA-wq5f-xc86-pv6w)
+  and `source-map-js` 1.2.2 (CVE-2026-93749).
+
+### 🧐 Enhancements
+
+- **Single sign-on administrators skip the first-time setup page.** When `OIDC_SYSTEM_GROUPS` names your
+  administrators, they sign in with single sign-on from the first start, and the setup page does not open. See
+  [System groups](./administration/authentication/index.md#system-groups).
+
+### 🐞 Fixes
+
+- **The first-time setup page no longer turns off OIDC sign-in.**
+- **A first start that fails leaves nothing half-saved.** The next start begins clean.
+
+The sign-in service in this release is Authfish 1.0.190.
 
 ---
 

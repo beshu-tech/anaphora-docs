@@ -172,8 +172,8 @@ Instead of the settings page, you can configure OIDC with environment variables.
 - The identity provider must allow the callback `<PUBLIC_URL>/auth/login-oidc/callback`.
 - The identity provider must send the user's roles (`admin`, `user`, `superuser`) in the claim that
   `OIDC_GROUPS_CLAIM` names.
-- The environment owns these settings. The settings page cannot change them. Authfish, the sign-in service, keeps a
-  copy of them in its database, the client secret included.
+- The environment owns these settings. The settings page cannot change them, and Anaphora does not save them in its
+  database.
 - A new installation starts with OIDC in its list of sign-in methods. On an existing installation, switch OIDC on under
   **Settings**, in the list of sign-in methods.
 - Anaphora reads the variables at every start.

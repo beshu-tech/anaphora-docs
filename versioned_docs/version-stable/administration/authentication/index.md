@@ -103,7 +103,7 @@ when one of its roles is in the **System groups** of that method. Set **System g
 
 :::warning Keep a local system user
 Keep at least one local user with the `system` role. It is the way in when the identity provider is down or the list
-is wrong.
+is wrong. Without one, the page that makes the first administrator opens again while single sign-on is off.
 :::
 
 ## Next steps
