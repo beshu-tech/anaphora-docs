@@ -126,6 +126,8 @@ flowchart LR
 | **Calculate**        | Arithmetic on variables        | `errors / total * 100`   |
 | **AI**               | Process captured data with AI  | Summarize a dashboard    |
 
+The **AI** step opens in its own page: see [The AI step](./ai-step.md).
+
 :::note Equation limits
 An equation in a **Calculate** action runs in a separate process, with 256 MB of memory and 5 seconds of time. It
 cannot create a matrix with more than one million cells. When a limit is reached, only that process stops, and the

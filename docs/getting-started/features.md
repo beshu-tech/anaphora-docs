@@ -27,6 +27,7 @@ For evaluation and personal projects.
 - Local user authentication
 - Self-Monitoring API: health endpoints for external systems
 - AI Analysis: summaries and anomaly detection by an LLM
+- [AI step](../jobs/ai-step.md): one AI call fills several variables, looks at earlier runs, and remembers between runs
   :::
 
 Best for: trying Anaphora, personal dashboards, small-scale reporting.

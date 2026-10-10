@@ -16,7 +16,7 @@ Every job has four main components:
 | Component | Description |
 |-----------|-------------|
 | [General](./jobs/general) | Name, description, scheduling, and throttling |
-| [Capture](./jobs/capture) | What to capture and how |
+| [Capture](./jobs/capture) | What to capture and how, with [the AI step](./jobs/ai-step) |
 | [Composer](./jobs/composer) | How to arrange content into a report |
 | [Delivery](./jobs/delivery) | Where and how to send the report |
 
@@ -78,16 +78,22 @@ conditions decide whether the report is sent. Use the **Break** action to skip d
 
 ## AI-powered analysis
 
-Jobs can use AI to analyze captured data:
+The **AI** step of a capture flow asks an AI provider about what the flow captured:
 
 ```
-Capture Dashboard -> Send to AI -> Receive Analysis -> Include in Report
+Capture pages and values -> AI step fills variables -> Conditional block, report, delivery
 ```
 
-- Visual analysis: pass screenshots to AI models to evaluate dashboard content
-- Text summaries: AI generates human-readable summaries of complex data
-- Anomaly detection: AI identifies unusual patterns or concerning trends
-- OpenAI compatible: works with any AI provider that uses the OpenAI API format
+- One call fills several variables, each with a type: text, number, yes/no or HTML.
+- The AI can look at earlier runs of the job, do exact math, read the captured pages when it needs them, and keep a
+  notebook between runs.
+- The AI decides; the flow acts. A **Conditional block** and a **Break** act on what the AI fills.
+- **Try it** runs the step on the values of the last run, and saves and sends nothing. An assistant can write the step
+  from your words.
+- Hard limits stop a step that runs too long, on top of the token budget of the provider.
+- Works with any AI provider that uses the OpenAI API format.
+
+See [The AI step](./jobs/ai-step).
 
 ## Visual composer
 
@@ -133,5 +139,6 @@ All the templates except **Kibana Dashboard Snapshot** are advanced templates: t
 
 - [General settings](./jobs/general): scheduling and throttling
 - [Capture configuration](./jobs/capture): data extraction workflows
+- [The AI step](./jobs/ai-step): AI that fills variables, looks at earlier runs and remembers
 - [Composer](./jobs/composer): report design and branding
 - [Delivery](./jobs/delivery): output channels and formats

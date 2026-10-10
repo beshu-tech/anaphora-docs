@@ -41,6 +41,7 @@ const sidebars: SidebarsConfig = {
         'advanced-examples/mixed-sources-report',
         'advanced-examples/kibana-anomaly-alert',
         'advanced-examples/ai-news-collation',
+        'advanced-examples/ai-triage',
       ],
     },
     {
@@ -53,6 +54,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'jobs/general',
         'jobs/capture',
+        'jobs/ai-step',
         'jobs/composer',
         'jobs/delivery',
       ],

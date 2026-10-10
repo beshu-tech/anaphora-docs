@@ -22,7 +22,7 @@ the pages themselves below it.
 
 ## Before you start
 
-The **AI** action needs an AI provider. Add one under **AI Providers** in the sidebar, with the API key of your
+The **AI** step needs an AI provider. Add one under **AI Providers** in the sidebar, with the API key of your
 provider.
 
 ## Steps
@@ -40,7 +40,7 @@ provider.
 
 ### 3. Capture
 
-Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI** action below them:
+Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI** step below them:
 
 ![The capture flow: two Navigate actions, for Hacker News and Lobsters, then an AI action that writes the summary variable](images/ai-news-collation-capture.png)
 
@@ -48,20 +48,21 @@ Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI*
    - **Connector**: **Web**.
    - **URL**: the page, for example `https://news.ycombinator.com`.
    - Tick **Take snapshot**.
-2. **AI**:
-   - **Variable name**: `summary`. The answer goes into this variable.
+2. **AI**: the step opens in its own page. Click **Set it up by hand instead**, then fill in the simple view:
    - **Provider**: your AI provider.
-   - **Prompt**: what to do with the pages, for example:
+   - **Instructions**: what to do with the pages, for example:
      ```
      Summarize the following articles into an executive summary, highlighting key trends and actionable insights.
      ```
-   - **Output type**: **text**.
-   - **Context**: **Everything so far** sends every earlier snapshot and variable, minus the rows you untick.
-     **Only ticked rows** sends only the rows you tick. Each snapshot row has **Show aria snapshot**, to see the
-     page text that the AI gets.
-   - **Answer length cap**: a limit in tokens, or empty for the default of the provider.
+   - **Fills in**: click **Edit**, enter the **Name** `summary`, and choose the **Type** **text**. The answer goes into
+     this variable. One variable is enough for this job.
+   - **It can**: the first line names what the step sees. Here it is both snapshots, "everything so far", which is
+     what this job needs.
+   - Click **Done** to go back to the flow.
 
-   ![The AI action: the variable summary, the provider, the prompt, the output type, and the context with the two snapshots ticked](images/ai-news-collation-action-ai.png)
+   ![The AI step in the simple view, shown here for another job: the provider, the Instructions, Fills in with one number variable, It can, and the line that says when the step stops](images/ai-news-collation-ai-step.png)
+
+   [The AI step](../jobs/ai-step.md) describes every setting, and how to try the step before you save the job.
 
 ### 4. Compose
 
@@ -82,4 +83,6 @@ Choose a delivery interface and the recipients.
 
 ## Next steps
 
+- [AI Triage](./ai-triage): one AI step that rates the errors, looks at earlier runs and remembers the open
+  incidents.
 - [Mixed Sources Report](./mixed-sources-report): put Kibana, Grafana and other pages in one report.

@@ -15,6 +15,7 @@ These examples show more complex reporting scenarios.
 | [Mixed Sources Report](./advanced-examples/mixed-sources-report) | Combine data from multiple Kibana/Grafana instances |
 | [Kibana Anomaly Alert](./advanced-examples/kibana-anomaly-alert) | Alerts based on anomaly analysis                    |
 | [AI News Collation](./advanced-examples/ai-news-collation)       | Aggregate and summarize content with AI             |
+| [AI Triage](./advanced-examples/ai-triage)                       | Page only for a new or worse incident, with one AI step |
 
 ## Prerequisites
 

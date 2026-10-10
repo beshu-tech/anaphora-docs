@@ -52,6 +52,29 @@ flowchart LR
 4. Click **Test**
 5. Click **Save**
 
+### What this model can do
+
+**Test** sends your prompt and three small checks: a tool call, a JSON answer and an image. It uses the key, the
+endpoint and the model of the form. The **Test AI Provider** window shows the answer, then **What this model can do**:
+
+- **Answers a prompt**.
+- **Uses tools**. An AI step with tools needs it: **Look at earlier runs**, **Do exact math**, **Remember between
+  runs**, and **The AI chooses** mode.
+- **Gives structured answers (JSON)**. When the answer is **No**, an AI step with several variables asks for JSON in its
+  instructions, and reads the text.
+- **Reads images**. When the answer is **No**, **Send the snapshots as images** is off in the AI steps of this provider.
+
+Under a **No**, a short line says why, for example "The endpoint refused an image."
+
+![The Test AI Provider window: the answer of the model, then Answers a prompt, Uses tools and Gives structured answers: Yes; Reads images: No](images/ai-provider-test.png)
+
+When the Test runs on the saved settings of the provider, it keeps the result: the window says "Saved with the
+provider." Otherwise, click **Save** to keep it. The card **What this model can do** on the provider form shows the
+result and when the test ran. AI steps read it. A change of the provider type, the model or the endpoint clears the
+result: click **Test** again after the change. The tokens of the Test count on the budget of the provider.
+
+![The card What this model can do: tested today at 11:04, three abilities Yes and Reads images No](images/ai-provider-abilities.png)
+
 :::note Free edition
 The Free edition allows one AI provider per space.
 :::
@@ -75,86 +98,18 @@ To copy or clone an AI provider into another space, you need admin access to the
 
 ## Using AI in jobs
 
-### Job capture integration
-
-To add an AI action to a job:
-
-1. Edit or create a job
-2. Go to the **Capture** tab
-3. Turn on the **Advanced** switch to use actions
-4. Add an **AI** action
-5. Configure:
-
-| Field                        | Description                                                                    |
-|------------------------------|--------------------------------------------------------------------------------|
-| Variable name                | Name of the variable that stores the AI output                                 |
-| Provider                     | Select the AI provider to use                                                  |
-| Prompt                       | Define the prompt with instructions                                            |
-| Output type                  | `text`, `number`, `html`                                                       |
-| Answer length cap            | Maximum tokens in the answer. Empty leaves it to the provider                  |
-| Context                      | **Everything so far** or **Only ticked rows**                                  |
-| Send the snapshots as images | Send the snapshots to the model as images (only for providers that read images) |
-
-### What an AI action sends
-
-The **Context** section of an AI action decides which earlier snapshots and variables go to the model. Each snapshot
-goes as its accessibility tree (the text structure of the page). The header of the table counts the rows that are sent.
-The section has two modes:
-
-| Mode                  | What is sent                                                                                                   |
-|-----------------------|----------------------------------------------------------------------------------------------------------------|
-| **Everything so far** | Every earlier snapshot and variable, minus the rows you untick. Anything you add to the job later is sent too. This is the default. |
-| **Only ticked rows**  | Only the rows you tick. Anything you add to the job later stays out until you tick it.                          |
-
-Switching modes does not change which rows are ticked.
-
-![The AI action drawer in "Everything so far" mode](images/ai-context-everything.png)
-
-![The AI action drawer in "Only ticked rows" mode](images/ai-context-only-ticked.png)
-
-Under the table, **Send the snapshots as images** also sends the ticked snapshots as pictures. Only a provider whose
-vendor reads images can take them: OpenAI does, DeepSeek and custom providers do not. For those, the box is disabled
-and its tooltip says why. Each image costs tokens on every run.
-
-**Answer length cap** limits the reply, in tokens. A number needs a few tokens; a report section may need a few hundred.
-
-:::tip Send less, pay less
-On a dashboard with many panels, "Everything so far" sends every panel to answer a question about one of them. Use
-"Only ticked rows" to send only what the prompt needs.
-:::
-
-### Example: dashboard summary
-
-```
-Context: Dashboard snapshot showing system performance metrics
-Type: Text
-Prompt: "Summarize the key metrics from this dashboard,
-        highlighting any values that exceed normal ranges."
-
-Output: "System performance remains stable with 99.8% uptime.
-        CPU utilization averaged 45% with a peak of 78% at 14:30 UTC.
-        Memory usage is trending upward (+12% week-over-week) and
-        may require attention if the trend continues."
-```
-
-### Example: anomaly detection
-
-```
-Context: Error rate visualization captured from Kibana
-Type: Number
-Prompt: "Identify any anomalies in the error rate data. Respond with 0 if none found. Return 1 if anomalies are detected."
-
-Output: 0
-```
-
-Use the output to add a condition in your job workflow for alerting.
+A job uses its AI provider through the **AI** step of an advanced capture flow. One call can fill several typed
+variables, look at earlier runs, do exact math, and keep a notebook between runs. See
+[The AI step](../jobs/ai-step.md): every setting, **Try it**, the assistant, and the traces on the Runs page.
 
 ### A number in a condition
 
-A **Conditional block** can test the variable of an AI action with the output type `number`. The answer of the model
+A **Conditional block** can test a **number** variable of an AI step. With one variable, the answer of the model
 must be a bare number, or hold exactly one number, for example `Severity: 7` or `7/10`. Any other answer fails the run
 with the error `The AI answer is not a number`. This way, the job never takes a branch on an answer that nobody can
-read. Ask the model for one number only, and set a small **Answer length cap**.
+read. Ask the model for one number only, and set a small **Answer length cap**. With several variables, the model answers
+one JSON object, and Anaphora checks each variable: a wrong value fails the step and names the variable. A **yes/no**
+variable holds `1` or `0`, so compare it with `1`.
 
 ### The Kibana AI Triage template
 
@@ -175,6 +130,9 @@ The job sends the report at most once every 3 hours. When the space has exactly 
 With more than one, select the **Provider** in each AI action. With none, add an AI provider to the space first. The
 template uses the public Kibana demo: change the URLs to your own Kibana.
 
+The [AI Triage](../advanced-examples/ai-triage.md) example builds the same job with one AI step. It looks at the earlier
+runs instead of capturing the hour before, and its notebook replaces the throttle.
+
 ## Token budgets
 
 Every AI provider shows the tokens it spent in the last 24 hours and in the last 7 days (the **Tokens 24h** and
@@ -182,8 +140,8 @@ Every AI provider shows the tokens it spent in the last 24 hours and in the last
 
 ![AI providers list with the two token columns](images/ai-budget-providers-list.png)
 
-Usage counts every call: scheduled runs, manual runs, retries, tests, previews and the **Test** button on the provider
-form. Some OpenAI-compatible services answer without usage data. Those calls count as zero, and the tooltip of the
+Usage counts every call: scheduled runs, manual runs, retries, tests, previews, the **Test** button on the provider
+form, the trials of AI steps (**Try it**) and the AI step assistant. Some OpenAI-compatible services answer without usage data. Those calls count as zero, and the tooltip of the
 column says that the total is a lower bound.
 
 ![Tooltip on a usage column](images/ai-budget-usage-tooltip.png)
@@ -211,6 +169,8 @@ up. The card then says what will happen.
 - The job that made the call is paused.
 - Every further AI call on that provider is refused until the window rolls over or you raise the budget.
 - A job that runs into a budget that another job used up is paused the same way.
+- A test, a preview, a trial or the assistant pauses no job: the budget refuses its next call. The assistant says so in
+  its panel, and the changes it made before stay.
 - The token columns turn green, yellow and red as the budget fills. A provider that reached its budget shows
   **Budget reached**.
 - On the Jobs list, a paused job shows that an AI budget paused it, so you can tell it apart from a job that someone
@@ -240,5 +200,6 @@ health monitoring on. Without a channel, jobs are still paused, but nothing is s
 ## Next steps
 
 - [Spaces](./spaces): configure Space-level AI providers
+- [The AI step](../jobs/ai-step.md): use the provider in a capture flow
 - [Composer](../jobs/composer): add AI blocks to reports
 - [Self-monitoring](./self-monitoring): monitor AI provider health
