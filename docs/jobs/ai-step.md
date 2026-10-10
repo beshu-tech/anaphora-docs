@@ -46,6 +46,7 @@ action. A new step starts with three short screens. A step that exists opens in 
    - **Discard** removes the new step.
 
    Then click **Try it on the last run**. When the job has no run yet, the button is **Try it on the Test capture**.
+   With no run and no Test capture, click **Run a Test capture of the actions before it** first.
 
    ![The Review screen: the plan in five sentences, the assistant's words, one thing to check, and "Try it on the last run"](images/ai-step-review.png)
 
@@ -220,8 +221,9 @@ Try it uses the values of the last run of the job. When the job has no run yet, 
 line at the top of the **Trial** panel says which, for example "Values of the run of Oct 10, 13:51". **Use the Test
 capture instead** and **Use the run instead** switch between the two.
 
-Try it needs a saved job, and a run or a Test capture. Until then, the button is off and the panel says what to do:
-"Save the job first", or "Run a Test capture first".
+A job that is not saved yet has no run, so Try it uses its Test capture. With no run and no Test capture, the button is
+off and the panel says "Run a Test capture first." Click **Run a Test capture of the actions before it** to get the
+values.
 
 ![The Trial panel: Success with 2 steps, 1 tool call and 1,664 tokens; severity, page_now and briefing; the AI's reasons; and the cost of a week](images/ai-step-trial.png)
 

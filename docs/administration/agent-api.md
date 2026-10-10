@@ -32,26 +32,40 @@ with `POST /auth/login-local` and a body `{ "username", "password" }`.
 
 The API applies the same access checks and edition limits as the pages.
 
-| Method and path                                    | Access | Result                                            |
-|----------------------------------------------------|--------|---------------------------------------------------|
-| `GET /api/agent/context`                           | any    | Who is logged in, the spaces, the license limits  |
-| `GET /api/spaces/{space}/jobs`                     | ro     | The jobs of the space                             |
-| `POST /api/spaces/{space}/jobs`                    | rw     | Creates a job                                     |
-| `GET /api/spaces/{space}/jobs/{jobId}`             | ro     | One job                                           |
-| `PUT /api/spaces/{space}/jobs/{jobId}`             | rw     | Replaces a job                                    |
-| `DELETE /api/spaces/{space}/jobs/{jobId}`          | rw     | Deletes a job                                     |
-| `POST /api/spaces/{space}/jobs/{jobId}/run`        | rw     | Runs a job now                                    |
-| `POST /api/spaces/{space}/jobs/preview`            | rw     | Previews a capture                                |
-| `POST /api/spaces/{space}/jobs/test`               | rw     | Tests a job that is not saved yet                 |
-| `GET /api/spaces/{space}/blueprints`               | ro     | The job templates (built-in and own)              |
-| `POST /api/spaces/{space}/blueprints`              | admin  | Creates a job template                            |
-| `GET /api/spaces/{space}/blueprints/{blueprintId}` | ro     | One job template                                  |
-| `PUT /api/spaces/{space}/blueprints/{blueprintId}` | admin  | Replaces a job template                           |
-| `DELETE /api/spaces/{space}/blueprints/{blueprintId}` | admin | Deletes a job template                          |
-| `GET /api/spaces/{space}/delivery-interfaces`      | ro     | Delivery interfaces, without secrets              |
-| `GET /api/spaces/{space}/ai-providers`             | ro     | AI providers, without API keys                    |
-| `GET /api/spaces/{space}/runs`                     | ro     | Runs, one page at a time                          |
-| `GET /api/spaces/{space}/runs/{runId}`             | ro     | One run, with the links to its report files       |
+| Method and path                                                     | Access | Result                                                                                                                                                    |
+|---------------------------------------------------------------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `GET /api/agent/context`                                            | any    | Who is logged in, the spaces, the license limits, what this version can do                                                                                |
+| `GET /api/spaces/{space}/jobs`                                      | ro     | The jobs of the space                                                                                                                                     |
+| `POST /api/spaces/{space}/jobs`                                     | rw     | Creates a job                                                                                                                                             |
+| `GET /api/spaces/{space}/jobs/{jobId}`                              | ro     | One job                                                                                                                                                   |
+| `PUT /api/spaces/{space}/jobs/{jobId}`                              | rw     | Replaces a job                                                                                                                                            |
+| `DELETE /api/spaces/{space}/jobs/{jobId}`                           | rw     | Deletes a job                                                                                                                                             |
+| `POST /api/spaces/{space}/jobs/{jobId}/run`                         | rw     | Runs a job now                                                                                                                                            |
+| `POST /api/spaces/{space}/jobs/preview`                             | rw     | Previews a capture                                                                                                                                        |
+| `POST /api/spaces/{space}/jobs/test`                                | rw     | Tests a job that is not saved yet                                                                                                                         |
+| `POST /api/spaces/{space}/jobs/{jobId}/ai-steps/{actionId}/preview` | ro     | What the model gets for an AI step; no token spent                                                                                                        |
+| `POST /api/spaces/{space}/jobs/{jobId}/ai-steps/{actionId}/trial`   | rw     | Runs the step once on the latest run of the job, or on a Test capture that you send: a stream of `step` events, then `end` with the trace and the outputs |
+| `POST /api/spaces/{space}/ai-step-preview`                          | ro     | The preview for a job that is not saved yet: the body carries the step and the values of a Test capture                                                   |
+| `POST /api/spaces/{space}/ai-step-trial`                            | rw     | The trial for a job that is not saved yet: the body carries the step and the values of a Test capture                                                     |
+| `POST /api/spaces/{space}/ai-step-assistant`                        | rw     | The AI step assistant, in mode `draft`, `chat` or `explain`: a stream of `text`, `change`, `suggestion`, `proposal`, `trial` and `end` events             |
+| `GET /api/spaces/{space}/jobs/{jobId}/notebook`                     | ro     | The notebook of the job                                                                                                                                   |
+| `PUT /api/spaces/{space}/jobs/{jobId}/notebook`                     | rw     | Replaces the notebook                                                                                                                                     |
+| `DELETE /api/spaces/{space}/jobs/{jobId}/notebook`                  | rw     | Empties the notebook; the versions keep the text                                                                                                          |
+| `GET /api/spaces/{space}/jobs/{jobId}/notebook/versions`            | ro     | The last 50 versions of the notebook                                                                                                                      |
+| `GET /api/spaces/{space}/blueprints`                                | ro     | The job templates (built-in and own)                                                                                                                      |
+| `POST /api/spaces/{space}/blueprints`                               | admin  | Creates a job template                                                                                                                                    |
+| `GET /api/spaces/{space}/blueprints/{blueprintId}`                  | ro     | One job template                                                                                                                                          |
+| `PUT /api/spaces/{space}/blueprints/{blueprintId}`                  | admin  | Replaces a job template                                                                                                                                   |
+| `DELETE /api/spaces/{space}/blueprints/{blueprintId}`               | admin  | Deletes a job template                                                                                                                                    |
+| `GET /api/spaces/{space}/delivery-interfaces`                       | ro     | Delivery interfaces, without secrets                                                                                                                      |
+| `GET /api/spaces/{space}/ai-providers`                              | ro     | AI providers, without API keys                                                                                                                            |
+| `POST /api/spaces/{space}/ai-providers/{providerId}/test`           | rw     | The provider Test; it also records what the model can do                                                                                                  |
+| `GET /api/spaces/{space}/runs`                                      | ro     | Runs, one page at a time, without AI traces                                                                                                               |
+| `GET /api/spaces/{space}/runs/{runId}`                              | ro     | One run, with the links to its report files and its AI traces without raw bodies                                                                          |
+| `GET /api/spaces/{space}/runs/{runId}/ai-steps/{actionId}/trace`    | ro     | The full trace of an AI step of a run, raw bodies included                                                                                                |
+
+`GET /api/agent/context` lists what the instance supports under `capabilities.aiStep`; the bodies and the events are
+described in `/llms/api.md` of the instance.
 
 Access levels: `ro` is read-only access to the space, `rw` is read-write, and `admin` is space admin. With read-only
 access, the answers carry the captures without their login passwords.
@@ -67,7 +81,8 @@ and the agent binds a job to them by their ID.
 | 401    | Not logged in                                                                            |
 | 403    | No access to the space, or the space does not exist. With `code: "licenseLimit"`, the edition limit is reached. |
 | 404    | No such object in this space                                                             |
-| 409    | The `id` you chose on create is already in use                                           |
+| 409    | The `id` you chose on create is already in use, or an AI step has no values to try on: run a Test capture |
+| 413    | The body of an AI step preview, trial or assistant call is over 8 MB                     |
 
 A `POST` or `PUT` from another origin is refused, even with the session cookie.
 

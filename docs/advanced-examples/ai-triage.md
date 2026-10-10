@@ -81,8 +81,8 @@ Switch on **Advanced**, and build this flow:
 7. **Conditional block**: **Variable** `page_now`, **Condition operation** **not equals**, **Condition value** `1`.
    Inside it, add a **Break**: when the answer is no, the run stops and nobody is paged.
 
-Save the job, click **Test capture**, then open the AI step and click **Try it**. The trial shows the four values and
-the reasons of the AI, and saves nothing. See [Try it](../jobs/ai-step.md#try-it).
+In the AI step, click **Try it**. When the job has no run yet, click **Run a Test capture of the actions before it**
+first. The trial shows the four values and the reasons of the AI, and saves nothing. See [Try it](../jobs/ai-step.md#try-it).
 
 :::tip Describe it instead
 On the first screen of a new AI step, write what you want, for example "Look at the error count. Decide if someone must
