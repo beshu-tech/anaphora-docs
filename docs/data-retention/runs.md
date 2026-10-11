@@ -30,6 +30,8 @@ Each time a job runs, Anaphora makes a run record. Use it to:
 
 Click an **Error** or **Delivery issue** tag to see the details.
 
+When a filter or a sort is on, **Clear**, at the top of the page next to **Delete ALL**, removes them.
+
 ## Retries and attempts
 
 A retry is not a separate run. Anaphora lists the retries under the run that failed first, and the **Attempts** column

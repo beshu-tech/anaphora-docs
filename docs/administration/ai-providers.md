@@ -62,11 +62,12 @@ stays in the field, also when the list does not have it. The first model of the 
 
 **Test** opens the **Test the AI provider** window. Its prompt starts as "Say hello in five words or fewer." **Send test
 prompt** sends your prompt and three small checks: a tool call, a JSON answer and an image. Under the prompt, the
-window says "The Test makes up to five model calls: your prompt and three small checks. Their tokens count on the budget
-of the provider." The JSON check first sends a JSON schema of the answer (`json_schema`, strict), as an AI step with
-**Fills in** rows sends it. Only when the endpoint refuses the schema, or the answer does not fit it, does the check ask
-for a JSON object with no schema: the fifth model call. The Test uses the key, the endpoint and the model of the
-form. The window shows the answer, then **What this model can do**:
+window says "The Test makes four or five model calls: your prompt, a check of tools, one or two checks of JSON answers
+and a check of images. Their tokens count on the budget of the provider." The JSON check first sends a JSON schema of
+the answer (`json_schema`, strict), as an AI step with **Fills in** rows sends it. When that does not prove the schema
+(the endpoint refuses it, the answer does not fit it, or the call fails), the check asks for a JSON object with no
+schema: the fifth model call. The Test uses the key, the endpoint and the model of the form. The window shows the
+answer, then **What this model can do**:
 
 - **Answers a prompt**.
 - **Uses tools**. An AI step with tools needs it: **Look at earlier runs**, **Do exact math**, **Remember between
@@ -74,10 +75,19 @@ form. The window shows the answer, then **What this model can do**:
 - **Gives structured answers (JSON)**. When the answer is **No**, an AI step with several variables asks for JSON in its
   instructions, and reads the text. An AI step sends its JSON schema to the provider only when the Test proved the
   schema. A provider tested before this check must be tested again to get it. Until then, its AI steps send what they
-  sent before.
+  sent before. **What the model gets** of a step says how its request asks for the answer: see
+  [Try it](../jobs/ai-step.md#try-it).
 - **Reads images**. When the answer is **No**, **Send the snapshots as images** is off in the AI steps of this provider.
 
 Under a **No**, a short line says why, for example "The endpoint refused an image."
+
+The Test also records two things that the window does not list:
+
+- Whether the schema is proved: after a Test, always yes or no. The API gives the reason of a no
+  (`reasons.jsonSchema`). When the call with the schema fails, its error shows under **Details** and in the log of
+  Anaphora.
+- Whether the model writes hidden reasoning. Unless the Test saw none, the token cap that Anaphora sets for an AI step
+  makes room for it: see [Guardrails](../jobs/ai-step.md#guardrails).
 
 ![The Test the AI provider window: the answer of the model, then Answers a prompt, Uses tools and Gives structured answers: Yes; Reads images: No](images/ai-provider-test.png)
 
@@ -128,7 +138,7 @@ with the error `The AI answer is not a number`. This way, the job never takes a 
 read. Ask the model for one number only, and set a small **Answer length cap**. With several variables, the model answers
 one JSON object, and Anaphora checks each variable: a wrong value fails the step and names the variable. An answer that
 is not valid JSON gets one more model call to correct it: see [Fills in](../jobs/ai-step.md#fills-in). A **yes/no**
-variable holds `1` or `0`, so compare it with `1`.
+variable holds `1` or `0`. A **Conditional block** on it offers **is Yes** and **is No**.
 
 ### The Kibana AI Triage template
 

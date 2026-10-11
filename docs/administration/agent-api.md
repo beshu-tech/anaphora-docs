@@ -59,7 +59,7 @@ The API applies the same access checks and edition limits as the pages.
 | `DELETE /api/spaces/{space}/blueprints/{blueprintId}`               | admin  | Deletes a job template                                                                                                                                                                                          |
 | `GET /api/spaces/{space}/delivery-interfaces`                       | ro     | Delivery interfaces, without secrets                                                                                                                                                                            |
 | `GET /api/spaces/{space}/ai-providers`                              | ro     | AI providers, without API keys, with the tokens and calls of the last 24 hours and 7 days, by run type                                                                                                          |
-| `POST /api/spaces/{space}/ai-providers/{providerId}/test`           | rw     | The provider Test; it also records what the model can do. A Test whose prompt gets no answer records nothing                                                                                                    |
+| `POST /api/spaces/{space}/ai-providers/{providerId}/test`           | rw     | The provider Test; it also records what the model can do, and whether it writes hidden reasoning. A Test whose prompt gets no answer records nothing                                                          |
 | `GET /api/spaces/{space}/runs`                                      | ro     | Runs, one page at a time, without AI traces                                                                                                                                                                     |
 | `GET /api/spaces/{space}/runs/{runId}`                              | ro     | One run, with the links to its report files and its AI traces without raw bodies                                                                                                                                |
 | `GET /api/spaces/{space}/runs/{runId}/ai-steps/{actionId}/trace`    | ro     | The full trace of an AI step of a run, raw bodies included                                                                                                                                                      |
@@ -99,7 +99,12 @@ A `PUT` of a built-in template stores a copy for the space, with its own `id`: t
 the built-in id updates that copy, and the list shows the copy in place of the built-in template.
 
 Send `nextActions`, the actions after the step, to the assistant: it then proposes no Conditional block with a
-**Break** that the flow already has.
+**Break** that the flow already has. An assistant estimate (`estimate: true`) of a chat that may try the step (its last
+message asks for a trial, or `mayTry: true`) counts three model calls, else two.
+
+Send the values of a Test capture with its `startedAt`: the model is told when its values were captured. Without it,
+the model gets the start of the trial. The `answerFormat` of a preview says how the request asks for the answer
+(`schema`, `jsonObject` or `instructions`); `outputSchema` is there only when the request sends it.
 
 `run`, `preview` and `test` answer with a stream (`text/event-stream`). The last event, `end`, carries the result. A
 preview or a test takes as long as the page takes to load, often 10 to 60 seconds.

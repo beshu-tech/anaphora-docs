@@ -142,7 +142,8 @@ action fails. The job editor checks equations when you save the job.
 | **Break**             | Stop the run here, without sending                                 | Skip report if threshold not met |
 
 A **Conditional block** can also test a variable that an **AI step** fills. See
-[A number in a condition](../administration/ai-providers.md#a-number-in-a-condition).
+[A number in a condition](../administration/ai-providers.md#a-number-in-a-condition). On a **yes/no** variable, the
+block offers **is Yes** and **is No**: see [Fills in](./ai-step.md#fills-in).
 
 ### Example: multi-source report
 

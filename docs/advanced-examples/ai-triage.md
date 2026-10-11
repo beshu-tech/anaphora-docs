@@ -78,9 +78,9 @@ Switch on **Advanced**, and build this flow:
      Remove an incident when the errors are back to normal.
      ```
    - **Guardrails**: leave them empty. Closed, the section says the limits that apply, for example "Stops after 8
-     model calls or 29,000 tokens. Anaphora sets these limits from the step."
-7. **Conditional block**, after the AI step: **Variable** `page_now`, **Condition operation** **not equals**,
-   **Condition value** `1`. Inside it, add a **Break**: when the answer is no, the run stops and nobody is paged. This
+     model calls or 45,000 tokens. Anaphora sets these limits from the step."
+7. **Conditional block**, after the AI step: **Variable** `page_now`, **Condition** **is No**. The card of the block
+   says "page_now is No". Inside it, add a **Break**: when the answer is no, the run stops and nobody is paged. This
    block and its **Break** decide when the report goes out. The AI step only fills `page_now`.
 
 In the AI step, click **Try it**. When the job has no run yet, click **Run a Test capture of the actions before it**
