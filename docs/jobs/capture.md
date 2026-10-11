@@ -119,14 +119,14 @@ flowchart LR
 
 ### Data extraction actions
 
-| Action               | Description                    | Example                  |
-|----------------------|--------------------------------|--------------------------|
-| **Capture value**    | Extract text into variable     | Error count, status text |
-| **Capture snapshot** | Screenshot element to variable | Chart, panel, full page  |
-| **Calculate**        | Arithmetic on variables        | `errors / total * 100`   |
-| **AI**               | Process captured data with AI  | Summarize a dashboard    |
+| Action               | Description                                    | Example                  |
+|----------------------|------------------------------------------------|--------------------------|
+| **Capture value**    | Extract text into variable                     | Error count, status text |
+| **Capture snapshot** | Screenshot element to variable                 | Chart, panel, full page  |
+| **Calculate**        | Arithmetic on variables                        | `errors / total * 100`   |
+| **AI step**          | A model reads the captures and fills variables | Summarize a dashboard    |
 
-The **AI** step opens in its own page: see [The AI step](./ai-step.md).
+The **AI step** opens in its own page: see [The AI step](./ai-step.md).
 
 :::note Equation limits
 An equation in a **Calculate** action runs in a separate process, with 256 MB of memory and 5 seconds of time. It
@@ -141,7 +141,7 @@ action fails. The job editor checks equations when you save the job.
 | **Conditional block** | Run nested actions when a variable meets a condition (or does not) | Only notify if errors > 0        |
 | **Break**             | Stop without sending                                               | Skip report if threshold not met |
 
-A **Conditional block** can also test the number that an **AI** action returns. See
+A **Conditional block** can also test a variable that an **AI step** fills. See
 [A number in a condition](../administration/ai-providers.md#a-number-in-a-condition).
 
 ### Example: multi-source report

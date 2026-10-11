@@ -78,19 +78,20 @@ conditions decide whether the report is sent. Use the **Break** action to skip d
 
 ## AI-powered analysis
 
-The **AI** step of a capture flow asks an AI provider about what the flow captured:
+The **AI step** of a capture flow asks an AI provider about what the flow captured:
 
 ```
 Capture pages and values -> AI step fills variables -> Conditional block, report, delivery
 ```
 
-- One call fills several variables, each with a type: text, number, yes/no or HTML.
+- One answer fills several variables, each with a type: text, number, yes/no or HTML.
 - The AI can look at earlier runs of the job, do exact math, read the captured pages when it needs them, and keep a
   notebook between runs.
 - The AI decides; the flow acts. A **Conditional block** and a **Break** act on what the AI fills.
 - **Try it** runs the step on the values of the last run, and saves and sends nothing. An assistant can write the step
   from your words.
-- Hard limits stop a step that runs too long, on top of the token budget of the provider.
+- Guardrails stop a step that makes too many model calls, spends too many tokens or runs too long, on top of the
+  token budget of the provider.
 - Works with any AI provider that uses the OpenAI API format.
 
 See [The AI step](./jobs/ai-step).

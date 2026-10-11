@@ -22,7 +22,7 @@ the pages themselves below it.
 
 ## Before you start
 
-The **AI** step needs an AI provider. Add one under **AI Providers** in the sidebar, with the API key of your
+The **AI step** needs an AI provider. Add one under **AI Providers** in the sidebar, with the API key of your
 provider.
 
 ## Steps
@@ -40,7 +40,7 @@ provider.
 
 ### 3. Capture
 
-Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI** step below them:
+Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI step** below them:
 
 ![The capture flow: two Navigate actions, for Hacker News and Lobsters, then an AI action that writes the summary variable](images/ai-news-collation-capture.png)
 
@@ -48,7 +48,7 @@ Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI*
    - **Connector**: **Web**.
    - **URL**: the page, for example `https://news.ycombinator.com`.
    - Tick **Take snapshot**.
-2. **AI**: the step opens in its own page. Click **Set it up by hand instead**, then fill in the simple view:
+2. **AI step**: the step opens in its own page. Click **Set it up by hand instead**, then fill in the simple view:
    - **Provider**: your AI provider.
    - **Instructions**: what to do with the pages, for example:
      ```
