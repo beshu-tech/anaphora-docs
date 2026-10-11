@@ -47,10 +47,16 @@ flowchart LR
 | **Provider** | Type of AI provider                                   | `OpenAI`, `DeepSeek`, `Custom (OpenAI API compatible)` |
 | **Endpoint** | OpenAI-compatible base URL (only for a custom provider) | `https://api.openai.com/v1`    |
 | **API key**  | Authentication token                                  | `sk-...` (stored encrypted)    |
-| **Model**    | Model to use. Suggestions need the API key.           | `gpt-5.2`                      |
+| **Model**    | Model to use: one of the list, or a name you type. The list needs the API key. | `gpt-5.2`     |
 
 4. Click **Test**
 5. Click **Save**
+
+The **Model** field is a list that you can search. The note under it says "Pick a model of the list, or type the name
+the vendor gives it. The list shows only models that chat." Embedding, rerank, speech, image and moderation models are
+not in the list. A name that the list does not have shows as `Use "<name>"`: click it to use that name. A saved name
+stays in the field, also when the list does not have it. The first model of the list goes in only when you change the
+**Provider**, or, for a new provider, while the field still holds the default model.
 
 ### What this model can do
 
@@ -76,8 +82,8 @@ model can do** on the provider form shows the result and when the test ran. AI s
 type, the model or the endpoint clears the result: click **Test** again after the change.
 
 When the model does not answer the prompt, the Test fails. The window shows one sentence that says what to correct,
-for example "The model did not answer. Correct the model or the endpoint, then click Test again." or "The provider
-refused the API key. Correct the key, then click Test again." **Details** shows the error of the endpoint. A failed
+for example "The model did not answer. Correct the model or the endpoint, then send the test again." or "The provider
+refused the API key. Correct the key, then send the test again." **Details** shows the error of the endpoint. A failed
 Test lists no ability and keeps nothing: **Save** stores nothing from it.
 
 ![The card What this model can do: tested today at 11:04, three abilities Yes and Reads images No](images/ai-provider-abilities.png)
@@ -150,7 +156,8 @@ Every AI provider shows the tokens it spent in the last 24 hours and in the last
 
 Usage counts every model call: scheduled and manual runs (a retry counts as a scheduled run), test runs, Test captures,
 trials of AI steps (**Try it**), the AI step assistant and the **Test** button on the provider form. The tooltip of each
-column splits the tokens and the calls by these kinds. Trials made before this split count as Test captures. Some
+column splits the tokens and the calls by these kinds. Trials made before this split count as Test captures: the
+tooltip names that line "Test captures and earlier trials". Some
 OpenAI-compatible services answer without usage data. Those calls count as zero, and the tooltip of the column says
 that the total is a lower bound.
 

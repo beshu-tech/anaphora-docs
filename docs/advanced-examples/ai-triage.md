@@ -61,7 +61,7 @@ Switch on **Advanced**, and build this flow:
      stopped sending, which is a 7. Compare with the earlier runs and with the open incidents in your notebook.
      Page only for a new incident, or for an open one that got worse.
      ```
-   - **Fills in**: click **Add variable** for each row.
+   - **Fills in**: click **Add variable** for each variable.
 
      | Name           | Type       | What it means                                                                                      |
      |----------------|------------|----------------------------------------------------------------------------------------------------|
@@ -93,7 +93,7 @@ the settings above, and add what it lacks. For "only page for…", the assistant
 Break after this step**, for example "The run stops when page_now is not 1.". **Add them** puts step 7 in the flow:
 check its condition against step 7 above.
 
-![The plan of the assistant for a triage step: severity and page_now, exact math, the job's notebook, its 5 changes with Undo, and one thing to check](images/ai-triage-plan.png)
+![The plan of the assistant for a triage step: severity and page_now, exact math, the job's notebook, its 5 changes with Undo, and a card for something to add to the flow](images/ai-triage-plan.png)
 :::
 
 ### 4. Compose

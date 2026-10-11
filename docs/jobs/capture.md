@@ -139,7 +139,7 @@ action fails. The job editor checks equations when you save the job.
 | Action                | Description                                                        | Example                          |
 |-----------------------|--------------------------------------------------------------------|----------------------------------|
 | **Conditional block** | Run nested actions when a variable meets a condition (or does not) | Only notify if errors > 0        |
-| **Break**             | Stop without sending                                               | Skip report if threshold not met |
+| **Break**             | Stop the run here, without sending                                 | Skip report if threshold not met |
 
 A **Conditional block** can also test a variable that an **AI step** fills. See
 [A number in a condition](../administration/ai-providers.md#a-number-in-a-condition).

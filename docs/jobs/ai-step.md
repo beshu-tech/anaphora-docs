@@ -46,7 +46,8 @@ robot mark shows the jobs that have an AI step.
    estimated". **In its words** is the summary of the assistant.
    - **Show the instructions it wrote, and why each choice** shows the instructions and the changes of the assistant.
      Each change has **Undo**: see [The assistant](#the-assistant).
-   - When the flow lacks something the plan needs, a card says what. For example, no snapshot comes before the step:
+   - When the flow lacks something the plan needs, a card says what. With nothing missing, there is no card. For
+     example, no snapshot comes before the step:
      **Something to add to the flow**, where **Add it** puts a **Navigate** with a snapshot before the step, and **I
      have one** sets the card aside. Or the report must go out only in some runs: **A Conditional block and a Break
      after this step**, for example "The run stops when page_now is not 1.", where **Add them** puts the block and its
@@ -60,7 +61,7 @@ robot mark shows the jobs that have an AI step.
    When **Try it** is off, its tooltip says why. With no run and no Test capture, click **Run a Test capture of the
    actions before it** first.
 
-   ![The Review screen: the plan in five sentences, the assistant's words, one thing to check, and the Try it button](images/ai-step-review.png)
+   ![The Review screen: the plan in five sentences, the assistant's words, a card for something to add to the flow, and the Try it button](images/ai-step-review.png)
 
 3. **Try.** The step runs once on those values. The screen shows the status, the values it filled in, **Why, in its
    words**, the tokens, and what the step costs in a week at the schedule of the job. **See every model call** and
@@ -72,7 +73,8 @@ robot mark shows the jobs that have an AI step.
 
    ![The Try screen: Success, severity 7 and page_now Yes, the AI's reasons, the cost of a week, and Done](images/ai-step-try.png)
 
-**Set it up by hand instead**, on the first screen, skips the assistant and opens the editor with the defaults. When the
+**Set it up by hand instead**, on the first screen, skips the assistant and opens the editor with the defaults. A step
+made either way gets the new settings: see [Steps set up before the AI step](#steps-set-up-before-the-ai-step). When the
 space has no AI provider, the first screen says so and links to **AI Providers**.
 
 Nothing is saved until you save the job. **Done** does not save it. When you click a link in the app and the job has
@@ -93,22 +95,27 @@ panel goes under the step, and a trial that starts or ends comes into view. Clic
   choose one".
 - **Instructions**: what the AI must do, in your words. Name the variables, and say what a good answer looks like.
   **Improve with the assistant** asks the assistant to make them clearer.
-- **Fills in**: the variables that the step fills, for example `severity · number`. **Edit** opens the table: the
-  **Name**, **Type** and **What it means** of each variable, **Add variable**, and a bin to remove one.
+- **Fills in**: the variables that the step fills, for example `severity · number`. **Edit** shows one block per
+  variable: **Name**, **Type** and a bin to remove it on one line, and under them **What it means**, a text box at the
+  full width. **Add variable** adds a block.
 - **It can**: one line per ability that is on, each with a switch. **+ More abilities** opens a menu with the
   abilities that are off, and with **Browse**, **Fetch from the web** and **MCP servers**, which are not available yet.
-- A grey line that says when the step stops, and who set the limits. For example:
+- A grey line that says when the step stops: the most model calls and the token cap. When every guardrail is empty,
+  "Anaphora sets these limits from the step." follows. "Change them in Guardrails." ends the line. For example:
   - "Stops after 8 model calls or 29,000 tokens. Anaphora sets these limits from the step. Change them in Guardrails."
     for a step with a tool;
-  - "Stops after one answer, or at 8,000 tokens. Anaphora sets these limits from the step. Change them in
-    Guardrails." for a step with no tool;
-  - "… You set them in Guardrails." when you set a limit yourself;
+  - "Stops after 2 model calls or 30,000 tokens. …" for a step with no tool that answers in JSON (see
+    [Fills in](#fills-in)): one answer, and one more model call when the answer is not valid JSON;
+  - "Stops after 1 model call or 8,000 tokens. …" for a step with no tool and one plain variable;
+  - "Stops after 8 model calls or 40,000 tokens. Change them in Guardrails." when a guardrail is set;
   - "No limit (a step set up as before has none)." for a step set up before the AI step existed.
 
-  See [Guardrails](#guardrails).
+  Until Anaphora has the estimate, the token cap reads "a token cap still being estimated". See [Guardrails](#guardrails).
 - Warnings, under the step, for a setting the step cannot work with. For example "With a tool on, the step needs at
   least 2 model calls. Raise Most model calls in Guardrails.", or an **Answer length cap** too small for the rows of
   **Fills in** (Anaphora then uses 256 tokens).
+- For a step set up before the AI step that sends more than 50,000 tokens a run, a warning with **Use the new
+  settings**: see [Steps set up before the AI step](#steps-set-up-before-the-ai-step).
 - **Done** goes back to the flow. **Try it** runs the step once: see [Try it](#try-it). When there are no values to try
   on, "Run a Test capture first." and the button **Run a Test capture of the actions before it** show next to it.
 
@@ -159,9 +166,9 @@ Each model call sends the whole conversation again. That is why a step with tool
 
 ### Advanced
 
-Switch on **Advanced** to see every setting. The line under the title says "Advanced on · Every section, with all its
-settings", and **Back to the simple view** switches back. **Fills in** shows its table, and four sections open under
-it. Each section says in one line what it is set to, also when it is closed.
+Switch on **Advanced** to see every setting. The line under the title says "Advanced on: every section, with all its
+settings.", and **Back to the simple view** switches back. **Fills in** shows the block of each variable, and four
+sections open under it. Each section says in one line what it is set to, also when it is closed.
 
 #### Can see
 
@@ -180,17 +187,26 @@ The header of the rows says how many rows go, for example "Rows sent: 2 of 3". I
 "Rows offered: 2 of 3". Closed, the section says it in one sentence, for example "Sends 2 ticked rows." or "Offers 3
 rows. The AI reads the ones it needs."
 
-Each row shows its value and its size, for example "about 661 tokens". The values come from the newest Test capture of
-this page, else from the Test capture kept for the job. A snapshot row has **Show the page text**. It opens **Page text
-of …**: the text that the model reads, with its size. With no Test capture, it says "No page text yet. Run a Test
-capture."
+Each row shows its value and its size, for example "about 661 tokens". The size is the size of the text that the step
+sends for the row. One calculation gives the size of a row, the estimate of **What the model gets** and the request of a
+run, so they agree. The values come from the newest Test capture of this page, else from the Test capture kept for the
+job. A snapshot row shows the top of the page in a thumbnail of 240 × 160 px: click it to see the whole image. **Show
+the page text** opens **Page text of …**: the text that the model reads, with its size. With no Test capture, it says
+"No page text yet. Run a Test capture."
 
 The page text is the text of the page as compact lines: one element a line, a link once with its address, at most
-50,000 characters a snapshot. A step set up before the AI step existed sends the page text as it always did.
+50,000 characters a snapshot. A text that only separates, such as `|`, `·`, `•`, `-` or `—`, is left out. A step set up
+before the AI step sends the page text as JSON, as it always did: **Page text of …** then shows the JSON and says "A
+step set up as before sends the page text as JSON."
 
 The box under the rows gives the size in tokens: **Sent at the start** and, in **The AI chooses** mode, **If the AI reads
 every row once**. A row that the AI reads in model call 1 is paid again in each later model call. **Guardrails** shows
-the real total of the last trial.
+the real total of the last trial. With no estimate, the box says why:
+
+- "No estimate yet: the step is not complete. Instructions: fill it in." The sentence names the part to fill in.
+- "No estimate yet: it needs the values of a run or of a Test capture."
+- "No estimate: the Preview of the step failed. Open What the model gets to see why."
+- "Estimating what is sent at the start…" while the estimate is on its way.
 
 **Send the snapshots as images** also sends the snapshots as pictures. Each image costs tokens, on every run. The box is
 off when the model does not read images, or when Anaphora does not know yet. The line under the box says why, for
@@ -218,6 +234,10 @@ The tools of the step, in two groups.
 Each variable in **Variables it reads** must be a variable of the flow. When you rename or remove one, the job cannot
 be saved until you remove it from the list too.
 
+Closed, the section names the tools that are on, for example "Look at earlier runs, Do exact math, and the notebook
+tools." The notebook tools come with **This job's notebook** under **Remembers**: with no other tool, the section says
+"Uses the notebook tools. No other tool." With no tool at all, it says "No tool: one answer from what it sees."
+
 #### Remembers
 
 ![Remembers: This job's notebook, What to keep, Longest notebook 4000 characters, and the notebook now with Edit, History and Clear](images/ai-step-remembers.png)
@@ -231,12 +251,19 @@ be saved until you remove it from the list too.
 started and the last severity." **Longest notebook** is the limit in characters, 4,000 by default. The AI cannot save a
 longer text: Anaphora refuses it and tells the AI the limit.
 
-When the job is saved, **The notebook now** shows the text, its size, and when it changed and by whom: "by the run of
-19:57", a link to the runs of the job, or "by a person".
+When the job is saved, **The notebook now** shows the text, its size against the limit of the saved job, and when it
+changed and by whom, for example "52 of 4,000 characters · changed Today at 11:21 by a person". A change by a run says
+"by the run of 19:57", a link to the runs of the job.
 
-- **Edit** changes the text. Its **Save** stores the notebook at once, not with the job.
+- **Edit** changes the text. Its **Save** stores the notebook at once, not with the job. **Save** is off while the text
+  is longer than the limit of the saved job. A **Save** of the text as it was changes nothing, and adds nothing to
+  **History**.
 - **History** lists the last 50 versions, each by a run or by a person.
 - **Clear** empties the notebook. **History** keeps the text.
+
+The limit of the saved job is the largest **Longest notebook** of its AI steps. When you set a larger **Longest
+notebook** in this step, a second line says so, for example "The new longest notebook, 20,000 characters, applies after
+you save the job." Until you save the job, **Save** keeps to the old limit.
 
 A run saves the notebook when the step ends, and only when the step succeeds or stops with **Keep what is filled in and
 go on**. Trials and Test captures read the notebook but never write it. A copy of the job, and a job made from a
@@ -260,9 +287,12 @@ set from the step. Type a number to set your own.
 The token cap is checked between model calls. A model call that starts under the cap ends, so a run can go over the
 cap by the size of its last model call.
 
-A step set up before the AI step existed (no **Fills in** table, no tool, no limit set) gets no limit at all: one model
-call, no time limit and no token cap, as before. Its fields show **No limit**, and **Most model calls** shows 1. When
-you set one field, every limit applies.
+With no tool, the step makes one model call, and one more when its JSON answer is not valid. The grey line counts these
+model calls, so it can say fewer than **Most model calls**.
+
+A step set up before the AI step gets no limit at all: one model call, no time limit and no token cap, as before. Its
+fields show **No limit**, and **Most model calls** shows 1. When you set one field, every limit applies. See [Steps set
+up before the AI step](#steps-set-up-before-the-ai-step).
 
 **When a limit is reached**:
 
@@ -275,6 +305,22 @@ the job in runs a week, **This step, a week**, and the budget of the provider, w
 not fit in the budget, a warning says so: when the budget is reached, every job of that provider pauses. Send less to
 the model, run the job less often, or raise the budget. **Ask the assistant for a cheaper setup** asks the assistant for
 help.
+
+### Steps set up before the AI step
+
+An AI step that you add now gets the new settings, with the assistant or with **Set it up by hand instead**: the page
+text as short lines, at most 50,000 characters a snapshot, a token cap and a time limit. When you save a new job, all
+its AI steps get them, also the steps that come from a template. When you save a job that exists, only the AI steps that you added
+get them, also a step that you clone in the flow.
+
+A step that was saved before the AI step keeps what it sent: the page text as JSON, and no limit. A copy of a job or of
+a template keeps its steps as they are. The step changes only when you give it a new setting, for example a tool or a
+limit, or when you click **Use the new settings**.
+
+When the estimate of such a step is over 50,000 tokens, the editor shows a warning, for example "This step was set up
+before the AI step. It sends the page text as JSON, about 387,917 tokens a run, with no token cap." and "The new
+settings send the page text as short lines, at most 50,000 characters a snapshot, and add a token cap and a time
+limit." **Use the new settings** changes the step in the form, as any other change does. Save the job to keep it.
 
 ## Try it
 
@@ -337,8 +383,9 @@ to it too.
 
 The **Assistant** panel is above the trial. It works on the same values as **Try it**. Write a question or a change in
 **Ask, or say what to change**, and click **Send**. The line under the field says what an answer costs, for example
-"An answer costs about 25,200 tokens. It tries the step only when you ask. A trial adds its own tokens." After the
-answer, "This answer: 24,945 tokens" says what it cost.
+"An answer costs about 14,000 tokens. It tries the step only when you ask. A trial adds its own tokens." The estimate
+counts two model calls: one that makes the changes, and one that answers. After the answer, "This answer: 12,460
+tokens" says what it cost.
 
 The assistant may change this step, and only this step: the title, the **Instructions**, **Fills in**, **Can see**, the
 tools that stay in Anaphora, **Remembers** and **Guardrails**. Each change is a card with its reason, and goes into the
@@ -369,6 +416,10 @@ The assistant tries the step only when you ask for it, for example "try it", "te
 **Try** screen of a new step. It tries at most three times in one answer. Each trial shows as one line with its answer and tokens, and
 **Open** opens its model calls. It never saves the job. Its text shows with simple formatting, such as bold, lists and
 code. Its links open only web addresses.
+
+The assistant writes a time as the editor shows it, in your time zone and with no zone name, for example "the run of
+Oct 11, 16:02" or "the trial of Oct 11, 16:03". It says a **yes/no** value as "yes" or "no". It gives each value of a
+trial word for word, as the trial shows it.
 
 Its tokens count on the provider budget, like a trial. One answer stops at 12 model calls, 60,000 tokens or 120
 seconds. The answer then says which limit stopped it, and the changes so far stay. A fourth trial in one answer is
@@ -441,7 +492,8 @@ Test capture fails, there is no **AI** tab: the traces of the AI steps show unde
   next model call. The provider list splits the tokens by what spent them.
 - The guardrails that you leave empty come from the step: see [Guardrails](#guardrails). The grey line under **It can**
   shows them.
-- A step set up as before, with one variable and no tool, sends what it always sent.
+- A step set up before the AI step sends what it always sent, with no limit, until you change it: see
+  [Steps set up before the AI step](#steps-set-up-before-the-ai-step).
 - The values that the editor sends for a trial, a Preview or the assistant can be up to 8 MB. When they are larger
   with the images, the editor sends the snapshots as page text only, and the **Assistant** panel says so. When they are
   still too large, the editor says "The Test capture is over 8 MB as page text. Untick snapshots under Can see, or
