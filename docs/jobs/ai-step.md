@@ -27,7 +27,7 @@ of the step, of its trials and of the assistant all count on the token budget of
    the step after the actions that capture what the AI must read.
 
 The step opens in its own page. On the left, **All actions** goes back to the flow, and the list under it opens another
-action. A new step starts with three short screens. A step that exists opens in the editor. On the **Jobs** list, a
+action. An action with no title shows its type and what tells it apart, for example "Capture value · errorsNow". A new step starts with three short screens. A step that exists opens in the editor. On the **Jobs** list, a
 robot mark shows the jobs that have an AI step.
 
 ## The first time: Describe, Review, Try
@@ -42,7 +42,8 @@ robot mark shows the jobs that have an AI step.
    ![The Describe screen: the field "What should this step do?", four starting points, "Set it up by hand instead" and Continue](images/ai-step-describe.png)
 
 2. **Review.** **Here is the plan** lists, with check marks, what the step fills in, what it sees, what it does, what
-   it remembers and when it stops. **In its words** is the summary of the assistant.
+   it remembers and when it stops. Until Anaphora has the estimate, the token cap reads "a token cap still being
+   estimated". **In its words** is the summary of the assistant.
    - **Show the instructions it wrote, and why each choice** shows the instructions and the changes of the assistant.
      Each change has **Undo**: see [The assistant](#the-assistant).
    - When the flow lacks something the plan needs, a card says what. For example, no snapshot comes before the step:
@@ -65,6 +66,8 @@ robot mark shows the jobs that have an AI step.
    words**, the tokens, and what the step costs in a week at the schedule of the job. **See every model call** and
    **What the model gets** open the details (see [Try it](#try-it)). To change something, write in **Not what you
    wanted? Say what to change**, or click **Try again**. After a trial that failed, **Try again** is under the error.
+   When a limit stopped the trial, **Raise the cap and try again** raises that limit (its tooltip says from what to
+   what) and runs the step again.
    **Done** opens the editor in the simple view. **Adjust by hand** opens it with **Advanced** on.
 
    ![The Try screen: Success, severity 7 and page_now Yes, the AI's reasons, the cost of a week, and Done](images/ai-step-try.png)
@@ -103,6 +106,9 @@ panel goes under the step, and a trial that starts or ends comes into view. Clic
   - "No limit (a step set up as before has none)." for a step set up before the AI step existed.
 
   See [Guardrails](#guardrails).
+- Warnings, under the step, for a setting the step cannot work with. For example "With a tool on, the step needs at
+  least 2 model calls. Raise Most model calls in Guardrails.", or an **Answer length cap** too small for the rows of
+  **Fills in** (Anaphora then uses 256 tokens).
 - **Done** goes back to the flow. **Try it** runs the step once: see [Try it](#try-it). When there are no values to try
   on, "Run a Test capture first." and the button **Run a Test capture of the actions before it** show next to it.
 
@@ -120,7 +126,9 @@ row. You read the reasons in the trial and on the Runs page. They never go into 
 | **yes/no** | Yes or no, stored as `1` (yes) or `0` (no) |
 | **HTML**   | An HTML fragment for the report             |
 
-A name follows the rules of any variable name, and is unique in the job. The name `reasoning` is not available.
+A name follows the rules of any variable name, and is unique in the job. The name `reasoning` is not available. A
+name that breaks a rule shows the reason under its row, and **Try it** and **What the model gets** refuse to start
+until you correct it, for example "Row 2 of Fills in: the name severity is already a variable of this job."
 
 **What it means** goes to the AI with the name. Say the range and what each value means, for example
 `0 to 10. 7 and above: page someone now.` For a **yes/no**, say in words when the answer is yes, not `1` and `0`: the
@@ -290,8 +298,10 @@ values. A template cannot be tried: try the step in a job made from the template
 The **Trial** panel shows:
 
 - the status: **Success**, a stop such as **Stopped at the token cap**, or **Error**, with the time, the model calls,
-  the tool calls, the tokens and the duration, for example "2 model calls · 1 tool call · 1,664 tokens · 4.2 s". After
-  an error, **Details** shows the answer as the model wrote it;
+  the tool calls, the tokens and the duration, for example "2 model calls · 1 tool call · 1,664 tokens · 4.2 s". A stop
+  says whether the step kept values, for example "Stopped at the model call limit after 1 model call. Nothing was
+  filled." When no model call was made (for example the budget is spent), it says "No call was made." After an error,
+  **Details** shows the answer as the model wrote it;
 - the values it ran on, for example "On the values of the run of Oct 10, 13:51. No page was opened, and nothing was
   saved or delivered.";
 - the value of each variable: a **yes/no** as Yes or No, and **HTML** as its text;
@@ -299,7 +309,7 @@ The **Trial** panel shows:
 - **See every model call** and **What the model gets**;
 - the cost of a week at the schedule of the job, and its share of the provider budget, for example "At the job's
   schedule (every 15 minutes), this step costs about 1.1M tokens a week: 12% of the weekly budget of OpenAI." When the
-  job is suspended, the line adds "The job is suspended now.";
+  job is suspended, the line adds "The job is suspended now.". A daily job says "Daily at 04:05, this costs about …";
 - the notebook: what the trial would write, line by line, or "Not changed: the step wrote nothing new.";
 - after a second trial, the previous trial in one line. **Compare** shows the two answers side by side, and marks each
   value that changed, or says "No change".
@@ -307,14 +317,15 @@ The **Trial** panel shows:
 **See every model call** opens **Every model call of the trial**. Each model call shows what it did ("Asks for Do exact
 math", "Answers"), its tokens and time. Open one to see the model request: its size and, for the first model call, the
 estimate by part, for example "Instructions 306 · Fills in 136 · Can do 445 · Notebook 266"; the model response and how
-it ended ("ended with an answer", "asked for tools"); and each tool call with its input and output. **Copy trace** and
+it ended ("ended with an answer", "asked for tools"); and each tool call with its input and output. A long tool output is cut in the trace, and says so, for example "Cut:
+the trace keeps the first 8,192 characters of 21,394." **Copy trace** and
 **Raw JSON** are at the top. With two or more model calls, **Expand all** is there too.
 
 ![Every model call of the trial: model call 1 asks for Do exact math, with the request, the response and the tool call; model call 2 answers](images/ai-step-every-step.png)
 
 **What the model gets** opens what the first model call sends: the system message, the user message, the JSON schema of
 the answer (from **Fills in**), the tools it may call (from **Can do**), the tokens of each part, and **Not sent, and
-why**. **Copy as text**, **View the messages as JSON** and **Copy the step as JSON** are at the end. Anaphora builds it
+why**. A variable of an earlier action that has no value in these values shows there as "Empty in this run." **Copy as text**, **View the messages as JSON** and **Copy the step as JSON** are at the end. Anaphora builds it
 with the same code as a run, and calls no model: it spends no token. Before the first trial, the **Trial** panel links
 to it too.
 
@@ -354,8 +365,8 @@ Other things it only proposes, as a card for you to decide:
 - **A tool that reaches out of Anaphora**: not available yet. **Set aside** closes the card.
 - **Something to check** in another part of the flow: **Set aside** closes the card.
 
-The assistant tries the step only when you ask for it, for example "try it" or "run a trial", and on the **Try** screen
-of a new step. It tries at most three times in one answer. Each trial shows as one line with its answer and tokens, and
+The assistant tries the step only when you ask for it, for example "try it", "test it" or "run the step", and on the
+**Try** screen of a new step. It tries at most three times in one answer. Each trial shows as one line with its answer and tokens, and
 **Open** opens its model calls. It never saves the job. Its text shows with simple formatting, such as bold, lists and
 code. Its links open only web addresses.
 
@@ -390,7 +401,9 @@ access to the space.
 
 The **AI** column of the **Runs** page says what the AI steps of each run cost, for example "1.1k tokens · 2 model
 calls". Click its header to sort the runs by the tokens of their AI steps. When a limit stops a step, the column names
-the limit in yellow, for example "Token cap · 5 model calls". When a step fails, it shows "AI error" in red. A run with
+the limit, for example "Token cap · 5 model calls": in yellow when the step kept what it filled and the run went on, in
+red when the run failed. When a step fails, it shows "AI error" in red. A run that a **Break** stopped has the status
+**Stopped at Break**. The message of a failed run names what happened, with no technical prefix. A run with
 no AI step shows "no AI".
 
 Click the cell to open the **AI trace** of the run. It has the same content as a trial: the status, **Why, in its
