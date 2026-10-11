@@ -88,7 +88,8 @@ and the agent binds a job to them by their ID.
 A call to `/api/spaces/…` from another origin is refused (403), whatever its method, even with the session cookie.
 `GET /api/agent/context` answers every caller: with no session, it answers 401 and names the login page.
 
-A run that a **Break** stopped has the status `cancelled` in the API; the pages show it as **Stopped at Break**.
+A run that a **Break** stopped has the status `cancelled` in the API; the pages, and the earlier runs that an AI step
+reads, show it as **Stopped at Break**.
 
 A job write sets `stepVersion: 2` on each AI step that it adds: every AI step of a `POST`, and each AI step with a new
 id in a `PUT`. Such a step gets the new settings, as in the editor. A stored step keeps its form. A `PUT` of a job or a
@@ -105,6 +106,9 @@ message asks for a trial, or `mayTry: true`) counts three model calls, else two.
 Send the values of a Test capture with its `startedAt`: the model is told when its values were captured. Without it,
 the model gets the start of the trial. The `answerFormat` of a preview says how the request asks for the answer
 (`schema`, `jsonObject` or `instructions`); `outputSchema` is there only when the request sends it.
+
+A trial on a run reads the notebook that run read, and a trial on a Test capture the notebook now. The trace says
+which version it read (`notebook.read`).
 
 `run`, `preview` and `test` answer with a stream (`text/event-stream`). The last event, `end`, carries the result. A
 preview or a test takes as long as the page takes to load, often 10 to 60 seconds.

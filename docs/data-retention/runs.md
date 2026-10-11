@@ -6,7 +6,7 @@ keywords: [ job runs, execution history, run status, debugging, job monitoring, 
 
 # Runs
 
-![Runs page showing job execution history with job name, type, timestamp, duration, status, and attempts columns](images/runs.png)
+![The Runs page with two filters on, the job Checkout errors and the statuses Success and Stopped at Break: Clear next to Delete ALL, and the columns Job name, Type, Time, Duration, Status, Attempts, AI and Report](images/runs.png)
 
 The Runs section shows the execution history of your jobs, including successful captures, failures, and delivery status.
 
@@ -31,6 +31,8 @@ Each time a job runs, Anaphora makes a run record. Use it to:
 Click an **Error** or **Delivery issue** tag to see the details.
 
 When a filter or a sort is on, **Clear**, at the top of the page next to **Delete ALL**, removes them.
+
+The **AI** column says what the AI steps of each run cost: see [Runs](../jobs/ai-step.md#runs).
 
 ## Retries and attempts
 

@@ -83,15 +83,18 @@ answer, then **What this model can do**:
 
 Under a **No**, a short line says why, for example "The endpoint refused an image."
 
-The Test also records two things that the window does not list:
+When JSON answers work but the Test did not prove the schema, a line under **Gives structured answers (JSON)** says
+why, for example "The call with the answer schema failed, so a step asks for a JSON object without it. The error is
+under Details." The other reasons are "The endpoint refused the answer schema, …" and "The answer did not fit the answer
+schema, …". The line shows only after a Test, in the window and on the card under the form. After a reload, the card
+does not show it. The API gives it as `reasons.jsonSchema`. When the call with the schema fails, its error also goes
+to the log of Anaphora.
 
-- Whether the schema is proved: after a Test, always yes or no. The API gives the reason of a no
-  (`reasons.jsonSchema`). When the call with the schema fails, its error shows under **Details** and in the log of
-  Anaphora.
-- Whether the model writes hidden reasoning. Unless the Test saw none, the token cap that Anaphora sets for an AI step
-  makes room for it: see [Guardrails](../jobs/ai-step.md#guardrails).
+The Test also records whether the model writes hidden reasoning. The window does not list it. Unless the Test saw
+none, the token cap and the time limit that Anaphora sets for an AI step make room for it: see
+[Guardrails](../jobs/ai-step.md#guardrails).
 
-![The Test the AI provider window: the note "The Test makes four or five model calls", the answer "Hello!", then Answers a prompt, Uses tools, Gives structured answers (JSON) and Reads images: all Yes; Details, closed; and "Saved with the provider."](images/ai-provider-test.png)
+![The Test the AI provider window after a Test: the note "The Test makes four or five model calls", the answer "Hello!", then Answers a prompt, Uses tools, Gives structured answers (JSON) and Reads images: all Yes; under Gives structured answers (JSON), "The call with the answer schema failed, so a step asks for a JSON object without it. The error is under Details."; Details, closed; and "Saved with the provider."](images/ai-provider-test.png)
 
 When the Test runs on the saved settings of the provider, it keeps the result: the window says "Saved with the
 provider." Otherwise, it says "Save the provider to keep this result.": click **Save** to keep it. The card **What this
@@ -103,7 +106,7 @@ for example "The model did not answer. Correct the model or the endpoint, then s
 refused the API key. Correct the key, then send the test again." **Details** shows the error of the endpoint. A failed
 Test lists no ability and keeps nothing: **Save** stores nothing from it.
 
-![The card What this model can do: tested today at 11:04, three abilities Yes and Reads images No](images/ai-provider-abilities.png)
+![The card What this model can do after a reload: "Tested Today at 01:24.", and the four abilities Yes, with no line under Gives structured answers (JSON)](images/ai-provider-abilities.png)
 
 :::note Free edition
 The Free edition allows one AI provider per space.
@@ -169,7 +172,7 @@ runs instead of capturing the hour before, and its notebook replaces the throttl
 Every AI provider shows the tokens it spent in the last 24 hours and in the last 7 days (the **Tokens 24h** and
 **Tokens 7d** columns). You can give each window a budget. The windows roll: "the last 24 hours" is not "since midnight".
 
-![AI providers list with the two token columns](images/ai-budget-providers-list.png)
+![The AI Providers list with one provider, Deepseek (Beshu): Tokens 24h 1.2M, 79% of a budget of 1.5M, with a yellow bar; and Tokens 7d 2.2M, 44% of 5M, with a green bar](images/ai-budget-providers-list.png)
 
 Usage counts every model call: scheduled and manual runs (a retry counts as a scheduled run), test runs, Test captures,
 trials of AI steps (**Try it**), the AI step assistant and the **Test** button on the provider form. The tooltip of each
@@ -216,7 +219,7 @@ up. The card then says what will happen.
 ### Resuming paused jobs
 
 Raising the budget does not switch the paused jobs back on. On the AI Providers list, the **Paused jobs** column counts
-the jobs that the budget paused. Click **Resume** to switch those jobs back on, and only those. The question names the
+the jobs that the budget paused. The column shows only when a budget paused a job. Click **Resume** to switch those jobs back on, and only those. The question names the
 count, for example "Resume 1 job? It runs on its schedule again.", and the message after it says how many resumed:
 "1 job resumed." When the budget is still reached, the next AI call pauses the job again.
 

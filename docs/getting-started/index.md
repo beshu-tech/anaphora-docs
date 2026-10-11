@@ -103,7 +103,7 @@ deployments.
 - Advanced capture workflows for complex navigation paths
 - Multi-step browser automation for authenticated applications
 
-![Advanced capture mode with available browser actions](images/actions-dropdown.png)
+![Advanced capture mode: the menu of the + between two actions, with Navigate, Click, Type text, Capture snapshot, Capture value, AI step, Wait for visible and Reload, each with a line that says what it does](images/actions-dropdown.png)
 
 *Advanced mode has a full set of browser automation actions for complex workflows.*
 

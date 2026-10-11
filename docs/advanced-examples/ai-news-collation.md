@@ -42,7 +42,7 @@ provider.
 
 Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI step** below them:
 
-![The capture flow: two Navigate actions, for Hacker News and Lobsters, then an AI action that writes the summary variable](images/ai-news-collation-capture.png)
+![The capture flow, shown here for a job with other sources: two Navigate actions, Open the NPR headlines and Open the CNN headlines, then the AI step "Summarize the news", which fills summary](images/ai-news-collation-capture.png)
 
 1. **Navigate**, one for each source:
    - **Connector**: **Web**.
