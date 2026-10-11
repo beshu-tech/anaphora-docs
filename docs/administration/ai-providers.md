@@ -54,8 +54,10 @@ flowchart LR
 
 ### What this model can do
 
-**Test** sends your prompt and three small checks: a tool call, a JSON answer and an image. It uses the key, the
-endpoint and the model of the form. The **Test AI Provider** window shows the answer, then **What this model can do**:
+**Test** opens the **Test the AI provider** window. Its prompt starts as "Say hello in five words or fewer." **Send test
+prompt** sends your prompt and three small checks: a tool call, a JSON answer and an image. That is four model calls,
+and their tokens count on the budget of the provider. The Test uses the key, the endpoint and the model of the form.
+The window shows the answer, then **What this model can do**:
 
 - **Answers a prompt**.
 - **Uses tools**. An AI step with tools needs it: **Look at earlier runs**, **Do exact math**, **Remember between
@@ -66,12 +68,17 @@ endpoint and the model of the form. The **Test AI Provider** window shows the an
 
 Under a **No**, a short line says why, for example "The endpoint refused an image."
 
-![The Test AI Provider window: the answer of the model, then Answers a prompt, Uses tools and Gives structured answers: Yes; Reads images: No](images/ai-provider-test.png)
+![The Test the AI provider window: the answer of the model, then Answers a prompt, Uses tools and Gives structured answers: Yes; Reads images: No](images/ai-provider-test.png)
 
 When the Test runs on the saved settings of the provider, it keeps the result: the window says "Saved with the
-provider." Otherwise, click **Save** to keep it. The card **What this model can do** on the provider form shows the
-result and when the test ran. AI steps read it. A change of the provider type, the model or the endpoint clears the
-result: click **Test** again after the change. The tokens of the Test count on the budget of the provider.
+provider." Otherwise, it says "Save the provider to keep this result.": click **Save** to keep it. The card **What this
+model can do** on the provider form shows the result and when the test ran. AI steps read it. A change of the provider
+type, the model or the endpoint clears the result: click **Test** again after the change.
+
+When the model does not answer the prompt, the Test fails. The window shows one sentence that says what to correct,
+for example "The model did not answer. Correct the model or the endpoint, then click Test again." or "The provider
+refused the API key. Correct the key, then click Test again." **Details** shows the error of the endpoint. A failed
+Test lists no ability and keeps nothing: **Save** stores nothing from it.
 
 ![The card What this model can do: tested today at 11:04, three abilities Yes and Reads images No](images/ai-provider-abilities.png)
 
@@ -98,7 +105,7 @@ To copy or clone an AI provider into another space, you need admin access to the
 
 ## Using AI in jobs
 
-A job uses its AI provider through the **AI** step of an advanced capture flow. One call can fill several typed
+A job uses its AI provider through the **AI step** of an advanced capture flow. One answer can fill several typed
 variables, look at earlier runs, do exact math, and keep a notebook between runs. See
 [The AI step](../jobs/ai-step.md): every setting, **Try it**, the assistant, and the traces on the Runs page.
 
@@ -108,7 +115,8 @@ A **Conditional block** can test a **number** variable of an AI step. With one v
 must be a bare number, or hold exactly one number, for example `Severity: 7` or `7/10`. Any other answer fails the run
 with the error `The AI answer is not a number`. This way, the job never takes a branch on an answer that nobody can
 read. Ask the model for one number only, and set a small **Answer length cap**. With several variables, the model answers
-one JSON object, and Anaphora checks each variable: a wrong value fails the step and names the variable. A **yes/no**
+one JSON object, and Anaphora checks each variable: a wrong value fails the step and names the variable. An answer that
+is not valid JSON gets one more model call to correct it: see [Fills in](../jobs/ai-step.md#fills-in). A **yes/no**
 variable holds `1` or `0`, so compare it with `1`.
 
 ### The Kibana AI Triage template
@@ -127,7 +135,7 @@ edition does not have it. Every 15 minutes, the job:
    dashboard.
 
 The job sends the report at most once every 3 hours. When the space has exactly one AI provider, the new job uses it.
-With more than one, select the **Provider** in each AI action. With none, add an AI provider to the space first. The
+With more than one, select the **Provider** in each AI step. With none, add an AI provider to the space first. The
 template uses the public Kibana demo: change the URLs to your own Kibana.
 
 The [AI Triage](../advanced-examples/ai-triage.md) example builds the same job with one AI step. It looks at the earlier
@@ -140,9 +148,11 @@ Every AI provider shows the tokens it spent in the last 24 hours and in the last
 
 ![AI providers list with the two token columns](images/ai-budget-providers-list.png)
 
-Usage counts every call: scheduled runs, manual runs, retries, tests, previews, the **Test** button on the provider
-form, the trials of AI steps (**Try it**) and the AI step assistant. Some OpenAI-compatible services answer without usage data. Those calls count as zero, and the tooltip of the
-column says that the total is a lower bound.
+Usage counts every model call: scheduled and manual runs (a retry counts as a scheduled run), test runs, Test captures,
+trials of AI steps (**Try it**), the AI step assistant and the **Test** button on the provider form. The tooltip of each
+column splits the tokens and the calls by these kinds. Trials made before this split count as Test captures. Some
+OpenAI-compatible services answer without usage data. Those calls count as zero, and the tooltip of the column says
+that the total is a lower bound.
 
 ![Tooltip on a usage column](images/ai-budget-usage-tooltip.png)
 
@@ -169,7 +179,8 @@ up. The card then says what will happen.
 - The job that made the call is paused.
 - Every further AI call on that provider is refused until the window rolls over or you raise the budget.
 - A job that runs into a budget that another job used up is paused the same way.
-- A test, a preview, a trial or the assistant pauses no job: the budget refuses its next call. The assistant says so in
+- A test run, a Test capture, a trial, the assistant or the provider **Test** pauses no job: the budget refuses its
+  next call. The assistant says so in
   its panel, and the changes it made before stay.
 - The token columns turn green, yellow and red as the budget fills. A provider that reached its budget shows
   **Budget reached**.
@@ -189,7 +200,7 @@ the jobs that the budget paused. Click **Resume** to switch those jobs back on, 
 
 Tick **Notify the operator when a budget is reached** to send an alert over the channel of the health alerts. Tick
 **Also warn early, at** to send a warning at a percentage of the budget too (80% by default). Each pause of a job sends
-an alert that names the job. The early warning, and a "reached" alert with no job to pause (a test or a preview), go out
+an alert that names the job. The early warning, and a "reached" alert with no job to pause (for example a Test capture), go out
 at most once per window.
 
 Choose the channel under **Settings** > **Application** > **Health Monitoring**. You can set it without switching
