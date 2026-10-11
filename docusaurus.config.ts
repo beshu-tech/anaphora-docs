@@ -1,6 +1,7 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import unescapeImageText from './plugins/unescapeImageText';
 
 const config: Config = {
   title: 'Anaphora Documentation',
@@ -114,6 +115,8 @@ const config: Config = {
           routeBasePath: '/',
           lastVersion: 'stable',
           showLastUpdateTime: true,
+          // after transformImage, which escapes image alt text once too often
+          remarkPlugins: [unescapeImageText],
           versions: {
             current: {
               label: 'Pre-release',
