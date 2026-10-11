@@ -64,6 +64,16 @@ Report templates run in a separate process on the server:
 
 In the job editor, the preview renders one block at a time in your browser, with a 6-second limit per block.
 
+## Preview data
+
+**Load preview data** runs the capture once to get values for the preview (then the button is **Update preview
+data**). When the capture has an AI step, the line under the button says so, and what the last run or preview cost, for
+example "Runs the whole capture, the AI step included. The last run used 1,234 AI tokens." Those tokens count on the
+budget of the AI provider.
+
+A **yes/no** variable of an AI step prints `1` for yes and `0` for no. To print a word, write
+`{% if page_now == 1 %}Yes{% else %}No{% endif %}`. The composer shows this tag under the variable.
+
 The tags `{% include %}`, `{% render %}` and `{% layout %}` are not available. A template that uses one is refused as a
 syntax error.
 

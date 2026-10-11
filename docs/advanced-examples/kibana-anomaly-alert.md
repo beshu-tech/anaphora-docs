@@ -100,7 +100,7 @@ Log volume changed by {{ percent_change }}%. <a href="{{ metaData.reportLink }}"
 
 ## Result
 
-A run where the change stays below 20% stops at the **Break**. The Runs page shows it as **Cancelled**, and nobody gets
+A run where the change stays below 20% stops at the **Break**. The Runs page shows it as **Stopped at Break**, and nobody gets
 a message:
 
 ![The Runs page: runs of "Log volume anomaly" with the status Cancelled](images/kibana-anomaly-alert-runs.png)

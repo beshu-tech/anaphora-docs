@@ -21,12 +21,12 @@ Each time a job runs, Anaphora makes a run record. Use it to:
 
 ## Run statuses
 
-| Status             | Description                                                            |
-|--------------------|------------------------------------------------------------------------|
-| **Success**        | The job completed and the report was delivered                         |
-| **Delivery issue** | The report was created, but it could not be delivered to all destinations |
-| **Error**          | The job execution failed                                               |
-| **Cancelled**      | A condition stopped the run (for example a **Break** action), so no report was sent |
+| Status               | Description                                                                                      |
+|----------------------|--------------------------------------------------------------------------------------------------|
+| **Success**          | The job completed and the report was delivered                                                   |
+| **Delivery issue**   | The report was created, but it could not be delivered to all destinations                        |
+| **Error**            | The job execution failed                                                                         |
+| **Stopped at Break** | The run stopped as planned: a **Break**, or a hits condition that was not met. It made no report |
 
 Click an **Error** or **Delivery issue** tag to see the details.
 

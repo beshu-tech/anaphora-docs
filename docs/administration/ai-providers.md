@@ -192,7 +192,9 @@ up. The card then says what will happen.
 ### Resuming paused jobs
 
 Raising the budget does not switch the paused jobs back on. On the AI Providers list, the **Paused jobs** column counts
-the jobs that the budget paused. Click **Resume** to switch those jobs back on, and only those.
+the jobs that the budget paused. Click **Resume** to switch those jobs back on, and only those. The question names the
+count, for example "Resume 1 job? It runs on its schedule again.", and the message after it says how many resumed:
+"1 job resumed." When the budget is still reached, the next AI call pauses the job again.
 
 ![Resuming the jobs a budget paused](images/ai-budget-resume.png)
 

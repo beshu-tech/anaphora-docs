@@ -79,7 +79,7 @@ Alert: {{ hits }} server errors in the last 24 hours. <a href="{{ metaData.repor
 ### 6. Run and save
 
 Click **Run** to try the job once. If the condition does not hold now, the run stops without a message and the Runs page
-shows it as **Cancelled**. Click **Save**.
+shows it as **Stopped at Break**. Click **Save**.
 
 ## Result
 

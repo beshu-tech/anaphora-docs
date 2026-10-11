@@ -112,8 +112,8 @@ Choose a delivery interface and the on-call recipients.
 
 ## How it behaves
 
-- A run with no new or worse incident stops at the **Break**. Nobody is notified, and the notebook keeps what the AI
-  wrote.
+- A run with no new or worse incident stops at the **Break**: the Runs page shows **Stopped at Break**. Nobody is
+  notified, and the notebook keeps what the AI wrote.
 - A new incident, or one that got worse, sends the report.
 - The **AI** column of the **Runs** page shows what each run cost. Click it to read why the AI decided so. See
   [Runs](../jobs/ai-step.md#runs).

@@ -122,6 +122,11 @@ You can combine visual snapshots with AI-generated summaries in one report.
 4. Test the job: click **Test capture** in the **Capture** tab, or a test run button in the **Deliver** tab
 5. Click **Save**. A new job is active by default. Use the **Active** switch in the job list to suspend it or activate it again
 
+When someone else saved the job (or the template) after you opened it, **Save** is refused, and nothing is written:
+"The job was not saved. Someone saved this job after you opened it. Reload to see their changes, then make yours
+again." **Reload** opens the
+saved job and drops your changes. **Cancel** keeps your page, so you can copy what you need first.
+
 ### Built-in templates
 
 **Create Job** offers these templates next to **Create New**. Each one uses the public Kibana demo at

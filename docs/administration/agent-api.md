@@ -81,12 +81,14 @@ and the agent binds a job to them by their ID.
 | 401    | Not logged in                                                                                                                                                                                                                                    |
 | 403    | No access to the space, or the space does not exist. With `code: "licenseLimit"`, the edition limit is reached.                                                                                                                                  |
 | 404    | No such object in this space                                                                                                                                                                                                                     |
-| 409    | The `id` you chose on create is already in use, or an AI step has no values to try on: run a Test capture                                                                                                                                        |
+| 409    | The `id` you chose on create is already in use; an AI step has no values to try on (run a Test capture); or a `PUT` sent an `updatedAt` older than the stored job or template: someone saved it since, and nothing was written                   |
 | 413    | The body is too long: over 8 MB for an AI step preview, trial or assistant call, over 1 MB for any other call                                                                                                                                    |
 | 504    | An AI step preview (60 s), trial (10 min) or assistant answer (5 min) did not finish in time: try again                                                                                                                                          |
 
 A call to `/api/spaces/…` from another origin is refused (403), whatever its method, even with the session cookie.
 `GET /api/agent/context` answers every caller: with no session, it answers 401 and names the login page.
+
+A run that a **Break** stopped has the status `cancelled` in the API; the pages show it as **Stopped at Break**.
 
 `run`, `preview` and `test` answer with a stream (`text/event-stream`). The last event, `end`, carries the result. A
 preview or a test takes as long as the page takes to load, often 10 to 60 seconds.

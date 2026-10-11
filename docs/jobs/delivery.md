@@ -151,7 +151,8 @@ With the S3 file type **PDF & HTML Report**, nothing is uploaded when the HTML c
 Every delivery config includes a test button: **Run with test email** for SMTP and Mailgun, **Test run** for Webhook
 and S3 Object Storage. Use it to verify the configuration before you save the job. **Test run without delivery** runs the job
 and shows the output without notifying any recipients. A test withholds a report with a broken text block in the same
-way, and says so. Anaphora logs all steps of the capture and delivery process for troubleshooting.
+way, and says so. Anaphora logs all steps of the capture and delivery process for troubleshooting. Each AI step adds
+one line, for example `AI step "Rate the errors" answered after 2 model calls: 1,234 tokens, 4.1 s.`
 Select **Debug test run** in the button menu to also receive a video of the capture process.
 
 ## Next steps
