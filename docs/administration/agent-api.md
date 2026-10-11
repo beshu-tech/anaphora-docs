@@ -83,6 +83,7 @@ and the agent binds a job to them by their ID.
 | 404    | No such object in this space                                                                                                                                                                                                                     |
 | 409    | The `id` you chose on create is already in use, or an AI step has no values to try on: run a Test capture                                                                                                                                        |
 | 413    | The body is too long: over 8 MB for an AI step preview, trial or assistant call, over 1 MB for any other call                                                                                                                                    |
+| 504    | An AI step preview (60 s), trial (10 min) or assistant answer (5 min) did not finish in time: try again                                                                                                                                          |
 
 A call to `/api/spaces/…` from another origin is refused (403), whatever its method, even with the session cookie.
 `GET /api/agent/context` answers every caller: with no session, it answers 401 and names the login page.
