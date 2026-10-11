@@ -71,7 +71,7 @@ robot mark shows the jobs that have an AI step.
    what) and runs the step again.
    **Done** opens the editor in the simple view. **Adjust by hand** opens it with **Advanced** on.
 
-   ![The Try screen: Success, severity 7 and page_now Yes, the AI's reasons, the cost of a week, and Done](images/ai-step-try.png)
+   ![The Try screen: Success, severity 6 and page_now Yes, the AI's reasons, and the cost of a week](images/ai-step-try.png)
 
 **Set it up by hand instead**, on the first screen, skips the assistant and opens the editor with the defaults. A step
 made either way gets the new settings: see [Steps set up before the AI step](#steps-set-up-before-the-ai-step). When the
@@ -174,7 +174,7 @@ sections open under it. Each section says in one line what it is set to, also wh
 
 #### Can see
 
-![Can see: the three modes, the rows errorsNow and the errors page, the box "Sent at the start: about 661 tokens", and the images box](images/ai-step-can-see.png)
+![Can see: the three modes, the rows errorsNow and the errors page, the box "Sent at the start: about 1,283 tokens", and the images box](images/ai-step-can-see.png)
 
 What the AI gets of the earlier snapshots and variables. Three modes:
 
@@ -189,7 +189,7 @@ The header of the rows says how many rows go, for example "Rows sent: 2 of 3". I
 "Rows offered: 2 of 3". Closed, the section says it in one sentence, for example "Sends 2 ticked rows." or "Offers 3
 rows. The AI reads the ones it needs."
 
-Each row shows its value and its size, for example "about 661 tokens". The size is the size of the text that the step
+Each row shows its value and its size, for example "about 140 tokens". The size is the size of the text that the step
 sends for the row. One calculation gives the size of a row, the estimate of **What the model gets** and the request of a
 run, so they agree. The rows show the values that the top of the **Assistant** panel names, for example "Values of the
 run of Oct 10, 13:51": the values of **What the model gets** and **Try it**. **Use the Test capture instead** and **Use
@@ -355,12 +355,12 @@ A job that is not saved yet has no run, so Try it uses its Test capture. With no
 off and the editor says "Run a Test capture first." Click **Run a Test capture of the actions before it** to get the
 values. A template cannot be tried: try the step in a job made from the template.
 
-![The Trial panel: Success with 2 model calls, 1 tool call and 1,664 tokens; severity, page_now and briefing; the AI's reasons; and the cost of a week](images/ai-step-trial.png)
+![The Trial panel: Success with 3 model calls, 2 tool calls and 9,857 tokens; page_now, errorTrend and page_reason; the AI's reasons; and the cost of a week](images/ai-step-trial.png)
 
 The **Trial** panel shows:
 
 - the status: **Success**, a stop such as **Stopped at the token cap**, or **Error**, with the time, the model calls,
-  the tool calls, the tokens and the duration, for example "2 model calls · 1 tool call · 1,664 tokens · 4.2 s". A stop
+  the tool calls, the tokens and the duration, for example "3 model calls · 2 tool calls · 9,857 tokens · 14 s". A stop
   says whether the step kept values, for example "Stopped at the model call limit after 1 model call. Nothing was
   filled." When no model call was made (for example the budget is spent), it says "No call was made." After an error,
   **Details** shows the answer as the model wrote it;
@@ -498,7 +498,7 @@ A **Test capture** runs the AI steps too. Its result has an **AI** tab with the 
 line "Limits of this Test capture: …". When the Test capture fails, there is no **AI** tab: the traces of the AI steps
 show under the error.
 
-![The AI tab of a Test capture: the step "Rate the errors" with its status, variables, reasons and model calls](images/ai-step-test-capture.png)
+![The AI tab of a Test capture that stopped at a Break: the step "Decide whether to page on checkout errors" with its status, variables and reasons](images/ai-step-test-capture.png)
 
 ### When a step stops at a limit
 
