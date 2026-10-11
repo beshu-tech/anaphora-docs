@@ -78,7 +78,8 @@ goes under the step. Click the title to rename the step.
   **Name**, **Type** and **What it means** of each variable, **Add variable**, and a bin to remove one.
 - **It can**: one line per ability that is on, each with a switch. **+ More** lists the others.
 - A grey line, for example "Stops by itself after 8 steps or 8,000 tokens, set from this step." It shows the limits
-  that apply. When you set a limit yourself, it says "(set by you)". See [Guardrails](#guardrails).
+  that apply. When you set a limit yourself, it says "(set by you)". A step set up before the AI step existed has no
+  limit, and the line says "No limit (a step set up as before has none)." See [Guardrails](#guardrails).
 - **Done** goes back to the flow. **Try it** runs the step once: see [Try it](#try-it).
 
 #### Fills in
@@ -190,16 +191,23 @@ template, start with an empty notebook.
 
 ![Guardrails: the five limits, "When a limit is reached", and "What this step costs" with a budget at 112%](images/ai-step-guardrails.png)
 
-Hard limits on one run of the step, on top of the provider budget. An empty field shows in grey the value that applies,
+Limits on one run of the step, on top of the provider budget. An empty field shows in grey the value that applies,
 set from the step. Type a number to set your own.
 
 | Field                      | Limit                                                     | When empty                                                                        |
 |----------------------------|-----------------------------------------------------------|-----------------------------------------------------------------------------------|
 | **Most model steps**       | Model calls                                               | 1 when the step fills one variable and has no tool, else 8                       |
 | **Most tool calls**        | Tool calls                                                | 12                                                                                |
-| **Token cap for the step** | Tokens of all the model calls together, input and output | 3 times the size of what the model gets, at least 8,000, rounded up to a thousand |
+| **Token cap for the step** | Tokens of all the model calls together, input and output | The size of what the model gets (in **The AI chooses** mode, plus every row read once) times one more than **Most model steps**, at least 8,000, rounded up to a thousand |
 | **Time limit**             | Seconds for the whole step                                | 60 with no tool, 90 with a tool                                                   |
 | **Answer length cap**      | Tokens of one answer                                      | The default of the provider                                                       |
+
+The token cap is checked between model calls. A call that starts under the cap ends, so a run can go over the cap by
+the size of its last call.
+
+A step set up before the AI step existed (no **Fills in** table, no tool, no limit set) gets no limit at all: one model
+call, no time limit and no token cap, as before. Its fields show **No limit**, and **Most model steps** shows 1. When
+you set one field, every limit applies.
 
 **When a limit is reached**:
 
@@ -286,6 +294,7 @@ answer comes under **Explained by the assistant**, with suggestions. **Apply** p
 ![The Runs page with the AI column: 1.7k tokens · 2 steps, and 2 tokens · 1 step](images/ai-step-runs-column.png)
 
 The **AI** column of the **Runs** page says what the AI steps of each run cost, for example "1.7k tokens · 2 steps".
+Click its header to sort the runs by the tokens of their AI steps.
 When a limit stops a step, the column names the limit in yellow, for example "Token cap · 5 steps". When a step fails,
 it shows "AI error" in red. A run with no AI step shows "no AI".
 
