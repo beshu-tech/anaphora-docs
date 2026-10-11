@@ -89,8 +89,9 @@ first. The trial shows the four values and the reasons of the AI, and saves noth
 :::tip Describe it instead
 On the first screen of a new AI step, write what you want, for example "Look at the error count. Decide if someone must
 be paged now. Only page for a new incident, or for one that got worse." The assistant proposes a plan. Check it against
-the settings above, and add what it lacks. The assistant changes only the AI step: add the **Conditional block** and
-its **Break** of step 7 yourself.
+the settings above, and add what it lacks. For "only page for…", the assistant can propose **A Conditional block and a
+Break after this step**, for example "The run stops when page_now is not 1.". **Add them** puts step 7 in the flow:
+check its condition against step 7 above.
 
 ![The plan of the assistant for a triage step: severity and page_now, exact math, the job's notebook, its 5 changes with Undo, and one thing to check](images/ai-triage-plan.png)
 :::

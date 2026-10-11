@@ -45,9 +45,11 @@ robot mark shows the jobs that have an AI step.
    it remembers and when it stops. **In its words** is the summary of the assistant.
    - **Show the instructions it wrote, and why each choice** shows the instructions and the changes of the assistant.
      Each change has **Undo**: see [The assistant](#the-assistant).
-   - When the flow lacks something the plan needs, **One thing to check** says what. For example, no snapshot comes
-     before the step: **Add it** puts a **Navigate** with a snapshot before the step, and **I have one** sets the card
-     aside.
+   - When the flow lacks something the plan needs, a card says what. For example, no snapshot comes before the step:
+     **Something to add to the flow**, where **Add it** puts a **Navigate** with a snapshot before the step, and **I
+     have one** sets the card aside. Or the report must go out only in some runs: **A Conditional block and a Break
+     after this step**, for example "The run stops when page_now is not 1.", where **Add them** puts the block and its
+     **Break** after the step. See [The assistant](#the-assistant).
    - To change the plan, write in **Change something, in your words** and click **Send**. The line under the field
      says what an answer costs.
    - **Discard** removes the new step and what the assistant wrote for it.
@@ -121,7 +123,8 @@ row. You read the reasons in the trial and on the Runs page. They never go into 
 A name follows the rules of any variable name, and is unique in the job. The name `reasoning` is not available.
 
 **What it means** goes to the AI with the name. Say the range and what each value means, for example
-`0 to 10. 7 and above: page someone now.`
+`0 to 10. 7 and above: page someone now.` For a **yes/no**, say in words when the answer is yes, not `1` and `0`: the
+model answers yes or no, and Anaphora stores it as `1` or `0`.
 
 When the answer is not valid JSON, the step makes one more model call: the AI gets its answer back and corrects it.
 That call counts on the provider budget and under the [guardrails](#guardrails). When the step is at its model call
@@ -275,6 +278,9 @@ line at the top of the **Assistant** panel says which, for example "Values of th
 capture instead** and **Use the run instead** switch between the two. The assistant and **What the model gets** use the
 same values.
 
+A trial that takes more than 10 minutes stops with "The server did not finish in time. Try again." **What the model
+gets** stops the same way after 60 seconds.
+
 A job that is not saved yet has no run, so Try it uses its Test capture. With no run and no Test capture, the button is
 off and the editor says "Run a Test capture first." Click **Run a Test capture of the actions before it** to get the
 values. A template cannot be tried: try the step in a job made from the template.
@@ -320,32 +326,46 @@ to it too.
 
 The **Assistant** panel is above the trial. It works on the same values as **Try it**. Write a question or a change in
 **Ask, or say what to change**, and click **Send**. The line under the field says what an answer costs, for example
-"An answer costs about 25,200 tokens. A trial it runs adds its own." After the answer, "This answer: 24,945 tokens"
-says what it cost.
+"An answer costs about 25,200 tokens. It tries the step only when you ask. A trial adds its own tokens." After the
+answer, "This answer: 24,945 tokens" says what it cost.
 
 The assistant may change this step, and only this step: the title, the **Instructions**, **Fills in**, **Can see**, the
 tools that stay in Anaphora, **Remembers** and **Guardrails**. Each change is a card with its reason, and goes into the
 step at once.
 
-- **Undo** on a card takes that change back. The card then says **Undone**.
-- The changes of one answer are a group, for example "5 changes". **Show each** shows the cards. **Undo all** takes
-  back every change of the group. When you undid some of them already, the button is **Undo the rest**. When all are
-  undone, the group says **All undone**.
+- The changes of one answer are a group, for example "5 changes", with one line per change, such as "Instructions:
+  adds “Page only for a new incident.”". **Show each** shows the cards. A change of **Instructions** shows the lines it
+  added and removed.
+- **Undo** on a card takes that change back. The card then says **Undone**. When you changed that field after the
+  assistant, Anaphora asks first, for example "You changed Instructions after the assistant. Undo anyway?": **Keep
+  mine** keeps your text, **Undo** takes the field back to what it was before the change.
+- **Undo all** takes back every change of the group. When you changed some of its fields after the assistant, it asks
+  once and names them: **Keep mine** takes back the other changes and keeps your fields, **Undo** takes back all. When
+  you undid some of the changes already, the button is **Undo the rest**. When all are undone, the group says **All
+  undone**.
 
 Other things it only proposes, as a card for you to decide:
 
-- **A new action before this step**: **Add it** puts a **Navigate** with a snapshot before the step, and **I have one**
-  sets the card aside.
+- **Something to add to the flow**, for example a snapshot before the step: **Add it** puts a **Navigate** with a
+  snapshot before the step, and **I have one** sets the card aside.
+- **A Conditional block and a Break after this step**, when the report must go out only in some runs. The card says
+  when the run stops, for example "The run stops when page_now is not 1.". **Add them** puts the block and its **Break**
+  after the step, and **Open the block** opens it. **Set aside** closes the card.
 - **A tool that reaches out of Anaphora**: not available yet. **Set aside** closes the card.
 - **Something to check** in another part of the flow: **Set aside** closes the card.
 
-The assistant can try the step too, up to three times in one answer. Each trial shows as one line with its answer and
-tokens, and **Open** opens its model calls. It never saves the job. Its text shows with simple formatting, such as bold,
-lists and code. Its links open only web addresses.
+The assistant tries the step only when you ask for it, for example "try it" or "run a trial", and on the **Try** screen
+of a new step. It tries at most three times in one answer. Each trial shows as one line with its answer and tokens, and
+**Open** opens its model calls. It never saves the job. Its text shows with simple formatting, such as bold, lists and
+code. Its links open only web addresses.
 
 Its tokens count on the provider budget, like a trial. One answer stops at 12 model calls, 60,000 tokens or 120
 seconds. The answer then says which limit stopped it, and the changes so far stay. A fourth trial in one answer is
-refused, and the answer goes on.
+refused, and the answer goes on. When the server does not answer in time, the panel says "The assistant did not answer
+in time. Send your message again."
+
+The conversation and the trials of a step stay while you switch the tabs of the job, and after you create the job. A
+reload of the page forgets them.
 
 ### Explain this trial
 
@@ -355,7 +375,8 @@ explanation is one model call with no tool: the assistant reads a short summary 
 nothing.
 
 The answer comes under **Explained by the assistant**, with suggestions. **Apply** puts a suggestion into the step, and
-**Undo** takes it back. **Ask again** asks once more. "This answer: N tokens" says what it cost.
+**Undo** takes it back. A proposal for the flow comes as a card, as in the panel. With nothing to change, it says "The
+assistant suggests no change." **Ask again** asks once more. "This answer: N tokens" says what it cost.
 
 ![Explained by the assistant: why the step rated 7, a suggestion for the guardrails with Apply, and Ask again](images/ai-step-explain.png)
 
