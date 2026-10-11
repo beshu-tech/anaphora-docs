@@ -35,7 +35,7 @@ robot mark shows the jobs that have an AI step.
 1. **Describe.** Under **What should this step do?**, say in your words what the step looks at, what it decides and
    what it writes. Or click a starting point: **Summarise the pages**, **Decide whether to page**, **Pull a number out
    of a page** or **Write a report section**. The line under them names the provider that the assistant uses, what a
-   draft costs (for example "A draft costs about 15,000 tokens."), and what the assistant sees: the names of your
+   draft costs (for example "A draft costs about 20,900 tokens."), and what the assistant sees: the names of your
    earlier actions, and the values of the last run or of your last Test capture. Click **Continue**: the assistant
    writes the step from your words.
 
@@ -56,12 +56,12 @@ robot mark shows the jobs that have an AI step.
      says what an answer costs.
    - **Discard** removes the new step and what the assistant wrote for it.
 
-   The footer says what the draft cost, for example "This draft: 13,311 tokens. Nothing is saved until you save the
+   The footer says what the draft cost, for example "This draft: 19,892 tokens. Nothing is saved until you save the
    job." Then click **Try it**. The step runs on the values of the last run of the job, else on your last Test capture.
    When **Try it** is off, its tooltip says why. With no run and no Test capture, click **Run a Test capture of the
    actions before it** first.
 
-   ![The Review screen: the plan in five sentences, the assistant's words, a card for something to add to the flow, and the Try it button](images/ai-step-review.png)
+   ![The Review screen of "Rate checkout errors and page": the plan in five sentences, with "Stops after 8 model calls or 26,000 tokens."; In its words; the card "A Conditional block and a Break after this step"; and the footer "This draft: 19,892 tokens." with Try it](images/ai-step-review.png)
 
 3. **Try.** The step runs once on those values. The screen shows the status, the values it filled in, **Why, in its
    words**, the tokens, and what the step costs in a week at the schedule of the job. **See every model call** and
@@ -84,7 +84,7 @@ about.
 
 ## The editor
 
-![The AI step editor: the actions of the flow on the left, the step in the middle, and the assistant and the last trial on the right](images/ai-step-editor.png)
+![The AI step editor: on the left, the actions of the flow, with "Conditional block · page_now is No" and its Break; in the middle, the step, with "Stops after 8 model calls or 29,000 tokens."; on the right, the assistant and the last trial: Success, 3 model calls, 3 tool calls, 7,784 tokens, page_now No](images/ai-step-editor.png)
 
 The step is in the middle. The panel on the right holds the **Assistant** and the **Trial**. On a narrow screen, the
 panel goes under the step, and a trial that starts or ends comes into view. Click the title to rename the step.
@@ -103,11 +103,12 @@ panel goes under the step, and a trial that starts or ends comes into view. Clic
 - A grey line that says when the step stops: the most model calls and the token cap. When every guardrail is empty,
   "Anaphora sets these limits from the step." follows. In a step with no tool, **Most tool calls** limits nothing, so
   it does not count here. "Change them in Guardrails." ends the line. For example:
-  - "Stops after 8 model calls or 27,000 tokens. Anaphora sets these limits from the step. Change them in Guardrails."
+  - "Stops after 8 model calls or 29,000 tokens. Anaphora sets these limits from the step. Change them in Guardrails."
     for a step with a tool;
   - "Stops after 2 model calls or 30,000 tokens. …" for a step with no tool that answers in JSON (see
     [Fills in](#fills-in)): one answer, and one more model call when the answer is not valid JSON;
-  - "Stops after 1 model call or 10,000 tokens. …" for a step with no tool and one plain variable;
+  - "Stops after 1 model call or 20,000 tokens. …" for a step with no tool and one plain variable that sees two
+    snapshots;
   - "Stops after 8 model calls or 40,000 tokens. Change them in Guardrails." when a guardrail is set;
   - "No limit (a step set up as before has none)." for a step set up before the AI step existed.
 
@@ -143,6 +144,8 @@ until you correct it, for example "Row 2 of Fills in: the name severity is alrea
 `0 to 10. 7 and above: page someone now.` For a **yes/no**, say in words when the answer is yes, not `1` and `0`: the
 model answers yes or no, and Anaphora stores it as `1` or `0`. The editor shows the value as Yes or No: on the card of
 the step in the flow, in the trial and in the words of the assistant.
+
+![Fills in, open to edit: page_now yes/no, "Yes when someone must be paged now about the checkout errors, no otherwise."; errorTrend text; page_reason text; Add variable; and "The AI fills them all in one answer and gives its reasons, which you see in the trial."](images/ai-step-fills-in.png)
 
 When the answer is not valid JSON, the step makes one more model call: the AI gets its answer back and corrects it.
 That call counts on the provider budget and under the [guardrails](#guardrails). When the step is at its model call
@@ -255,7 +258,7 @@ tools." The notebook tools come with **This job's notebook** under **Remembers**
 
 #### Remembers
 
-![Remembers: This job's notebook, What to keep, Longest notebook 4000 characters, and the notebook now with Edit, History and Clear](images/ai-step-remembers.png)
+![Remembers: This job's notebook, What to keep, Longest notebook 4000 characters, and the notebook now with Edit, History and Clear: "568 of 4,000 characters · changed Today at 00:02 by the run of 00:02"](images/ai-step-remembers.png)
 
 - **Nothing**: each run starts from nothing. This is the default.
 - **This job's notebook**: one text for the job, shared by all its AI steps. In each run, the AI can read it and replace
@@ -268,7 +271,7 @@ longer text: Anaphora refuses it and tells the AI the limit.
 
 When the job is saved, **The notebook now** shows the text, its size against the limit of the saved job, and when it
 changed and by whom, for example "52 of 4,000 characters · changed Today at 11:21 by a person". A change by a run says
-"by the run of 19:57", a link to the runs of the job.
+"by the run of 00:02", a link to the runs of the job.
 
 - **Edit** changes the text. Its **Save** stores the notebook at once, not with the job. **Save** is off while the text
   is longer than the limit of the saved job. A **Save** of the text as it was changes nothing, and adds nothing to
@@ -286,7 +289,7 @@ template, start with an empty notebook.
 
 #### Guardrails
 
-![Guardrails: the limits, "When a limit is reached", and "What this step costs" with a budget at 112%](images/ai-step-guardrails.png)
+![Guardrails: every field empty, with the values that apply in grey (8 model calls, 12 tool calls, 29,000 tokens, 90 seconds, Provider default); "When a limit is reached"; and "What this step costs" from the trial of Oct 12, 00:04: 7,784 tokens a run, about 5.2M tokens a week, and no budget](images/ai-step-guardrails.png)
 
 Limits on one run of the step, on top of the provider budget. An empty field shows in grey the value that applies,
 set from the step. Type a number to set your own. Until Anaphora has the estimate, an empty **Token cap for the step**
@@ -315,9 +318,10 @@ call back with the next call. It is 0 when the **Test** of the provider saw no r
 tested, or was tested before Anaphora looked for reasoning, counts as one that reasons: click **Test** again to find
 out. See [What this model can do](../administration/ai-providers.md#what-this-model-can-do).
 
-For example, a step with a tool whose first call sends about 1,200 tokens gets a token cap of 27,000: 1,200 times 9,
-plus 8,000 twice, rounded up. On a provider whose Test saw no reasoning, the same step gets 11,000. A step with no tool
-and a JSON answer that sends about 12,700 tokens gets 55,000: 12,700 times 3, plus 8,000 twice, rounded up.
+For example, the step of the image above has a tool, and its first call sends about 1,344 tokens. It gets a token cap
+of 29,000: 1,344 times 9, plus 8,000 twice, rounded up. On a provider whose Test saw no reasoning, the same step gets
+13,000. A step with no tool and a JSON answer that sends about 12,700 tokens gets 55,000: 12,700 times 3, plus 8,000
+twice, rounded up.
 
 The token cap is checked before each model call: a call whose request would pass the cap is not made. Its answer is not
 known before, so a run can pass the cap by the answer of its last call. The tooltip of the field says the same. The
@@ -397,34 +401,36 @@ The **Trial** panel shows:
 - the value of each variable: a **yes/no** as Yes or No, and **HTML** as its text;
 - **Why, in its words**: the reasons of the AI. After a stop, **The AI's last answer**;
 - **See every model call** and **What the model gets**;
-- the cost of a week at the schedule of the job, and its share of the provider budget, for example "At the job's
-  schedule (every 15 minutes), this step costs about 1.1M tokens a week: 12% of the weekly budget of OpenAI." When the
-  job is suspended, the line adds "The job is suspended now.". A daily job says "Daily at 04:05, this costs about …".
+- the cost of a week at the schedule of the job, and its share of the provider budget, for example "Every 15 minutes,
+  this costs about 1.1M tokens a week: 12% of the weekly budget of OpenAI." A provider with no budget gives no share,
+  for example "Every 15 minutes, this costs about 5.2M tokens a week. Deepseek (Beshu) has no budget." When the job is
+  suspended, the line adds "The job is suspended now.". A daily job says "Daily at 04:05, this costs about …".
   A trial that did not finish gives no cost of a week, and the line says why, for example "This trial stopped at the
   time limit, so the cost of a week is not known.";
 - the notebook: what the trial would write, line by line, or "Not changed: the step wrote nothing new.";
 - after a second trial, the previous trial in one line. **Compare** shows the two answers side by side, and marks each
   value that changed, or says "No change".
 
-**See every model call** opens **Every model call of the trial**. Each model call shows what it did ("Asks for Do exact
-math", "Answers"), its tokens and time. Open one to see the model request: its size and, for the first model call, the
-estimate by part, for example "Instructions 306 · Fills in 136 · Can do 445 · Notebook 266"; the model response and how
-it ended ("ended with an answer", "asked for tools"); and each tool call with its input and output. A long tool output is cut in the trace, and says so, for example "Cut:
-the trace keeps the first 8,192 characters of 21,394." **Copy trace** and
-**Raw JSON** are at the top. With two or more model calls, **Expand all** is there too.
+**See every model call** opens **Every model call of the trial**. Each model call shows what it did ("Asks for Look at
+earlier runs · Read the notebook", "Answers"), its tokens and time. Open one to see the model request: its size and,
+for the first model call, the estimate by part, for example "Instructions 374 · Fills in 149 · Can do 452 · Notebook
+225 · errorsNow 4 · errors page 140"; the model response and how it ended ("ended with an answer", "asked for
+tools"); and each tool call with its input and output. A long tool output is cut in the trace, and says so, for example
+"Cut: the trace keeps the first 8,192 characters of 21,394." **Copy trace** and **Raw JSON** are at the top. With two
+or more model calls, **Expand all** is there too.
 
 A model call with hidden reasoning gives its size in the heading, for example "11,779 tokens (7,830 reasoning) · 1.2 s",
 and in the model response, for example "7,950 tokens, of them 7,830 reasoning · asked for tools". See [Hidden
 reasoning](#hidden-reasoning).
 
 Under the buttons, one line gives the limits that the trial applied, for example "Limits of this trial: 8 model calls,
-12 tool calls, 12,000 tokens and 60 seconds; a limit fails the run." A step with no tool gets 0 tool calls, and the
+12 tool calls, 29,000 tokens and 90 seconds; a limit fails the run." A step with no tool gets 0 tool calls, and the
 line leaves them out, for example "Limits of this run: 2 model calls, 12,000 tokens and 60 seconds; a limit fails the
 run." With **Keep what is filled in and go on**, the line ends "at a limit the step keeps what it filled." A step set
 up before the AI step has no limit, for example "Limits of this run: none." A trace from before Anaphora kept the
 limits has no such line.
 
-![Every model call of the trial: model call 1 asks for Do exact math, with the request, the response and the tool call; model call 2 answers](images/ai-step-every-step.png)
+![Every model call of the trial: 3 model calls, 3 tool calls and 7,784 tokens, the limits of the trial, and model call 1 open: it asks for Look at earlier runs and Read the notebook, with the request, the response with 60 tokens of reasoning, and the output of Look at earlier runs in local time](images/ai-step-every-step.png)
 
 **What the model gets** opens what the first model call sends: the system message, the user message, how the answer is
 asked for (from **Fills in**), the tools it may call (from **Can do**), the tokens of each part, and **Not sent, and
@@ -434,9 +440,10 @@ to it too.
 
 The system message tells the model when its values were captured, in the time zone of the server, so that the model
 does not guess the time. A run says "This run started 2026-10-11 22:10 Europe/Rome (UTC+02:00)." A trial says where its
-values come from: "These values come from the run that started …. Use that time as the time of this run.", or "…
-the Test capture that started …". When the start of the Test capture is not known, it says "These values come from a
-Test capture. This trial started …". A step set up before the AI step gets no such line. The estimate counts it.
+values come from, for example "These values come from the run that started 2026-10-12 00:02 Europe/Rome (UTC+02:00).
+Use that time as the time of this run.", or "… the Test capture that started …". When the start of the Test capture
+is not known, it says "These values come from a Test capture. This trial started …". A step set up before the AI step
+gets no such line. The estimate counts it.
 
 How the answer is asked for follows the provider's **Test** (see
 [What this model can do](../administration/ai-providers.md#what-this-model-can-do)):
@@ -447,19 +454,20 @@ How the answer is asked for follows the provider's **Test** (see
 - **The answer is JSON, asked for in words**: "The request asks for no format: the provider's Test found no JSON
   answers. The system message asks for the JSON and names each field."
 
-![What the model gets: the system message, the user message and the JSON schema of the answer](images/ai-step-what-the-model-gets.png)
+![What the model gets: about 1,344 tokens before any tool call, from the values of the run of Oct 12, 00:02; the system message, scrolled to the line that says when the values were captured; the user message; and "The answer is a JSON object", with no schema](images/ai-step-what-the-model-gets.png)
 
 ## The assistant
 
-![The assistant panel: a group of 5 changes with Show each and Undo all, a proposal for a new action, and one change after "No notebook, please"](images/ai-step-assistant.png)
+![The assistant panel after one answer: the values of its trial (page_now No, errorTrend "steady", page_reason), "It spent 10,484 tokens over 3 model calls and 3 tool calls.", no change to the Conditional block, a group of 3 changes with Show each and Undo all, the trial with Open, "This answer: 35,245 tokens", and "An answer costs about 24,761 tokens."](images/ai-step-assistant.png)
 
 The **Assistant** panel is above the trial. It works on the same values as **Try it**. Write a question or a change in
 **Ask, or say what to change**, and click **Send**. The line under the field says what an answer costs, for example
-"An answer costs about 14,000 tokens. It tries the step only when you ask. A trial adds its own tokens." The estimate
+"An answer costs about 15,400 tokens. It tries the step only when you ask. A trial adds its own tokens." The estimate
 counts two model calls: one that makes the changes, and one that answers. An answer that tries the step makes one more:
-one model call asks for the trial, the next reads it, the last answers. After the answer, "This answer: 12,460
+one model call asks for the trial, the next reads it, the last answers. After the answer, "This answer: 35,245
 tokens" says what it cost, its trials included. The line under the field then gives what that answer cost without the
-tokens of its trials.
+tokens of its trials, for example "An answer costs about 24,761 tokens.": 35,245 tokens minus the 10,484 tokens of
+the trial.
 
 The assistant may change this step, and only this step: the title, the **Instructions**, **Fills in**, **Can see**, the
 tools that stay in Anaphora, **Remembers** and **Guardrails**. Each change is a card with its reason, and goes into the
@@ -497,8 +505,8 @@ The assistant writes a time as the editor shows it, in your time zone and with n
 Oct 11, 16:02" or "the trial of Oct 11, 16:03". A time from earlier runs or from the notebook keeps the zone it names.
 It says a **yes/no** value as "Yes" or "No", as the editor shows it, and describes a **yes/no** variable as "yes when
 …, no otherwise". It gives each value of a trial word for word, as the trial shows it: a text in quotes, a **yes/no** or
-a number with no quotes, for example page_now: Yes. It writes a count with a comma between the thousands, for example
-6,779 tokens.
+a number with no quotes, for example page_now: No and errorTrend: "steady". It writes a count with a comma between the
+thousands, for example "It spent 10,484 tokens over 3 model calls and 3 tool calls."
 
 Its tokens count on the provider budget, like a trial. One answer stops at 12 model calls, 60,000 tokens or 120
 seconds. The answer then says which limit stopped it, and the changes so far stay. A fourth trial in one answer is
@@ -511,16 +519,17 @@ reload of the page forgets them.
 ### Explain this trial
 
 At the end of **Every model call of the trial**, **Explain this trial** asks the assistant why the step did what it did.
-Next to the button, a line says what an explanation costs, for example "An explanation costs about 10,000 tokens." An
+Next to the button, a line says what an explanation costs, for example "An explanation costs about 10,500 tokens." An
 explanation is one model call with no tool: the assistant reads a short summary of the trial in words, and changes
 nothing. The estimate adds about 3,800 tokens for the [hidden reasoning](#hidden-reasoning) of a model that thinks. It
 leaves them out when the trace shows no reasoning in any model call.
 
 The answer comes under **Explained by the assistant**, with suggestions. **Apply** puts a suggestion into the step, and
 **Undo** takes it back. A proposal for the flow comes as a card, as in the panel. With nothing to change, it says "The
-assistant suggests no change." **Ask again** asks once more. "This answer: N tokens" says what it cost.
+assistant suggests no change." **Ask again** asks once more. "This answer: N tokens" says what it cost, for example
+"This answer: 12,366 tokens".
 
-![Explained by the assistant: why the step rated 7, a suggestion for the guardrails with Apply, and Ask again](images/ai-step-explain.png)
+![Explained by the assistant, under the three model calls of the trial: "This answer: 12,366 tokens", why page_now is No, three suggestions with Apply (two for Can do, one for Instructions), and Ask again](images/ai-step-explain.png)
 
 On the Runs page, the same button is **Explain this run**. There, a suggestion has **Open the step** instead of
 **Apply**: open the step, then make the change in the editor. **Explain this run** and **Open the step** need write
@@ -539,10 +548,10 @@ no AI step shows "no AI".
 
 Click the cell to open the **AI trace** of the run. It has the same content as a trial: the status, **Why, in its
 words**, the variables, the notebook, every model call, and the limits of the run, for example "Limits of this run: 8
-model calls, 12 tool calls, 12,000 tokens and 60 seconds; a limit fails the run." It also has **Compare** with the
+model calls, 12 tool calls, 28,000 tokens and 90 seconds; a limit fails the run." It also has **Compare** with the
 previous run of the job, **Explain this run**, and **Open the step**, which opens the step in the editor.
 
-![The AI trace of a run: Success, the AI's reasons, the variables, the notebook, and the two model calls](images/ai-step-trace-popup.png)
+![The AI trace of the run of Oct 12, 00:02: Success; Why, in its words; the variables, with page_now Yes; the notebook that the run saved; the previous run, which stopped at a Break, with Compare; the limits of the run, 28,000 tokens among them; the three model calls; Explain this run, "An explanation costs about 10,500 tokens."; and Open the step](images/ai-step-trace-popup.png)
 
 A **Test capture** runs the AI steps too. Its result has an **AI** tab with the same trace for each AI step, and the
 line "Limits of this Test capture: …". When the Test capture fails, there is no **AI** tab: the traces of the AI steps

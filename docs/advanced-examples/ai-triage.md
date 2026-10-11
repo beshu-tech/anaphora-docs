@@ -93,7 +93,7 @@ the settings above, and add what it lacks. For "only page for…", the assistant
 Break after this step**, for example "The run stops when page_now is No.". **Add them** puts step 7 in the flow:
 check its condition against step 7 above. When the flow already has step 7, the assistant proposes no second one.
 
-![The plan of the assistant for a triage step: severity and page_now, exact math, the job's notebook, its 5 changes with Undo, and a card for something to add to the flow](images/ai-triage-plan.png)
+![The plan of the assistant for a triage step, "Rate checkout errors and page": severity and page_now, the last 10 runs of errorsNow, the job's notebook, "Stops after 8 model calls or 26,000 tokens."; the instructions it wrote; its 5 changes with Show each and Undo all; and the card "A Conditional block and a Break after this step", "The run stops when page_now is No."](images/ai-triage-plan.png)
 :::
 
 ### 4. Compose

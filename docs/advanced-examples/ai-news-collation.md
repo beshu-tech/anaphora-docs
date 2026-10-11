@@ -60,7 +60,7 @@ Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI 
      what this job needs.
    - Click **Done** to go back to the flow.
 
-   ![The AI step in the simple view, shown here for another job: the provider, the Instructions, Fills in with one number variable, It can, and the line that says when the step stops](images/ai-news-collation-ai-step.png)
+   ![The AI step "Summarize the news" in the simple view, shown here for a job with other sources: the provider, the Instructions, Fills in with one text variable, summary, It can see the NPR headlines and CNN headlines snapshots, and "Stops after 1 model call or 20,000 tokens."](images/ai-news-collation-ai-step.png)
 
    [The AI step](../jobs/ai-step.md) describes every setting, and how to try the step before you save the job.
 

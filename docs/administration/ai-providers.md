@@ -58,6 +58,8 @@ not in the list. A name that the list does not have shows as `Use "<name>"`: cli
 stays in the field, also when the list does not have it. The first model of the list goes in only when you change the
 **Provider**, or, for a new provider, while the field still holds the default model.
 
+![The Model field with deepseek/deepseek-v4-flash, and the note "Pick a model of the list, or type the name the vendor gives it. The list shows only models that chat."](images/ai-provider-model-field.png)
+
 ### What this model can do
 
 **Test** opens the **Test the AI provider** window. Its prompt starts as "Say hello in five words or fewer." **Send test
@@ -89,7 +91,7 @@ The Test also records two things that the window does not list:
 - Whether the model writes hidden reasoning. Unless the Test saw none, the token cap that Anaphora sets for an AI step
   makes room for it: see [Guardrails](../jobs/ai-step.md#guardrails).
 
-![The Test the AI provider window: the answer of the model, then Answers a prompt, Uses tools and Gives structured answers: Yes; Reads images: No](images/ai-provider-test.png)
+![The Test the AI provider window: the note "The Test makes four or five model calls", the answer "Hello!", then Answers a prompt, Uses tools, Gives structured answers (JSON) and Reads images: all Yes; Details, closed; and "Saved with the provider."](images/ai-provider-test.png)
 
 When the Test runs on the saved settings of the provider, it keeps the result: the window says "Saved with the
 provider." Otherwise, it says "Save the provider to keep this result.": click **Save** to keep it. The card **What this
@@ -176,7 +178,7 @@ tooltip names that line "Test captures and earlier trials". Some
 OpenAI-compatible services answer without usage data. Those calls count as zero, and the tooltip of the column says
 that the total is a lower bound.
 
-![Tooltip on a usage column](images/ai-budget-usage-tooltip.png)
+![The tooltip of the Tokens 24h column: 1,103,713 tokens in the last 24 hours and 143 AI calls, split in five lines: Scheduled and manual runs, Test captures and earlier trials, Trials, AI step assistant, and Provider Test](images/ai-budget-usage-tooltip.png)
 
 ### Setting a budget
 
