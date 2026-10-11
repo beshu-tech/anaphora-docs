@@ -91,8 +91,15 @@ A call to `/api/spaces/…` from another origin is refused (403), whatever its m
 A run that a **Break** stopped has the status `cancelled` in the API; the pages show it as **Stopped at Break**.
 
 A job write sets `stepVersion: 2` on each AI step that it adds: every AI step of a `POST`, and each AI step with a new
-id in a `PUT`. Such a step gets the new settings, as in the editor. A stored step keeps its form. See
-[Steps set up before the AI step](../jobs/ai-step.md#steps-set-up-before-the-ai-step).
+id in a `PUT`. Such a step gets the new settings, as in the editor. A stored step keeps its form. A `PUT` of a job or a
+template that leaves `stepVersion` out of a stored AI step keeps the stored value: a write never turns a step back into
+the old form. See [Steps set up before the AI step](../jobs/ai-step.md#steps-set-up-before-the-ai-step).
+
+A `PUT` of a built-in template stores a copy for the space, with its own `id`: the answer carries it. A later `PUT` of
+the built-in id updates that copy, and the list shows the copy in place of the built-in template.
+
+Send `nextActions`, the actions after the step, to the assistant: it then proposes no Conditional block with a
+**Break** that the flow already has.
 
 `run`, `preview` and `test` answer with a stream (`text/event-stream`). The last event, `end`, carries the result. A
 preview or a test takes as long as the page takes to load, often 10 to 60 seconds.

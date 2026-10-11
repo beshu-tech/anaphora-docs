@@ -141,6 +141,10 @@ saved job and drops your changes. **Cancel** keeps your page, so you can copy wh
 
 All the templates except **Kibana Dashboard Snapshot** are advanced templates: the Free edition does not have them.
 
+A space admin can change a template with **Edit template**. The first **Save** of a built-in template stores a copy for
+the space, and later saves update that copy. From then on, the page of the built-in template opens the copy, and the
+list shows the copy in place of the built-in template.
+
 ## Next steps
 
 - [General settings](./jobs/general): scheduling and throttling

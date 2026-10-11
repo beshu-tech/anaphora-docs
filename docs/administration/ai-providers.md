@@ -61,15 +61,20 @@ stays in the field, also when the list does not have it. The first model of the 
 ### What this model can do
 
 **Test** opens the **Test the AI provider** window. Its prompt starts as "Say hello in five words or fewer." **Send test
-prompt** sends your prompt and three small checks: a tool call, a JSON answer and an image. That is four model calls,
-and their tokens count on the budget of the provider. The Test uses the key, the endpoint and the model of the form.
-The window shows the answer, then **What this model can do**:
+prompt** sends your prompt and three small checks: a tool call, a JSON answer and an image. Under the prompt, the
+window says "The Test makes up to five model calls: your prompt and three small checks. Their tokens count on the budget
+of the provider." The JSON check first sends a JSON schema of the answer (`json_schema`, strict), as an AI step with
+**Fills in** rows sends it. Only when the endpoint refuses the schema, or the answer does not fit it, does the check ask
+for a JSON object with no schema: the fifth model call. The Test uses the key, the endpoint and the model of the
+form. The window shows the answer, then **What this model can do**:
 
 - **Answers a prompt**.
 - **Uses tools**. An AI step with tools needs it: **Look at earlier runs**, **Do exact math**, **Remember between
   runs**, and **The AI chooses** mode.
 - **Gives structured answers (JSON)**. When the answer is **No**, an AI step with several variables asks for JSON in its
-  instructions, and reads the text.
+  instructions, and reads the text. An AI step sends its JSON schema to the provider only when the Test proved the
+  schema. A provider tested before this check must be tested again to get it. Until then, its AI steps send what they
+  sent before.
 - **Reads images**. When the answer is **No**, **Send the snapshots as images** is off in the AI steps of this provider.
 
 Under a **No**, a short line says why, for example "The endpoint refused an image."
