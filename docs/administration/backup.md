@@ -21,6 +21,16 @@ A UI export or an API export backs up only the configuration and data stored in 
 include report files. For complete data protection, we recommend a Docker volume backup.
 :::
 
+### What an export holds
+
+The `.ana` file holds the whole database of the instance, encrypted as it is stored. The users, the spaces, the jobs and
+templates, the delivery interfaces, the AI providers and the runs travel with it. So do the AI traces of the runs, and
+the notebooks of the AI steps with their history.
+
+It does not hold the files under `content/`: the reports, the snapshots, and the page text that a trial of an AI step
+reads from a run. After an import, a trial on a run from before the import gets the variables of that run, but no page
+text. Run a Test capture, or let the job run again.
+
 ## UI backup
 
 1. Go to **Settings** > **Data**.
