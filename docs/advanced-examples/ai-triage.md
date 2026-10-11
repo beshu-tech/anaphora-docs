@@ -51,7 +51,7 @@ Switch on **Advanced**, and build this flow:
 3. **Navigate**: all the requests of the last hour, in Discover.
 4. **Capture value**: **Variable name** `requestsNow`, **Capture template** **Kibana discover hits**.
 5. **Navigate**: the overview dashboard of the last hour. Tick **Take snapshot**.
-6. **AI**: click **Set it up by hand instead**, then switch on **Advanced**.
+6. **AI step**: click **Set it up by hand instead**, then switch on **Advanced**.
    - **Instructions**:
      ```
      You are the on-call triage assistant of a web service. errorsNow counts the HTTP 5xx responses of the last
@@ -77,9 +77,11 @@ Switch on **Advanced**, and build this flow:
      The open incidents: the incident_key, when each started, its peak severity, and when someone was paged.
      Remove an incident when the errors are back to normal.
      ```
-   - **Guardrails**: leave them empty. The grey line under **It can** shows the limits that apply.
-7. **Conditional block**: **Variable** `page_now`, **Condition operation** **not equals**, **Condition value** `1`.
-   Inside it, add a **Break**: when the answer is no, the run stops and nobody is paged.
+   - **Guardrails**: leave them empty. Closed, the section says the limits that apply, for example "Stops after 8
+     model calls or 29,000 tokens. Anaphora sets these limits from the step."
+7. **Conditional block**, after the AI step: **Variable** `page_now`, **Condition operation** **not equals**,
+   **Condition value** `1`. Inside it, add a **Break**: when the answer is no, the run stops and nobody is paged. This
+   block and its **Break** decide when the report goes out. The AI step only fills `page_now`.
 
 In the AI step, click **Try it**. When the job has no run yet, click **Run a Test capture of the actions before it**
 first. The trial shows the four values and the reasons of the AI, and saves nothing. See [Try it](../jobs/ai-step.md#try-it).
@@ -87,7 +89,8 @@ first. The trial shows the four values and the reasons of the AI, and saves noth
 :::tip Describe it instead
 On the first screen of a new AI step, write what you want, for example "Look at the error count. Decide if someone must
 be paged now. Only page for a new incident, or for one that got worse." The assistant proposes a plan. Check it against
-the settings above, and add what it lacks.
+the settings above, and add what it lacks. The assistant changes only the AI step: add the **Conditional block** and
+its **Break** of step 7 yourself.
 
 ![The plan of the assistant for a triage step: severity and page_now, exact math, the job's notebook, its 5 changes with Undo, and one thing to check](images/ai-triage-plan.png)
 :::
