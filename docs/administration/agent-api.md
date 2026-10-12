@@ -103,6 +103,10 @@ Send `nextActions`, the actions after the step, to the assistant: it then propos
 **Break** that the flow already has. An assistant estimate (`estimate: true`) of a chat that may try the step (its last
 message asks for a trial, or `mayTry: true`) counts three model calls, else two.
 
+The assistant answers 400 to `mode: "explain"` with a trace that no model call finished (`steps` empty and
+`usage.hasUsage` false, for example a spent budget): "No model call of this trace finished: there is nothing to explain.
+Its `error` says why."
+
 Send the values of a Test capture with its `startedAt`: the model is told when its values were captured. Without it,
 the model gets the start of the trial. The `answerFormat` of a preview says how the request asks for the answer
 (`schema`, `jsonObject` or `instructions`); `outputSchema` is there only when the request sends it.

@@ -152,7 +152,11 @@ Every delivery config includes a test button: **Run with test email** for SMTP a
 and S3 Object Storage. Use it to verify the configuration before you save the job. **Test run without delivery** runs the job
 and shows the output without notifying any recipients. A test withholds a report with a broken text block in the same
 way, and says so. Anaphora logs all steps of the capture and delivery process for troubleshooting. Each AI step adds
-one line, for example `AI step "Rate the errors" answered after 2 model calls: 1,234 tokens, 4.1 s.`
+one line, for example `AI step "Rate the errors" answered after 2 model calls: 1,234 tokens, 4.1 s.` When the
+token budget of the provider refused the step, the line is `AI step "Rate the errors" failed: the provider's token
+budget refused it before its first model call, 0.0 s.` When the step stopped or failed before any model call finished
+for another cause, the line says so, for example `AI step "Rate the errors" stopped at the time limit before any
+model call finished, 150.0 s.`
 Select **Debug test run** in the button menu to also receive a video of the capture process.
 
 ## Next steps

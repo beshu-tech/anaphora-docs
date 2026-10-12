@@ -405,8 +405,9 @@ The **Trial** panel shows:
 - the status: **Success**, a stop such as **Stopped at the token cap**, or **Error**, with the time, the model calls,
   the tool calls, the tokens and the duration, for example "3 model calls · 2 tool calls · 9,857 tokens · 14 s". A stop
   says whether the step kept values, for example "Stopped at the model call limit after 1 model call. Nothing was
-  filled." When no model call was made (for example the budget is spent), it says "No call was made." After an error,
-  **Details** shows the answer as the model wrote it;
+  filled." When no model call finished, the stop says so, for example "Stopped at the time limit before any model call
+  finished. Nothing was filled." When no model call was made (for example the budget is spent), it says "No call was
+  made." After an error, **Details** shows the answer as the model wrote it;
 - the values it ran on, for example "On the values of the run of Oct 10, 13:51. No page was opened, and nothing was
   saved or delivered.";
 - the value of each variable: a **yes/no** as Yes or No, and **HTML** as its text;
@@ -547,6 +548,9 @@ explanation is one model call with no tool: the assistant reads a short summary 
 nothing. The estimate adds about 3,800 tokens for the [hidden reasoning](#hidden-reasoning) of a model that thinks. It
 leaves them out when the trace shows no reasoning in any model call.
 
+**Explain this trial** shows only when at least one model call of the trial finished. When none finished, for example
+because the token budget of the provider is spent, there is nothing to explain: the status says why.
+
 The answer comes under **Explained by the assistant**, with suggestions: at most one for each section, as in the
 panel. **Apply** puts a suggestion into the step, and **Undo** takes it back. A proposal for the flow comes as a card,
 as in the panel. With nothing to change, it says "The assistant suggests no change." **Ask again** asks once more.
@@ -556,11 +560,11 @@ as in the panel. With nothing to change, it says "The assistant suggests no chan
 
 On the Runs page, the same button is **Explain this run**. There, a suggestion has **Open the step** instead of
 **Apply**: open the step, then make the change in the editor. **Explain this run** and **Open the step** need write
-access to the space.
+access to the space. As in a trial, **Explain this run** shows only when at least one model call of the run finished.
 
 ## Runs
 
-![The Runs page with the AI column: the tokens and the model calls of each run](images/ai-step-runs-column.png)
+![Two runs of Checkout errors on the Runs page, with the AI column: "7.6k tokens · 3 model calls" for the run of 02:32, Stopped at Break, and "8k tokens · 3 model calls" for the run of 00:02, Success](images/ai-step-runs-column.png)
 
 The **AI** column of the **Runs** page says what the AI steps of each run cost, for example "1.1k tokens · 2 model
 calls". Each phrase stays on one line: a narrow table breaks the cell only between them. Click its header to sort the
@@ -572,7 +576,8 @@ no AI step shows "no AI".
 Click the cell to open the **AI trace** of the run. It has the same content as a trial: the status, **Why, in its
 words**, the variables, the notebook, every model call, and the limits of the run, for example "Limits of this run: 8
 model calls, 12 tool calls, 29,000 tokens and 150 seconds; a limit fails the run." It also has **Compare** with the
-previous run of the job, **Explain this run**, and **Open the step**, which opens the step in the editor.
+previous run of the job, **Explain this run** when a model call of the run finished, and **Open the step**, which opens
+the step in the editor.
 
 ![The AI trace of the run of Oct 12, 02:32: Success; Why, in its words; the variables, with page_now No; the notebook that the run saved, and the version it read; the previous run with Compare; the limits of the run, with 29,000 tokens and 150 seconds; the three model calls with their reasoning tokens; Explain this run, "An explanation costs about 10,700 tokens."; and Open the step](images/ai-step-trace-popup.png)
 

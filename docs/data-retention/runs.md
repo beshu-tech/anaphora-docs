@@ -6,7 +6,7 @@ keywords: [ job runs, execution history, run status, debugging, job monitoring, 
 
 # Runs
 
-![The Runs page with two filters on, the job Checkout errors and the statuses Success and Stopped at Break: Clear next to Delete ALL, and the columns Job name, Type, Time, Duration, Status, Attempts, AI and Report](images/runs.png)
+![The Runs page with two filters on, the job Checkout errors and the statuses Success and Stopped at Break: Clear next to Delete ALL, and the columns Job name, Time, Duration, Status, AI and Report](images/runs.png)
 
 The Runs section shows the execution history of your jobs, including successful captures, failures, and delivery status.
 
@@ -34,10 +34,14 @@ When a filter or a sort is on, **Clear**, at the top of the page next to **Delet
 
 The **AI** column says what the AI steps of each run cost: see [Runs](../jobs/ai-step.md#runs).
 
+In a window from 1,024 px wide, a job name of two words, such as "Checkout errors", stays on one line while the
+**Attempts** column does not show.
+
 ## Retries and attempts
 
 A retry is not a separate run. Anaphora lists the retries under the run that failed first, and the **Attempts** column
-counts them. When you delete a run, its retries and their files go with it.
+counts them. The column shows only when a run in the list, on any page, was retried, or when its filter is on. When you
+delete a run, its retries and their files go with it.
 
 The **Status** and **Report** filters read the latest attempt of a run. So a run whose retry succeeded is listed as a
 success.
