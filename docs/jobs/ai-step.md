@@ -550,9 +550,9 @@ leaves them out when the trace shows no reasoning in any model call.
 The answer comes under **Explained by the assistant**, with suggestions: at most one for each section, as in the
 panel. **Apply** puts a suggestion into the step, and **Undo** takes it back. A proposal for the flow comes as a card,
 as in the panel. With nothing to change, it says "The assistant suggests no change." **Ask again** asks once more.
-"This answer: N tokens" says what it cost, for example "This answer: 10,307 tokens".
+"This answer: N tokens" says what it cost, for example "This answer: 10,454 tokens".
 
-![Explained by the assistant, under the four model calls of the trial, closed, and the limits of the trial, with 150 seconds: "This answer: 10,307 tokens", and why the trial filled page_now = Yes and errorTrend = "worse"](images/ai-step-explain.png)
+![Explained by the assistant, under the three model calls of the trial, closed, and the limits of the trial, with 150 seconds: "This answer: 10,454 tokens", why the trial filled page_now No and errorTrend "steady", and three suggestions with Apply, one for each of Can do, Remembers and Fills in](images/ai-step-explain.png)
 
 On the Runs page, the same button is **Explain this run**. There, a suggestion has **Open the step** instead of
 **Apply**: open the step, then make the change in the editor. **Explain this run** and **Open the step** need write
@@ -571,10 +571,10 @@ no AI step shows "no AI".
 
 Click the cell to open the **AI trace** of the run. It has the same content as a trial: the status, **Why, in its
 words**, the variables, the notebook, every model call, and the limits of the run, for example "Limits of this run: 8
-model calls, 12 tool calls, 28,000 tokens and 90 seconds; a limit fails the run." It also has **Compare** with the
+model calls, 12 tool calls, 29,000 tokens and 150 seconds; a limit fails the run." It also has **Compare** with the
 previous run of the job, **Explain this run**, and **Open the step**, which opens the step in the editor.
 
-![The AI trace of the run of Oct 12, 00:02: Success; Why, in its words; the variables, with page_now Yes; the notebook that the run saved; the previous run, which stopped at a Break, with Compare; the limits of the run, 28,000 tokens among them; the three model calls; Explain this run, "An explanation costs about 10,500 tokens."; and Open the step](images/ai-step-trace-popup.png)
+![The AI trace of the run of Oct 12, 02:32: Success; Why, in its words; the variables, with page_now No; the notebook that the run saved, and the version it read; the previous run with Compare; the limits of the run, with 29,000 tokens and 150 seconds; the three model calls with their reasoning tokens; Explain this run, "An explanation costs about 10,700 tokens."; and Open the step](images/ai-step-trace-popup.png)
 
 A **Test capture** runs the AI steps too. Its result has an **AI** tab with the same trace for each AI step, and the
 line "Limits of this Test capture: …". When the Test capture fails, there is no **AI** tab: the traces of the AI steps

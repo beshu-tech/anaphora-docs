@@ -86,8 +86,9 @@ Under a **No**, a short line says why, for example "The endpoint refused an imag
 When JSON answers work but the Test did not prove the schema, a line under **Gives structured answers (JSON)** says
 why, for example "The call with the answer schema failed, so a step asks for a JSON object without it. The error is
 under Details." The other reasons are "The endpoint refused the answer schema, …" and "The answer did not fit the answer
-schema, …". The line shows only after a Test, in the window and on the card under the form. After a reload, the card
-does not show it. The API gives it as `reasons.jsonSchema`. When the call with the schema fails, its error also goes
+schema, …". Right after a Test, the line shows in the window and on the card under the form. After a reload, the card shows
+"Steps ask for a JSON object without a schema: the answer schema check of the last Test failed." The API gives the
+reason as `reasons.jsonSchema`. When the call with the schema fails, its error also goes
 to the log of Anaphora.
 
 The Test also records whether the model writes hidden reasoning. The window does not list it. Unless the Test saw
@@ -106,7 +107,7 @@ for example "The model did not answer. Correct the model or the endpoint, then s
 refused the API key. Correct the key, then send the test again." **Details** shows the error of the endpoint. A failed
 Test lists no ability and keeps nothing: **Save** stores nothing from it.
 
-![The card What this model can do after a reload: "Tested Today at 01:24.", and the four abilities Yes, with no line under Gives structured answers (JSON)](images/ai-provider-abilities.png)
+![The card What this model can do after a reload: "Tested Today at 01:24.", the four abilities Yes, and under Gives structured answers (JSON) the line "Steps ask for a JSON object without a schema: the answer schema check of the last Test failed."](images/ai-provider-abilities.png)
 
 :::note Free edition
 The Free edition allows one AI provider per space.
@@ -214,7 +215,7 @@ up. The card then says what will happen.
 - On the Jobs list, a paused job shows that an AI budget paused it, so you can tell it apart from a job that someone
   switched off.
 
-![Jobs list with a job paused by a budget](images/ai-budget-jobs-paused.png)
+![A row of the Jobs list: the last run failed, the Active switch is off, and the tag says "AI budget 1k"](images/ai-budget-jobs-paused.png)
 
 ### Resuming paused jobs
 
