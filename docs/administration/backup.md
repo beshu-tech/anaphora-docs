@@ -43,8 +43,9 @@ text. Run a Test capture, or let the job run again.
 2. Click **Import from file**
 3. Upload the backup file
 
-An import also brings back the secret that signs the snooze and unsubscribe links. So the links in emails sent before
-the backup was made work again, and the links that this install sent after the backup stop working.
+An import also brings back the secret that signs the snooze and unsubscribe links. When you import onto another
+install, the links in emails from the install that made the backup work, and the links that this install sent before
+the import stop working.
 
 ### Legacy import and export
 
