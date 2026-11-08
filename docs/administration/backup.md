@@ -43,6 +43,9 @@ text. Run a Test capture, or let the job run again.
 2. Click **Import from file**
 3. Upload the backup file
 
+An import also brings back the secret that signs the snooze and unsubscribe links. So the links in emails sent before
+the backup was made work again, and the links that this install sent after the backup stop working.
+
 ### Legacy import and export
 
 The **Legacy** tab under **Settings** > **Data** reads and writes the older `.json` format. This tab will be removed in
