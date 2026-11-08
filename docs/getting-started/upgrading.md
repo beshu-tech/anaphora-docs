@@ -101,6 +101,19 @@ restore it:
 
 If Anaphora cannot write the copy, it applies no migration, and the database stays as it was.
 
+## After the upgrade from 0.18.0
+
+The next version after 0.18.0 changes the database. So 0.18.0 refuses to start on the upgraded database, and a rollback needs the backup from
+before the upgrade. The upgrade script keeps it for you.
+
+- **Snooze and unsubscribe links.** Links in emails sent before the upgrade keep working for 90 days. See
+  [Email delivery](../jobs/delivery.md#email-delivery).
+- **After a rollback**, the links in emails that the new version sent do not work. The links from before the upgrade
+  work again.
+- **Observer keys read more.** Each observer key, also a key that you created before the upgrade, now reads the captured
+  number values of all spaces through the [Prometheus metrics](../administration/self-monitoring.md#prometheus-metrics).
+  If a monitor must not see them, revoke its key.
+
 ## After the upgrade from 0.16.0
 
 0.17.0 changes the database. `AddApiKeys` adds a table. `SamlClockSkewChecked` and `OidcSettingsExplicit` come with

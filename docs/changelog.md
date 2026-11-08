@@ -17,6 +17,38 @@ All notable changes to Anaphora are documented here.
 
 ---
 
+## [Unreleased]: Prometheus metrics, previous-run values, and a condition on each delivery
+
+These changes are on the pre-release documentation. They come in the next release after 0.18.0. That release changes
+the database: a rollback needs the backup from before the upgrade. See
+[After the upgrade from 0.18.0](./getting-started/upgrading.md#after-the-upgrade-from-0180).
+
+### What you need to do
+
+- **Most installations: nothing.**
+- **A monitor must not see captured values?** Revoke its observer key. Each observer key, also an existing one, now
+  reads the Prometheus metrics too.
+
+### 🚀 New
+
+- **Prometheus metrics.** `GET /guest/api/metrics` gives the last run of each job, in all spaces, in the Prometheus
+  text format: the number variables, the start time, the duration and the health of the run. Send an observer key as
+  a Bearer token. **Settings** > **Application** > **API Keys** shows the URL. See
+  [Prometheus metrics](./administration/self-monitoring.md#prometheus-metrics).
+- **Compare with the previous report.** Text blocks and delivery messages can read `prev.<variable>`, the value in the
+  last report that reached a recipient, and `delta.<variable>`, the change of a number since then. See
+  [Values of the previous report](./jobs/composer.md#values-of-the-previous-report).
+- **A condition on each delivery.** **Send through this delivery only if…** sends the report through one delivery
+  only when a captured value passes a test. When every delivery skips the report, the run shows **Skipped**. A test
+  send ignores the conditions. See [Send through a delivery only if…](./jobs/delivery.md#send-through-a-delivery-only-if).
+
+### 🚨 Security
+
+- **Snooze and unsubscribe links are safer.** Each installation now signs them with its own secret. Links in emails
+  sent before the upgrade keep working for 90 days.
+
+---
+
 ## [0.18.0] - 2026-10-09: Safer sign-in
 
 A security update for the sign-in. It carries no database migration: the upgrade replaces the image, and you can go
