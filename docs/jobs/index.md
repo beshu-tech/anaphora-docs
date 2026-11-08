@@ -74,6 +74,8 @@ Conditional reports that send only when criteria are met:
 :::tip
 In Anaphora, an alert is a conditional report. To create an alert, add conditions to your capture workflow. The
 conditions decide whether the report is sent. Use the **Break** action to skip delivery when conditions are not met.
+To send to some destinations only, give a delivery its own
+[condition](./delivery.md#send-through-a-delivery-only-if).
 :::
 
 ## AI-powered analysis

@@ -27,8 +27,10 @@ Each time a job runs, Anaphora makes a run record. Use it to:
 | **Delivery issue**   | The report was created, but it could not be delivered to all destinations                        |
 | **Error**            | The job execution failed                                                                         |
 | **Stopped at Break** | The run stopped as planned: a **Break**, or a hits condition that was not met. It made no report |
+| **Skipped**          | The run made the report, and the [condition](../jobs/delivery.md#send-through-a-delivery-only-if) of every delivery failed. Nobody got it, as planned |
 
-Click an **Error** or **Delivery issue** tag to see the details.
+Click an **Error** or **Delivery issue** tag to see the details. There, a delivery that its condition skipped shows
+"Skipped: its condition did not hold, so nothing was sent."
 
 When a filter or a sort is on, **Clear**, at the top of the page next to **Delete ALL**, removes them.
 
@@ -55,5 +57,6 @@ The Jobs list shows the result of the last run of each job:
 | **Success**        | The report was delivered                                                    |
 | **Error**          | The run failed                                                              |
 | **Delivery issue** | A destination refused the report                                            |
+| **Skipped**        | The condition of every delivery failed, so the report went to nobody        |
 | **Not delivered**  | Anaphora withheld the report because a text block of the template failed   |
 | **No runs**        | The job did not run yet                                                     |

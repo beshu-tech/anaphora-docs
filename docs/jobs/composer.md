@@ -42,6 +42,47 @@ The report layout is a hierarchy of pages, rows, and cells.
 A text block is a [Liquid](https://shopify.github.io/liquid/) template. It can show variables, for example
 `{{ hits }}`, and use tags such as `{% if hits > 5 %}`.
 
+### Values of the previous report
+
+A text block can compare this run with the last report that recipients got:
+
+| Variable                  | Value                                                                    |
+|---------------------------|--------------------------------------------------------------------------|
+| `{{ prev.hits }}`         | The value of `hits` in the previous report                               |
+| `{{ delta.hits }}`        | This value of `hits` minus the previous one. Only when both are numbers. |
+| `{{ metaData.previousRun.startedAt }}` | The start time of the previous run (ISO 8601)               |
+
+The previous report is the newest earlier run of the job (scheduled or manual, retries included) that reached at least
+one delivery interface or recipient. These runs do not count:
+
+- A run whose capture failed
+- A run that a **Break** stopped
+- A throttled run
+- A run where Anaphora withheld the report
+- A run whose report every delivery refused or [skipped](./delivery.md#send-through-a-delivery-only-if)
+
+So `prev` is what the recipients saw last. For example, a job that runs every 10 minutes and sends at most once a day
+compares each daily report with the report of the day before. A job with no delivery interface counts each report as
+delivered.
+
+Examples:
+
+```liquid
+Errors: {{ hits }} ({{ delta.hits | round: 0 }} since the last report)
+Before: {{ prev.hits | default: "n/a" }}
+{% if status != prev.status %}The status changed.{% endif %}
+{% if prev.hits and prev.hits != 0 %}{{ delta.hits | divided_by: prev.hits | times: 100 | round: 1 }}%{% endif %}
+```
+
+- `delta` is plain arithmetic. Use `round` before you print it.
+- For a text variable, compare with `prev`. `delta` has no text values.
+- On the first run, and when the previous report did not have the variable, `prev` and `delta` are empty.
+- A test, a preview and the editor preview have no previous report. There, `prev` and `delta` print nothing. The
+  composer says so under the variables.
+- If the job has its own variable named `prev` or `delta`, that variable keeps its value.
+- `prev` and `delta` work in text blocks and in delivery messages. A **Calculate** equation or a **Conditional block**
+  cannot read them.
+
 ### Errors in a text block
 
 - The editor shows a syntax error in the place of the block. You cannot save a template with a syntax error.

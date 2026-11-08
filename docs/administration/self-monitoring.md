@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-description: Monitor Anaphora health, performance, and job metrics. Configure alerts, access logs, and integrate with Prometheus.
+description: Monitor Anaphora health and job metrics. Configure health alerts, read the health API, and scrape job variables with Prometheus.
 keywords: [ self monitoring, health check, Prometheus, metrics, job monitoring, performance, Anaphora monitoring ]
 ---
 
@@ -51,8 +51,15 @@ proxy in front of Anaphora, gets the answer without names.
 
 ### Observer keys
 
-Use an observer key for a monitoring tool (Centreon, Zabbix, Nagios, Prometheus blackbox exporter). The key reads the
-health status only, and you can revoke it without changing a user's password.
+Use an observer key for a monitoring tool (Centreon, Zabbix, Nagios, Prometheus). You can revoke a key without changing
+a user's password.
+
+An observer key reads two APIs, for all spaces, and nothing else:
+
+- The health API: job and delivery interface names, schedules and recent runs. No error texts.
+- The [Prometheus metrics](#prometheus-metrics): the captured number values of the last run of each job.
+
+You cannot limit a key to the health API. If a monitor must not see captured values, revoke its key.
 
 1. Go to **Settings** > **Application** > **API Keys**.
 2. Click **New key**. Give the key the name of the monitor that uses it, and click **Create**.
@@ -178,6 +185,68 @@ job yellow, not red: one address that refuses the mail keeps the job yellow.
 
 The delivery interface of the health alerts also carries the [AI token budget](./ai-providers.md#budget-alerts) alerts.
 You can set it without switching health monitoring on.
+
+## Prometheus metrics
+
+Prometheus can read the last run of each job, in all spaces:
+
+```
+GET /guest/api/metrics
+```
+
+The endpoint needs an [observer key](#observer-keys) in the header `Authorization: Bearer <key>`. The **API Keys** page
+shows the URL under **Metrics URL (Prometheus)**. With no key, or with a revoked key, the answer is HTTP 401. Job names
+and captured values are data, so there is no answer without a key.
+
+A Prometheus scrape job:
+
+```yaml
+- job_name: anaphora
+  metrics_path: /guest/api/metrics
+  scheme: https
+  authorization:
+    credentials: ana_obs_...
+  static_configs:
+    - targets: ['anaphora.example.com']
+```
+
+To test the key with curl:
+
+```bash
+curl -fsS -H "Authorization: Bearer ana_obs_..." 'https://anaphora.example.com/guest/api/metrics'
+```
+
+### Metrics
+
+All metrics are gauges. Each sample has the labels `space`, `job_id` and `job_name`.
+
+| Metric                                     | Extra label | Value                                                                                   |
+|--------------------------------------------|-------------|-----------------------------------------------------------------------------------------|
+| `anaphora_job_variable`                    | `variable`  | The value of a number variable of the job                                               |
+| `anaphora_job_last_run_timestamp_seconds`  |             | The start time of the run, in Unix seconds                                              |
+| `anaphora_job_last_run_duration_seconds`   |             | The duration of the run, in seconds                                                     |
+| `anaphora_job_last_run_health`             | `state`     | `1` for the [run state](#run-states) of the run (`success`, `partial` or `failed`), `0` for the other two |
+
+Example output:
+
+```
+anaphora_job_variable{space="public",job_id="79cf54b6-...",job_name="Checkout errors",variable="errors"} 42
+anaphora_job_last_run_timestamp_seconds{space="public",job_id="79cf54b6-...",job_name="Checkout errors"} 1793516400
+anaphora_job_last_run_duration_seconds{space="public",job_id="79cf54b6-...",job_name="Checkout errors"} 12.5
+anaphora_job_last_run_health{space="public",job_id="79cf54b6-...",job_name="Checkout errors",state="success"} 1
+anaphora_job_last_run_health{space="public",job_id="79cf54b6-...",job_name="Checkout errors",state="partial"} 0
+anaphora_job_last_run_health{space="public",job_id="79cf54b6-...",job_name="Checkout errors",state="failed"} 0
+```
+
+The job label is `job_name`, not `job`, because Prometheus sets `job` to the name of the scrape job. All variables
+share one metric, so one query can compare jobs: `max by (variable) (anaphora_job_variable)`.
+
+Which values you get:
+
+- Only scheduled and manual runs count. A test or a preview does not.
+- A job that did not run yet has no sample.
+- Only variables with a number value are metrics. A text variable is not a metric.
+- When the last run fails before it fills a variable, that variable has no sample until a run fills it again.
 
 ## Next steps
 
