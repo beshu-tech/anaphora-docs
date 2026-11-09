@@ -12,6 +12,9 @@ It tests the new version on a copy of your database before it changes anything, 
 :::info Why a script?
 A new version can change the database (a migration). The previous version refuses to start on a database that a newer
 version changed. So a rollback needs the database from before the upgrade. The script keeps that copy for you.
+
+The previous version stops with the error "Database schema is ahead of application code". Update to the newer version, or
+restore the copy from before the upgrade (`storage/backups/`, or `anaphora-upgrade.sh rollback <backup dir>`).
 :::
 
 ## Requirements

@@ -58,6 +58,11 @@ the future. A legacy import has three modes:
 | Validate the imported file but autofix when possible            | Repairs what it can                         |
 | Do not validate the imported file (Use at own risk)             | Imports the file as it is                   |
 
+The legacy file is not a backup of the instance. It holds blueprints, delivery interfaces, snoozes, background images,
+health statuses and application settings. It does not hold jobs, runs, AI providers, notebooks, users or spaces. An
+import replaces everything the file holds, in every space. A job that uses an interface that the file does not hold loses it. To
+back up the instance, use **Export to file** on the **Data** tab.
+
 The first option refuses a file with a template that has no page. To repair such a file during the import, pick the
 autofix option. A refused import names the template and the field.
 

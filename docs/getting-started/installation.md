@@ -38,7 +38,7 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser and log
 | `ANAPHORA_TAG`      | The image version that `docker-compose.yaml` runs. The upgrade script sets it in `.env`.      | No          | `latest`                           |
 | `DEBUG`             | Enable debug logging                                                                         | No          | `false`                            |
 | `WORKER_COUNT`      | How many captures run at the same time (browser instances)                                   | No          | `2`                                |
-| `SKIP_NOTIFIER`     | Set to `true` to send no report, mail or webhook. Every delivery is skipped, as in a test run. | No        | `false`                            |
+| `SKIP_NOTIFIER`     | Set to `true` to send no report, mail or webhook. Each delivery is recorded as skipped: the run shows Skipped, not Success, a skipped delivery does not start the job's throttle window, and `prev` and `delta` in templates stay empty because no run counts as sent. | No        | `false`                            |
 | `REPORT_ALLOWED_HOSTS` | Host names, separated by commas, that a report can load an image or a frame from although they have an internal address. See [Report images from internal hosts](#report-images-from-internal-hosts). | No | `intranet.example.com` |
 
 More variables configure [OpenID Connect](../administration/authentication/oidc.md#configure-from-the-environment),
