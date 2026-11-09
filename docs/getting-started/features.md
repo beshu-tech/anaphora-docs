@@ -37,7 +37,8 @@ In the Free edition, every account is a system user, and Spaces are not availabl
 Enterprise is an exception: when its licence ends, only its administrators can sign in.
 When you reach a limit, the interface asks you to upgrade before you add another job, delivery interface or AI provider.
 A job with more than three capture actions cannot be saved until you upgrade.
-The server checks these limits for every write, also through the [API](../administration/agent-api.md) and for imports.
+The server checks these limits for every write, also through the [API](../administration/agent-api.md), and for the
+legacy JSON import. A restore from an `.ana` backup puts the saved instance back as it was.
 :::
 
 ## PRO edition
