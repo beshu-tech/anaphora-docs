@@ -50,8 +50,8 @@ monitor raises an alert. Anaphora keys start with `ana_`. A bearer token that do
 proxy in front of Anaphora, gets the answer without names.
 
 The answer to a call that does not sign in as a system user (no credentials, other credentials, or an observer key)
-can be up to 10 seconds old. Anaphora builds it once and gives it to every such call during that time. The answer to a
-system user is always current. A monitor that polls every minute or less often sees no difference.
+can be about 10 seconds old. Anaphora builds it once and gives it to every such call during that time. The answer to a
+system user is always current. A monitor that polls every minute or less often gets a new answer on each poll.
 
 ### Observer keys
 
