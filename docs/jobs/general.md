@@ -49,6 +49,11 @@ startup, the log names the runs that were missed.
 **Max Notify Freq** sets the minimum time between two delivered reports, whatever the job frequency. A run inside this
 time still runs, but sends nothing. Use it for high-frequency alerting jobs.
 
+A report counts as delivered when it reached at least one delivery. A run whose every delivery failed (for example, a
+mail server that refused every address), was skipped, or was withheld does not start the time, so its retry, or the
+next run, still sends. A run that an older version stored with every delivery failed still counts once, in
+its own time.
+
 Select the checkbox to turn on throttling. The default is 3 hours. If the job runs more often than once a day and
 throttling is off, the General tab shows a **Throttle Frequency** button that sets the default.
 
