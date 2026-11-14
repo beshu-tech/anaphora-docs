@@ -28,6 +28,8 @@ the database: a rollback needs the backup from before the upgrade. See
 - **Most installations: nothing.**
 - **A monitor must not see captured values?** Revoke its observer key. Each observer key, also an existing one, now
   reads the Prometheus metrics too.
+- **A tool reads reports from an S3 bucket by their path?** New reports have a new key: the last folder now holds the
+  run ID. See [Object names](./delivery-interfaces/s3.md#object-names).
 
 ### 🚀 New
 
@@ -46,6 +48,12 @@ the database: a rollback needs the backup from before the upgrade. See
 
 - **Snooze and unsubscribe links are safer.** Each installation now signs them with its own secret. Links in emails
   sent before the upgrade keep working for 90 days.
+
+### 🐞 Fixes
+
+- **S3 reports no longer replace each other.** The key of an object now ends with the run ID, in the form
+  `<job name>/<date>/<time>-<run ID>/report.pdf`, with date and time in UTC. Objects already in the bucket stay as
+  they are. See [Object names](./delivery-interfaces/s3.md#object-names).
 
 ---
 
