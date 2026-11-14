@@ -28,6 +28,10 @@ the database: a rollback needs the backup from before the upgrade. Before you up
 
 The list starts with the changes that can stop a job or a delivery.
 
+- **A proxy, a monitor or a health check calls port 3001?** It gets "Connection reset by peer" now. The application
+  behind the sign-in service listens inside the container only. Change the caller to port 3000 or to the HTTPS address
+  of Anaphora. Your data and your jobs are not affected. See
+  [Port 3001 is closed to other hosts](./getting-started/installation.md#port-3001-is-closed-to-other-hosts).
 - **A custom AI provider has no endpoint?** Set its endpoint, or change its provider to OpenAI. A provider of the type
   "Custom (OpenAI API compatible)" with no endpoint now fails its AI actions. See
   [Adding a provider](./administration/ai-providers.md#adding-a-provider).

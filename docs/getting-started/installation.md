@@ -148,6 +148,22 @@ When a reverse proxy (nginx, Traefik, Coolify) ends TLS in front of Anaphora:
 - Make sure that the proxy sends `X-Forwarded-For` and `X-Forwarded-Proto`.
 - Set `AF_TRUSTED_PROXIES` to the address of the proxy. See [Failed sign-in limits](#failed-sign-in-limits).
 - Publish only port 3000. A caller that reaches the Next.js port (3001) directly chooses its own client address.
+- Send every request to port 3000, or to the HTTPS address of the proxy. See
+  [Port 3001 is closed to other hosts](#port-3001-is-closed-to-other-hosts).
+
+### Port 3001 is closed to other hosts
+
+From version 0.19.0, the application behind the sign-in service listens on `127.0.0.1` inside the container. Only the
+container itself can reach port 3001. A caller from the host (a published `3001:3001`), from another host, or from
+another container on the same Docker network gets "Connection reset by peer". A reverse proxy with
+`proxy_pass http://anaphora:3001` (nginx, Traefik, Coolify) is such a caller. Port 3000 answers on the same paths, for
+example `/guest/api/health`.
+
+Your data and your jobs are not affected. A monitor, a health check or a proxy that aims at port 3001 stops working.
+Change each of them to port 3000 or to the HTTPS address of Anaphora.
+
+The upgrade script prints a `NOTE` when it finds such a caller in your compose file. It cannot read an nginx file that
+is mounted from the host: check that file yourself.
 
 When `X-Forwarded-Proto` says `https`, the session cookie is `Secure`. Over plain http, the cookie is not `Secure`. You
 do not set anything for this.

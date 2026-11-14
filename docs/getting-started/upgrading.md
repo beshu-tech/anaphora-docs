@@ -46,7 +46,8 @@ docker run --rm --entrypoint cat beshultd/anaphora:<version> /usr/local/bin/anap
 
    The script shows what it found (service, image, folders), the database changes that the new version applies, the
    jobs it reads, and what the log said. If it says that the check failed, or that it cannot read some jobs, do not
-   upgrade. Send the log file that it names to support.
+   upgrade. Read the lines that it prints. The log stays on your host. Support can ask for the lines that the script
+   printed. Support never needs your database or the log file.
 
 2. **Dry run.** See every step and command, without running any:
 
@@ -115,8 +116,8 @@ now, and says what to do. The last lines give the number of errors and of warnin
 - A **warning** means that the job runs, and something changes. Read the `Now:` line.
 - The upgrade does not stop for a note. Fix the jobs before the upgrade, or right after it. The check fails for two
   causes that the upgrade itself makes: a job that the new version cannot read, and a cron over 1024 characters.
-- The notes hold names, ids and field paths. They hold no pattern, template, address or password, so you can paste them
-  into a mail to support.
+- The notes hold names, ids and field paths. They hold no pattern, template, address or password. The log stays on your
+  host. Support can ask for the lines that the script printed. Support never needs your database or the log file.
 - "Nothing was checked" is not the same as "nothing found". If the check says that the scan did not run, or that regular
   expressions were not checked, run the check again.
 
