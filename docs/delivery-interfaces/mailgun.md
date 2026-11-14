@@ -42,6 +42,16 @@ Make sure your Mailgun domain is verified for best deliverability:
 - Add DNS records as instructed by Mailgun
 - Verify SPF and DKIM are configured
 
+## Sending behavior
+
+Anaphora sends up to 3 messages at the same time, in the order of the recipients. One message may take at most 5 minutes.
+This limit is fixed. When one message ends at that limit before any message of the delivery went through, Anaphora does
+not start the others. Mailgun is not answering, and the run is retried. Once one message went through, the others still
+go out.
+
+A Mailgun request that Anaphora gave up on can still run for up to 5 minutes. If Mailgun accepts it late, the retry of
+the run can send the same message twice.
+
 ## Testing
 
 Click **Test**, enter a **Test email** address (and optionally a **Test subject** and **Test body**), then click

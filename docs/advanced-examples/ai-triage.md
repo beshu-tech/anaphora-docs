@@ -61,7 +61,7 @@ Switch on **Advanced**, and build this flow:
      stopped sending, which is a 7. Compare with the earlier runs and with the open incidents in your notebook.
      Page only for a new incident, or for an open one that got worse.
      ```
-   - **Fills in**: click **Add variable** for each variable.
+   - **Variables**: click **Add variable** for each variable.
 
      | Name           | Type       | What it means                                                                                      |
      |----------------|------------|----------------------------------------------------------------------------------------------------|
@@ -70,14 +70,14 @@ Switch on **Advanced**, and build this flow:
      | `incident_key` | **text**   | A short name of the incident, for example `checkout-5xx`. Empty when there is no incident.         |
      | `briefing`     | **HTML**   | At most four short sentences: what is wrong, the numbers, what the dashboard shows, what to check. |
 
-   - **Can do**: switch on **Look at earlier runs**, with the **Variables it reads** `errorsNow`, `requestsNow` and
+   - **Tools**: switch on **Look at earlier runs**, with the **Variables it reads** `errorsNow`, `requestsNow` and
      `severity`, and `8` runs (two hours at this frequency). Switch on **Do exact math** too, for the share of errors.
-   - **Remembers**: **This job's notebook**. **What to keep**:
+   - **Memory between runs**: **This job's notebook**. **What to keep**:
      ```
      The open incidents: the incident_key, when each started, its peak severity, and when someone was paged.
      Remove an incident when the errors are back to normal.
      ```
-   - **Guardrails**: leave them empty. Closed, the section says the limits that apply, for example "Stops after 8
+   - **Limits**: leave them empty. Closed, the section says the limits that apply, for example "Stops after 8
      model calls or 45,000 tokens. Anaphora sets these limits from the step."
 7. **Conditional block**, after the AI step: **Variable** `page_now`, **Condition** **is No**. The card of the block
    says "page_now is No". Inside it, add a **Break**: when the answer is no, the run stops and nobody is paged. This

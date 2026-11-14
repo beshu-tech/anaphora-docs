@@ -72,6 +72,12 @@ X-Custom-Header: value
 
 Anaphora sets `Content-Type` from the body type.
 
+Anaphora never sends a forwarding header: `X-Forwarded-For`, `X-Forwarded-Host`, `X-Forwarded-Proto`, `X-Forwarded-Port`,
+`Forwarded`, `X-Real-IP`, `X-Client-IP`, `True-Client-IP` or `CF-Connecting-IP`. It drops the header and the delivery
+goes on without it. The run stores a [warning](../data-retention/runs.md#run-warnings), and the next save of the
+interface is refused until you remove the header. A receiver that needs the address of the sender reads it from the
+connection.
+
 ## Testing
 
 Click **Test**, enter an optional **Test message**, then click **Send to webhook**.
@@ -81,6 +87,18 @@ Click **Test**, enter an optional **Test message**, then click **Send to webhook
 A delivery succeeds only when the webhook answers with a 2xx status. Any other answer fails the delivery, and the run
 shows the status and the answer of the webhook. The **Test** button, the health monitor, the license alert and the AI
 budget alert use the same check.
+
+A webhook call stops after 60 seconds. This limit is fixed.
+
+Anaphora does not follow a redirect. An answer with a 3xx status and a `Location` header fails the delivery. The status
+of the run and the **Test** button say, for example, "Webhook answered 301, a redirect to hooks.example. Anaphora does
+not follow redirects: enter the final URL in the webhook interface." The text names the host only, never the path. Enter
+the final URL in the interface. A run is not retried when every failed delivery got a redirect, because a retry fails in
+the same way. A 3xx answer with no `Location` header (a 304, for example) is not a redirect and keeps its plain text.
+
+A webhook cannot point at a port of Anaphora itself, and the [outbound
+policy](../getting-started/installation.md#what-a-capture-and-a-delivery-may-reach) refuses a cloud metadata or
+link-local address.
 
 :::warning Test route removed
 The route `/guest/api/test/webhook` no longer exists. If a webhook interface points at it, point it at a real receiver.

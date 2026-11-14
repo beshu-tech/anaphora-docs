@@ -49,15 +49,15 @@ Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI 
    - **URL**: the page, for example `https://news.ycombinator.com`.
    - Tick **Take snapshot**.
 2. **AI step**: the step opens in its own page. Click **Set it up by hand instead**, then fill in the simple view:
-   - **Provider**: your AI provider.
+   - **Who answers**: your AI provider.
    - **Instructions**: what to do with the pages, for example:
      ```
      Summarize the following articles into an executive summary, highlighting key trends and actionable insights.
      ```
-   - **Fills in**: click **Edit**, enter the **Name** `summary`, and choose the **Type** **text**. The answer goes into
+   - **Variables**: click **Edit**, enter the **Name** `summary`, and choose the **Type** **text**. The answer goes into
      this variable. One variable is enough for this job.
-   - **It can**: the first line names what the step sees. Here it is both snapshots, "everything so far", which is
-     what this job needs.
+   - **Rows it can see**: leave it on "Everything so far". The step then sees both snapshots, which is what this job
+     needs.
    - Click **Done** to go back to the flow.
 
    ![The AI step "Summarize the news" in the simple view, shown here for a job with other sources: the provider, the Instructions, Fills in with one text variable, summary, It can see the NPR headlines and CNN headlines snapshots, and "Stops after 1 model call or 20,000 tokens."](images/ai-news-collation-ai-step.png)

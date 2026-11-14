@@ -55,7 +55,7 @@ docker run --rm --entrypoint cat beshultd/anaphora:<version> /usr/local/bin/anap
    ```
 
 3. **Apply.** The script checks again and asks before it stops Anaphora: type `yes` and press Enter. Then it copies
-   `storage/` to `anaphora-backups/<date>/`, sets `ANAPHORA_TAG` in `.env` (the old file stays as `.env.bak`), starts
+   `storage/` to `anaphora-backups/<date>/` (not `storage/backups/`: copy a `restore-*` folder out yourself), sets `ANAPHORA_TAG` in `.env` (the old file stays as `.env.bak`), starts
    the new version and waits until it answers. If the new version does not start, the script puts the backup back and
    starts the old version.
 
@@ -104,18 +104,123 @@ restore it:
 
 If Anaphora cannot write the copy, it applies no migration, and the database stays as it was.
 
+## The check lists what an upgrade changes for your jobs
+
+`anaphora-upgrade.sh check` reads your stored jobs, templates, delivery interfaces and settings on the copy of your
+database, with no network. It prints `NOTE` lines. Each note names a job, a template or the settings, says what happens
+now, and says what to do. The last lines give the number of errors and of warnings.
+
+- An **error** means that a job does not run, does not deliver its report, or was not checked, on the new version until
+  you fix it.
+- A **warning** means that the job runs, and something changes. Read the `Now:` line.
+- The upgrade does not stop for a note. Fix the jobs before the upgrade, or right after it. The check fails for two
+  causes that the upgrade itself makes: a job that the new version cannot read, and a cron over 1024 characters.
+- The notes hold names, ids and field paths. They hold no pattern, template, address or password, so you can paste them
+  into a mail to support.
+- "Nothing was checked" is not the same as "nothing found". If the check says that the scan did not run, or that regular
+  expressions were not checked, run the check again.
+
+### The Upgrade notes page
+
+The notes are also in the app, so you can read them after the upgrade. They do not need the script.
+
+- The **Upgrade notes** page is in the side menu for the System role and for the admin of a space. The System role sees
+  the notes of every space. An admin sees the notes of the jobs and templates of that space. A writer or a reader sees
+  none.
+- Each note has a link to the job and to the tab of the field.
+- A banner shows the number of notes. You can close it. It comes back when the notes change.
+- The Jobs list has a tag on each job that has a note, and a **Needs attention** filter.
+- A note goes away when its cause goes, not when someone reads it. Changes that you save show on the page within a few
+  seconds.
+
+The start log has the same notes, one line each, marked `[compat-scan]`.
+
 ## After the upgrade from 0.18.0
 
-The next version after 0.18.0 changes the database. So 0.18.0 refuses to start on the upgraded database, and a rollback needs the backup from
-before the upgrade. The upgrade script keeps it for you.
+The next version after 0.18.0 changes the database. So 0.18.0 refuses to start on the upgraded database, and a rollback
+needs the backup from before the upgrade. The upgrade script keeps it for you. You lose what Anaphora wrote after the
+upgrade. Run `anaphora-upgrade.sh check` first, and read its notes.
 
-- **Snooze and unsubscribe links.** Links in emails sent before the upgrade keep working for 90 days. See
-  [Email delivery](../jobs/delivery.md#email-delivery).
-- **After a rollback**, the links in emails that the new version sent do not work. The links from before the upgrade
-  work again.
-- **Observer keys read more.** Each observer key, also a key that you created before the upgrade, now reads the captured
-  number values of all spaces through the [Prometheus metrics](../administration/self-monitoring.md#prometheus-metrics).
-  If a monitor must not see them, revoke its key.
+The list starts with the changes that can stop a job or a delivery.
+
+1. **A custom AI provider with no endpoint fails all its AI actions.** Check each AI provider of the type "Custom
+   (OpenAI API compatible)". Set its endpoint, or change its provider to OpenAI. The form now refuses to save one with
+   no endpoint. A stored AI key also goes only to the endpoint that it was saved with: when you change the provider or
+   the endpoint, enter the key again. **Rotate the `AI_API_KEY` of the environment** if users that you do not fully
+   trust had access to your instance.
+2. **The jobs of a removed space do not run.** A job whose space is not in the space list of the settings has no
+   scheduled run, retry or catch-up run. Nothing is deleted. Look at the `[spaces]` lines of the check.
+3. **A webhook that answers with a redirect fails.** Anaphora does not follow redirects. Press **Test** on each webhook
+   interface, and enter the final URL where the answer names a host.
+4. **A capture or a delivery aimed at a cloud metadata address, a link-local address or a port of Anaphora is
+   refused.** Loopback, private networks and internal names stay open by default. See
+   [What a capture and a delivery may reach](./installation.md#what-a-capture-and-a-delivery-may-reach).
+5. **A webhook that sets a forwarding header no longer sends it.** The delivery goes on. The next save of that interface
+   is refused until you remove the header.
+6. **A delivery that does not finish is stopped.** A webhook stops after 60 seconds, a Mailgun message after 5 minutes,
+   one SMTP mail after 5 minutes and an S3 upload after 10 minutes. Before, a delivery that did not finish held its
+   worker for ever. The capture step, page navigation and run limits keep their values, and four variables raise them.
+   See [Time limits](./installation.md#time-limits). If your pages or your mail relay are slow, set them now.
+7. **A cron over 1024 characters never runs**, and a save refuses one. The Jobs list shows **Never runs**, and
+   **Run now** still works.
+8. **In a time zone with a clock change, some firings move.** See
+   [Clock changes](../jobs/general.md#clock-changes). A server in UTC is not affected.
+9. **A regular expression that RE2 does not support is skipped.** A "Process text" replacement with a backreference or a
+   lookaround is skipped, and the report is sent. The editor warns while you type.
+10. **A text block or a delivery template over 1,000,000 characters is refused on save.** A template that fails to render
+    already held back the report in 0.18.0. The check now lists such templates.
+11. **Retries run at other times.** The number of retries is the number that you set, and each delay counts from the end
+    of the attempt before it. A job whose attempts take longer retries more often. See
+    [Retry policy](../jobs/general.md#retry-policy).
+12. **The throttle counts the time between two firings.** A report that the old rule held back by mistake is sent, and a
+    report that it sent too soon is held back. A report that reached nobody no longer starts the throttle time, so its
+    retry sends. A Mailgun message that the run limit cut can then be sent twice.
+13. **Runs show other states, and the counts fall.** A run inside the throttle time says **Throttled**, and a run whose
+    recipients all snoozed says **Skipped**. The Reports page and the Overview count fewer runs. See
+    [Run statuses](../data-retention/runs.md#run-statuses).
+14. **A script that calls the JSON API can get a 400 or fail to read a schema.** The `issues` of a 400 answer use other
+    codes, the JSON Schemas are 2020-12, and a date and time without seconds is refused on a write. A write can answer
+    503 with `Retry-After` when the server is busy: retry it. `links.report` and `links.pdf` of a run are `null` for a run
+    with no report.
+15. **The S3 object key has a new form.** New reports go to `<job name>/<date>/<time>-<run ID>/report.pdf` (or `.html`),
+    with the date and time in UTC. Change any tool that reads the old path.
+16. **Anaphora refuses to start on a missing database, and an interrupted import leaves a folder in `storage/backups/`.**
+    After the first good start, a missing or empty `storage/authfish.sqlite` is a stop, not a new install. The upgrade
+    script does not copy `storage/backups/`: copy a `restore-*` folder out before you upgrade. See
+    [Backup](../administration/backup.md#the-copy-from-before-an-import).
+17. **The export is now the database file, not a zip file**, and an import with no `Content-Length` gets `411`. No
+    earlier version can import a new export. Make the export that you keep for a rollback **before** the upgrade, with
+    the old version: 0.18.0 cannot export a database over 2 GiB and refuses an import file over 100 MiB. See
+    [Backup](../administration/backup.md#ui-export).
+18. **Every observer key now reads the Prometheus metrics.** If a monitor must not see captured values, revoke its key.
+    See [Prometheus metrics](../administration/self-monitoring.md#prometheus-metrics).
+19. **Snooze and unsubscribe links.** Links in emails sent before the upgrade keep working for 90 days. See
+    [Email delivery](../jobs/delivery.md#email-delivery). After a rollback, the links in emails that the new version
+    sent do not work. The links from before the upgrade work again.
+20. **You see more.** A run stores its warnings, a run close to a limit warns, the Upgrade notes page lists what the
+    check finds, and the health monitoring mails once for each job and warning. Nothing is mailed at the upgrade for a
+    warning that is already there. See [Run warnings](../data-retention/runs.md#run-warnings). A capture of a Metabase
+    dashboard now waits for the queries of its cards. See [Metabase dashboards](../jobs/capture.md#metabase-dashboards).
+
+### A large history: the first start waits
+
+The first start builds a table for the Runs, Home and Reports pages, and waits for it. It takes about 12 seconds at
+1,000,000 runs on a fast host, and longer on a slow disk. After that, the pages open in milliseconds on a large history.
+With more than 100,000 runs, the start log says `Filling the run list table` before it starts, and the check prints the
+same line.
+
+If you run Anaphora under an orchestrator that restarts a container that reports unhealthy, set the start period of the
+health check before you upgrade. The health check of the image waits 30 seconds before it counts a failure. A restart
+during the build rolls it back, and the next start begins again, so an install whose build takes longer than the
+orchestrator lets a start take never upgrades. Allow 5 minutes plus 5 minutes for each million runs, and more on a
+slow disk:
+
+- Docker Compose: add `healthcheck: { start_period: 10m }` under the service.
+- `docker run`: add `--health-start-period=10m`.
+- Kubernetes: give the container a `startupProbe` with `failureThreshold` times `periodSeconds` of at least 600 seconds.
+
+Plain Docker and Compose restart a container that exits, not one that is unhealthy, so they are not concerned.
+`anaphora-upgrade.sh` waits 600 seconds for a start. For a large history, set `START_TIMEOUT_S` higher.
 
 ## After the upgrade from 0.16.0
 

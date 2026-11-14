@@ -66,7 +66,7 @@ stays in the field, also when the list does not have it. The first model of the 
 prompt** sends your prompt and three small checks: a tool call, a JSON answer and an image. Under the prompt, the
 window says "The Test makes four or five model calls: your prompt, a check of tools, one or two checks of JSON answers
 and a check of images. Their tokens count on the budget of the provider." The JSON check first sends a JSON schema of
-the answer (`json_schema`, strict), as an AI step with **Fills in** rows sends it. When that does not prove the schema
+the answer (`json_schema`, strict), as an AI step with **Variables** rows sends it. When that does not prove the schema
 (the endpoint refuses it, the answer does not fit it, or the call fails), the check asks for a JSON object with no
 schema: the fifth model call. The Test uses the key, the endpoint and the model of the form. The window shows the
 answer, then **What this model can do**:
@@ -92,8 +92,8 @@ reason as `reasons.jsonSchema`. When the call with the schema fails, its error a
 to the log of Anaphora.
 
 The Test also records whether the model writes hidden reasoning. The window does not list it. Unless the Test saw
-none, the token cap and the time limit that Anaphora sets for an AI step make room for it: see
-[Guardrails](../jobs/ai-step.md#guardrails).
+none, the token limit and the time limit that Anaphora sets for an AI step make room for it: see
+[Limits](../jobs/ai-step.md#limits).
 
 ![The Test the AI provider window after a Test: the note "The Test makes four or five model calls", the answer "Hello!", then Answers a prompt, Uses tools, Gives structured answers (JSON) and Reads images: all Yes; under Gives structured answers (JSON), "The call with the answer schema failed, so a step asks for a JSON object without it. The error is under Details."; Details, closed; and "Saved with the provider."](images/ai-provider-test.png)
 
@@ -141,9 +141,9 @@ variables, look at earlier runs, do exact math, and keep a notebook between runs
 A **Conditional block** can test a **number** variable of an AI step. With one variable, the answer of the model
 must be a bare number, or hold exactly one number, for example `Severity: 7` or `7/10`. Any other answer fails the run
 with the error `The AI answer is not a number`. This way, the job never takes a branch on an answer that nobody can
-read. Ask the model for one number only, and set a small **Answer length cap**. With several variables, the model answers
+read. Ask the model for one number only, and set a small **Answer length limit**. With several variables, the model answers
 one JSON object, and Anaphora checks each variable: a wrong value fails the step and names the variable. An answer that
-is not valid JSON gets one more model call to correct it: see [Fills in](../jobs/ai-step.md#fills-in). A **yes/no**
+is not valid JSON gets one more model call to correct it: see [Variables](../jobs/ai-step.md#variables). A **yes/no**
 variable holds `1` or `0`. A **Conditional block** on it offers **is Yes** and **is No**.
 
 ### The Kibana AI Triage template
@@ -162,7 +162,7 @@ edition does not have it. Every 15 minutes, the job:
    dashboard.
 
 The job sends the report at most once every 3 hours. When the space has exactly one AI provider, the new job uses it.
-With more than one, select the **Provider** in each AI step. With none, add an AI provider to the space first. The
+With more than one, select **Who answers** in each AI step. With none, add an AI provider to the space first. The
 template uses the public Kibana demo: change the URLs to your own Kibana.
 
 The [AI Triage](../advanced-examples/ai-triage.md) example builds the same job with one AI step. It looks at the earlier
