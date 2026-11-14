@@ -54,13 +54,15 @@ Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI 
      ```
      Summarize the following articles into an executive summary, highlighting key trends and actionable insights.
      ```
-   - **Variables**: click **Edit**, enter the **Name** `summary`, and choose the **Type** **text**. The answer goes into
+   - **Variables**: click **Name the variable**, enter the **Name** `summary`, and choose the **Type** **text**. The answer goes into
      this variable. One variable is enough for this job.
    - **Rows it can see**: leave it on "Everything so far". The step then sees both snapshots, which is what this job
      needs.
    - Click **Done** to go back to the flow.
 
-   ![The AI step "Summarize the news" in the simple view, shown here for a job with other sources: the provider, the Instructions, Fills in with one text variable, summary, It can see the NPR headlines and CNN headlines snapshots, and "Stops after 1 model call or 20,000 tokens."](images/ai-news-collation-ai-step.png)
+   The screenshot shows an earlier version of this screen; the sections are now named Variables and Rows it can see.
+
+   ![An earlier version of the AI step "Summarize the news" in the simple view, shown here for a job with other sources: the provider, the Instructions, Fills in (now Variables) with one text variable, summary, It can see (now Rows it can see) the NPR headlines and CNN headlines snapshots, and "Stops after 1 model call or 20,000 tokens."](images/ai-news-collation-ai-step.png)
 
    [The AI step](../jobs/ai-step.md) describes every setting, and how to try the step before you save the job.
 

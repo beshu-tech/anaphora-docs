@@ -28,7 +28,7 @@ Each time a job runs, Anaphora makes a run record. Use it to:
 | **Error**            | The job execution failed                                                                         |
 | **Stopped at Break** | The run stopped as planned: a **Break**, or a hits condition that was not met. It made no report |
 | **Skipped**          | The run made the report, and the [condition](../jobs/delivery.md#send-through-a-delivery-only-if) of every delivery failed. Nobody got it, as planned. A run whose recipients all snoozed the job is also **Skipped** |
-| **Throttled**        | The run came inside the [throttle](../jobs/general.md#notification-throttling) time of its job. It captured nothing, sent nothing and made no report |
+| **Throttled**        | The run came inside the [throttle](../jobs/general.md#notification-throttling) time of its job. It ran its capture, sent nothing and made no report |
 
 The **Status** filter has an option for each of these states. **Success** does not list throttled or skipped runs.
 The Reports page and the Overview count a throttled run as no report, because it made none. So after an upgrade from

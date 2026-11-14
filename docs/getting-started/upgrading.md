@@ -166,9 +166,11 @@ The list starts with the changes that can stop a job or a delivery.
 8. **In a time zone with a clock change, some firings move.** See
    [Clock changes](../jobs/general.md#clock-changes). A server in UTC is not affected.
 9. **A regular expression that RE2 does not support is skipped.** A "Process text" replacement with a backreference or a
-   lookaround is skipped, and the report is sent. The editor warns while you type.
-10. **A text block or a delivery template over 1,000,000 characters is refused on save.** A template that fails to render
-    already held back the report in 0.18.0. The check now lists such templates.
+   lookaround is skipped, and the text stays as it was. Rewrite the pattern. The report is sent, and the editor warns while you type. See
+   [Process text and regular expressions](../jobs/capture.md#process-text-and-regular-expressions).
+10. **A text block or a delivery template over 1,000,000 characters is refused on save.** A template that is already
+    saved still renders. A template that fails to render already held back the report in 0.18.0. The check now lists
+    such templates.
 11. **Retries run at other times.** The number of retries is the number that you set, and each delay counts from the end
     of the attempt before it. A job whose attempts take longer retries more often. See
     [Retry policy](../jobs/general.md#retry-policy).
@@ -220,7 +222,7 @@ slow disk:
 - Kubernetes: give the container a `startupProbe` with `failureThreshold` times `periodSeconds` of at least 600 seconds.
 
 Plain Docker and Compose restart a container that exits, not one that is unhealthy, so they are not concerned.
-`anaphora-upgrade.sh` waits 600 seconds for a start. For a large history, set `START_TIMEOUT_S` higher.
+`anaphora-upgrade.sh` waits 600 seconds for a start. For a large history, set `START_TIMEOUT_S` to 600 seconds, and 250 more for each million runs, or higher on a slow disk.
 
 ## After the upgrade from 0.16.0
 

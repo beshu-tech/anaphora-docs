@@ -120,7 +120,7 @@ Two variables say which addresses a capture and a delivery may reach.
 | Variable                 | Values                                  | Meaning                                                                          |
 |--------------------------|-----------------------------------------|----------------------------------------------------------------------------------|
 | `OUTBOUND_POLICY`        | `metadata` (default) or `strict`        | `metadata` refuses cloud metadata addresses, link-local addresses and special ranges. `strict` also refuses loopback and private addresses |
-| `OUTBOUND_ALLOWED_HOSTS` | `host` or `host:port`, separated by commas | Hosts that `strict` may reach. A host with no port means any port              |
+| `OUTBOUND_ALLOWED_HOSTS` | `host` or `host:port`, separated by commas | Hosts that a capture and a delivery may reach whatever their address, in both modes. A host with no port means any port. The ports of Anaphora stay refused |
 
 - The default keeps loopback, private networks and internal names open. A capture of an internal Kibana, Grafana or
   Metabase, an SMTP relay on a private address, MinIO and an intranet webhook work as before.
@@ -135,8 +135,7 @@ Two variables say which addresses a capture and a delivery may reach.
   the header.
 - An unknown value of `OUTBOUND_POLICY`, or a bad entry of `OUTBOUND_ALLOWED_HOSTS`, stops the start. The log has one
   `Outbound policy in force` line for each process.
-- In the default mode, a capture of a name that resolves to a refused address stops after the first answer arrives, not
-  before. That is detection, not prevention. For prevention use `strict`, and a network rule on your cloud.
+- The default mode protects less than `strict`. For full protection, use `strict` and a network rule in your cloud.
 
 The [Upgrade notes](./upgrading.md#the-upgrade-notes-page) page lists the stored jobs and interfaces that the policy
 refuses.

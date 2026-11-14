@@ -52,6 +52,17 @@ flowchart LR
 4. Click **Test**
 5. Click **Save**
 
+A custom provider needs an endpoint. The form refuses to save one without it, and a custom provider saved without one
+fails its AI actions. Set its endpoint, or change its provider to OpenAI.
+
+A stored API key goes only to the endpoint that it was saved with. When you change the provider or the endpoint, enter
+the key again ("Enter the API key again: the endpoint changed"). A change of the model, the name or the budget keeps the
+key. **Test** asks for a missing key instead of failing with a generic error. When the model list is empty, the field says
+why: the API key or the endpoint is missing, or the request failed with its own error.
+
+A provider from the [environment](#provider-from-the-environment) uses `AI_API_KEY`. Rotate it if users that you do not
+fully trust had access to your instance.
+
 The **Model** field is a list that you can search. The note under it says "Pick a model of the list, or type the name
 the vendor gives it. The list shows only models that chat." Embedding, rerank, speech, image and moderation models are
 not in the list. A name that the list does not have shows as `Use "<name>"`: click it to use that name. A saved name
@@ -235,6 +246,12 @@ at most once per window.
 
 Choose the channel under **Settings** > **Application** > **Health Monitoring**. You can set it without switching
 health monitoring on. Without a channel, jobs are still paused, but nothing is sent.
+
+An alert is tried again until a mail server takes it. A mail server that is down is tried again after 10 minutes, then
+after 20, 40, 80, 160 and 320 minutes, then every 6 hours. A mail server that answers late (after more than 45 seconds)
+may have taken the mail: after two such attempts, Anaphora stops, the log says that the alert may have arrived, and a
+recipient gets at most two mails for one alert. A failed attempt writes one line to the log. A later attempt does not
+name a job: it says that jobs of the provider are paused when they next call it.
 
 ![The operator channel, editable with health monitoring off](images/ai-budget-operator-channel.png)
 

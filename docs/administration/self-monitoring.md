@@ -49,6 +49,10 @@ The answer is always HTTP 200, except for an observer key that is revoked or mis
 monitor raises an alert. Anaphora keys start with `ana_`. A bearer token that does not, for example the token of a
 proxy in front of Anaphora, gets the answer without names.
 
+The answer to a call that does not sign in as a system user (no credentials, other credentials, or an observer key)
+can be about 10 seconds old. Anaphora builds it once and gives it to every such call during that time. The answer to a
+system user is always current. A monitor that polls every minute or less often gets a new answer on each poll.
+
 ### Observer keys
 
 Use an observer key for a monitoring tool (Centreon, Zabbix, Nagios, Prometheus). You can revoke a key without changing

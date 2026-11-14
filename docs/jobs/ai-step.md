@@ -84,10 +84,12 @@ about.
 
 ## The editor
 
-![The AI step editor: on the left, the actions of the flow, with "Conditional block · page_now is No" and its Break; in the middle, the step, with "Stops after 8 model calls or 29,000 tokens."; on the right, the assistant and the last trial: Success, 3 model calls, 3 tool calls, 7,784 tokens, page_now No](images/ai-step-editor.png)
+The screenshot shows an earlier version of this screen; the sections are now named Instructions, Variables, Rows it can see, Tools and Try it, and the right card has the tabs Trial and Assistant.
+
+![An earlier version of the AI step editor: on the left, the actions of the flow, with "Conditional block · page_now is No" and its Break; in the middle, the step, with "Stops after 8 model calls or 29,000 tokens."; on the right, the assistant and the last trial: Success, 3 model calls, 3 tool calls, 7,784 tokens, page_now No](images/ai-step-editor.png)
 
 The step is in the middle. It is a card of numbered sections: **1 Instructions**, **2 Variables**, **3 Rows it can
-see**, **4 Tools** and **5 Try it**. **Advanced** numbers its four sections in the same way. Each section has the same
+see**, **4 Tools** and **5 Try it**. With **Advanced** on, its four sections are 3 to 6, and **Try it** is 7. Each section has the same
 name in every place of the editor: the headings, the cards and **Undo** buttons of the assistant, and the text of a
 trial.
 
@@ -109,8 +111,8 @@ it** stay in a bar at the foot of the card. Click the title to rename the step.
 - **Who answers**: the AI provider of the step. A step whose provider is not in the space shows "A provider that is gone:
   choose one".
 - **Instructions**: what the AI must do, in your words. Name the variables, and say what a good answer looks like.
-  **Improve with the assistant** asks the assistant to make them clearer.
-- **Variables**: the variables that the step fills, for example `severity · number`. **Edit** shows one block per
+  The assistant offers **Improve my instructions**.
+- **Variables**: the variables that the step fills, for example `severity · number`. **Edit variables** shows one block per
   variable: **Name**, **Type** and a bin to remove it on one line, and under them **What it means**, a text box at the
   full width. **Add variable** adds a block.
 - **Tools**: one line per tool that is on, each with a switch. **+ Add a tool** opens a menu with the tools that are
@@ -123,8 +125,8 @@ it** stay in a bar at the foot of the card. Click the title to rename the step.
   Until Anaphora has the estimate, a token limit that it sets from the step reads "a token limit not known yet". With no
   values of a run or of a Test capture, it reads "a token limit set from the values of the run". See
   [Limits](#limits).
-- Warnings, under the step, for a setting the step cannot work with. For example "With a tool on, the step needs at
-  least 2 model calls. Raise Most model calls in Limits.", or an **Answer length limit** too small for the rows of
+- Warnings, under the step, for a setting the step cannot work with. For example "A tool needs at least 2 calls. Raise
+  Most model calls in Advanced › Limits.", or an **Answer length limit** too small for the rows of
   **Variables** (Anaphora then uses 256 tokens).
 - For a step set up before the AI step that sends more than 50,000 tokens a run, a warning with **Use the new
   settings**: see [Steps set up before the AI step](#steps-set-up-before-the-ai-step).
@@ -155,7 +157,9 @@ until you correct it, for example "Row 2 of Variables: the name severity is alre
 model answers yes or no, and Anaphora stores it as `1` or `0`. The editor shows the value as Yes or No: on the card of
 the step in the flow, in the trial and in the words of the assistant.
 
-![Fills in, open to edit: page_now yes/no, "Yes when someone must be paged now about the checkout errors, no otherwise."; errorTrend text; page_reason text; Add variable; and "The AI fills them all in one answer and gives its reasons, which you see in the trial."](images/ai-step-fills-in.png)
+The screenshot shows an earlier version of this screen; this section is now named Variables.
+
+![An earlier version of Variables (then named Fills in), open to edit: page_now yes/no, "Yes when someone must be paged now about the checkout errors, no otherwise."; errorTrend text; page_reason text; Add variable; and "The AI fills them all in one answer and gives its reasons, which you see in the trial."](images/ai-step-fills-in.png)
 
 When the answer is not valid JSON, the step makes one more model call: the AI gets its answer back and corrects it.
 That call counts on the provider budget and under the [limits](#limits). When the step is at its model call
@@ -189,13 +193,15 @@ Each model call sends the whole conversation again. That is why a step with tool
 
 ### Advanced
 
-Switch on **Advanced** to see every setting. The line under the title says "Advanced on: every section, with all its
-settings.", and **Back to the simple view** switches back. **Variables** shows the block of each variable, and four
+Switch on **Advanced** to see every setting. The headings stay the section names. Switch it off to go back to the simple
+view. **Variables** shows the block of each variable, and four
 sections open under it. Each section says in one line what it is set to, also when it is closed.
 
 #### Rows it can see
 
-![Can see: the three modes, the rows errorsNow and the errors page, the box "Sent at the start: about 1,283 tokens", and the images box](images/ai-step-can-see.png)
+The screenshot shows an earlier version of this screen; this section is now named Rows it can see.
+
+![An earlier version of Rows it can see (then named Can see): the three modes, the rows errorsNow and the errors page, the box "Sent at the start: about 1,283 tokens", and the images box](images/ai-step-can-see.png)
 
 What the AI gets of the earlier snapshots and variables. Three modes:
 
@@ -212,7 +218,7 @@ rows. The AI reads the ones it needs."
 
 Each row shows its value and its size, for example "about 140 tokens". The size is the size of the text that the step
 sends for the row. One calculation gives the size of a row, the estimate of **What the model gets** and the request of a
-run, so they agree. The rows show the values that the top of the **Assistant** panel names, for example "Values of the
+run, so they agree. The rows show the values that the line at the top of the card on the right, above **Trial** and **Assistant**, names, for example "Values of the
 run of Oct 10, 13:51": the values of **What the model gets** and **Try it**. **Use the Test capture instead** and **Use
 the run instead** change all of them. A variable that these values do not have shows no value and no size: **What the
 model gets** says "Empty in this run." for it. A template has no trial: its rows show the last Test capture. A snapshot
@@ -241,7 +247,9 @@ example "Anaphora does not know yet whether this model reads images. Run the pro
 
 #### Tools
 
-![Can do: Stays in Anaphora with Read capture data, Look at earlier runs and Do exact math; Reaches out with Browse, Fetch from the web and MCP servers, not available yet](images/ai-step-can-do.png)
+The screenshot shows an earlier version of this screen; this section is now named Tools.
+
+![An earlier version of Tools (then named Can do): Stays in Anaphora with Read capture data, Look at earlier runs and Do exact math; Reaches out with Browse, Fetch from the web and MCP servers, not available yet](images/ai-step-can-do.png)
 
 The tools of the step, in two groups.
 
@@ -269,7 +277,9 @@ tools." The notebook tools come with **This job's notebook** under **Memory betw
 
 #### Memory between runs
 
-![Remembers: This job's notebook, What to keep, Longest notebook 4000 characters, and the notebook now with Edit, History and Clear: "568 of 4,000 characters · changed Today at 00:02 by the run of 00:02"](images/ai-step-remembers.png)
+The screenshot shows an earlier version of this screen; this section is now named Memory between runs.
+
+![An earlier version of Memory between runs (then named Remembers): This job's notebook, What to keep, Longest notebook 4000 characters, and the notebook now with Edit, History and Clear: "568 of 4,000 characters · changed Today at 00:02 by the run of 00:02"](images/ai-step-remembers.png)
 
 - **Nothing**: each run starts from nothing. This is the default.
 - **This job's notebook**: one text for the job, shared by all its AI steps. In each run, the AI can read it and replace
@@ -301,7 +311,9 @@ notebook.
 
 #### Limits
 
-![Guardrails: every field empty, with the values that apply in grey (8 model calls, 12 tool calls, 29,000 tokens, 150 seconds, Provider default); "When a limit is reached"; and "What this step costs" from the trial of Oct 12, 01:19: 11,394 tokens a run, every 15 minutes, about 7.7M tokens a week, and no budget](images/ai-step-guardrails.png)
+The screenshot shows an earlier version of this screen; this section is now named Limits.
+
+![An earlier version of Limits (then named Guardrails): every field empty, with the values that apply in grey (8 model calls, 12 tool calls, 29,000 tokens, 150 seconds, Provider default); "When a limit is reached"; and "What this step costs" from the trial of Oct 12, 01:19: 11,394 tokens a run, every 15 minutes, about 7.7M tokens a week, and no budget](images/ai-step-guardrails.png)
 
 Limits on one run of the step, on top of the provider budget. An empty field shows in grey the value that applies,
 set from the step. Type a number to set your own. Until Anaphora has the estimate, an empty **Token limit for the step**
@@ -397,7 +409,7 @@ it fills first." **Try again** follows the same rule. A trial that does not run 
 cause is the key of the provider, the alert links to the provider.
 
 Try it uses the values of the last run of the job. When the job has no run yet, it uses your last **Test capture**. The
-line at the top of the **Assistant** panel says which, for example "Values of the run of Oct 10, 13:51". **Use the Test
+line at the top of the card on the right, above **Trial** and **Assistant**, says which, for example "Values of the run of Oct 10, 13:51". **Use the Test
 capture instead** and **Use the run instead** switch between the two. The assistant, **What the model gets** and the
 rows of [Rows it can see](#rows-it-can-see) use the same values.
 
@@ -410,10 +422,12 @@ A trial that takes more than 10 minutes stops with "The server did not finish in
 gets** stops the same way after 60 seconds.
 
 A job that is not saved yet has no run, so Try it uses its Test capture. With no run and no Test capture, the button is
-off and the editor says "Run a Test capture first." Click **Run a Test capture of the actions before it** to get the
+off and the editor says "Run a Test capture first." Click **Run a Test capture** to get the
 values. A template cannot be tried: try the step in a job made from the template.
 
-![The Trial panel: Success with 3 model calls, 2 tool calls and 9,857 tokens; page_now, errorTrend and page_reason; the AI's reasons; and the cost of a week](images/ai-step-trial.png)
+The screenshot shows an earlier version of this screen; the trial is now a tab named Trial, next to Assistant.
+
+![An earlier version of the trial, now the Trial tab: Success with 3 model calls, 2 tool calls and 9,857 tokens; page_now, errorTrend and page_reason; the AI's reasons; and the cost of a week](images/ai-step-trial.png)
 
 The **Trial** panel shows:
 
@@ -486,11 +500,14 @@ How the answer is asked for follows the provider's **Test** (see
 
 ## The assistant
 
-![The assistant panel after one answer, on the values of the run of Oct 12, 00:02: the question, which ends "Then try it."; the values of its trial (page_now: Yes, errorTrend: "worse", page_reason); its reasoning; "The trial made 3 model calls and 4 tool calls, and spent 8,357 tokens."; a group of 3 changes with Show each and Undo all; the trial with Open; "This answer: 33,387 tokens"; and, under the empty field, "An answer costs about 16,000 tokens. It tries the step only when you ask. A trial adds its own tokens."](images/ai-step-assistant.png)
+The screenshot shows an earlier version of this screen; the assistant is now a tab named Assistant, next to Trial, and the cost of an answer is the tooltip of Send.
 
-The **Assistant** panel is above the trial. It works on the same values as **Try it**. Write a question or a change in
-**Ask, or say what to change**, and click **Send**. The line under the field says what an answer to the text in the
-field costs, and changes while you type:
+![An earlier version of the assistant, now the Assistant tab: after one answer, on the values of the run of Oct 12, 00:02: the question, which ends "Then try it."; the values of its trial (page_now: Yes, errorTrend: "worse", page_reason); its reasoning; "The trial made 3 model calls and 4 tool calls, and spent 8,357 tokens."; a group of 3 changes with Show each and Undo all; the trial with Open; "This answer: 33,387 tokens"; and, under the empty field, "An answer costs about 16,000 tokens. It tries the step only when you ask. A trial adds its own tokens."](images/ai-step-assistant.png)
+
+The **Assistant** tab sits next to **Trial**. It works on the same values as **Try it**. Write a question or a change in
+**Ask, or say what to change**, and click **Send**. The tooltip of **Send** says what an answer to the text in the field
+costs, and changes while you type. On the first screen of a new step, a line under the field says what a draft costs.
+For the text in the field:
 
 - A question that does not ask for a trial counts two model calls: one that makes the changes, and one that answers.
   For example "An answer costs about 16,000 tokens. It tries the step only when you ask. A trial adds its own tokens."
@@ -571,7 +588,9 @@ panel. **Apply** puts a suggestion into the step, and **Undo** takes it back. A 
 as in the panel. With nothing to change, it says "The assistant suggests no change." **Ask again** asks once more.
 "This answer: N tokens" says what it cost, for example "This answer: 10,454 tokens".
 
-![Explained by the assistant, under the three model calls of the trial, closed, and the limits of the trial, with 150 seconds: "This answer: 10,454 tokens", why the trial filled page_now No and errorTrend "steady", and three suggestions with Apply, one for each of Can do, Remembers and Fills in](images/ai-step-explain.png)
+The screenshot shows an earlier version of this screen; the sections are now named Tools, Memory between runs and Variables.
+
+![An earlier version of the explanation by the assistant: under the three model calls of the trial, closed, and the limits of the trial, with 150 seconds: "This answer: 10,454 tokens", why the trial filled page_now No and errorTrend "steady", and three suggestions with Apply, one for each of Can do, Remembers and Fills in, the old names of Tools, Memory between runs and Variables](images/ai-step-explain.png)
 
 On the Runs page, the same button is **Explain this run**. There, a suggestion has **Open the step** instead of
 **Apply**: open the step, then make the change in the editor. **Explain this run** and **Open the step** need write
@@ -619,6 +638,7 @@ show under the error.
 
 - An AI step costs tokens: what each model call sends, and its answer. Each model call sends the whole conversation
   again, so a step with tools costs more than a single model call. Costs show in tokens, not in money.
+- An answer of the model longer than 1,000,000 characters fails the step.
 - The provider budget applies on top of the limits. When a run reaches it, the job pauses, and every further model
   call on that provider is refused until the window rolls over. See
   [Token budgets](../administration/ai-providers.md#token-budgets).

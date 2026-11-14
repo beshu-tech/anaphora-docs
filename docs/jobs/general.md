@@ -79,6 +79,12 @@ startup, the log names the runs that were missed.
 **Max Notify Freq** sets the minimum time between two delivered reports, whatever the job frequency. A run inside this
 time still runs, but sends nothing. Use it for high-frequency alerting jobs.
 
+A report counts as delivered when it reached at least one delivery. A run whose every delivery failed (for example, a
+mail server that refused every address), was skipped, or was withheld does not start the time, so its retry, or the
+next run, still sends. A run that an older version stored with every delivery failed does not count either, so a
+retry that was waiting at the upgrade sends. A test run (the Test button) belongs to no job, so it never starts the
+time.
+
 Select the checkbox to turn on throttling. The default is 3 hours. If the job runs more often than once a day and
 throttling is off, the General tab shows a **Throttle Frequency** button that sets the default.
 
@@ -120,7 +126,7 @@ flowchart TD
 
 The time between two reports counts from the moment the schedule fired each run, not from the start of the capture. So
 the time that a run waits in the queue, or takes to capture, does not move the window. Two runs that fired exactly one
-throttle time apart both send. A report that reached nobody does not start the time.
+throttle time apart both send.
 
 :::tip Alerting pattern
 High-frequency sampling with throttling gives an alerting-style workflow:
