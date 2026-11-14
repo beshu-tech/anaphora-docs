@@ -40,6 +40,7 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser and log
 | `WORKER_COUNT`      | How many captures run at the same time (browser instances)                                   | No          | `2`                                |
 | `SKIP_NOTIFIER`     | Set to `true` to send no report, mail or webhook. Each delivery is recorded as skipped: the run shows Skipped, not Success, a skipped delivery does not start the job's throttle window, and `prev` and `delta` in templates stay empty because no run counts as sent. | No        | `false`                            |
 | `REPORT_ALLOWED_HOSTS` | Host names, separated by commas, that a report can load an image or a frame from although they have an internal address. See [Report images from internal hosts](#report-images-from-internal-hosts). | No | `intranet.example.com` |
+| `REQUIRE_EXISTING_DATABASE` | Set to `true` to stop the start when the database file is missing. See [Backup](../administration/backup.md#the-copy-from-before-an-import). | No | `true` |
 
 More variables configure [OpenID Connect](../administration/authentication/oidc.md#configure-from-the-environment),
 an [AI provider](#ai-provider-from-the-environment), [failed sign-in limits](#failed-sign-in-limits) and
@@ -63,11 +64,81 @@ time. Each one runs in a separate process with 256 MB of memory.
 
 The PDF renderer does not load a report image or frame from an internal address: loopback, private networks and cloud
 metadata (`169.254.169.254`). A report that shows a logo from an intranet server needs that host in
-`REPORT_ALLOWED_HOSTS`. Captures are not affected: a capture can still open an internal dashboard.
+`REPORT_ALLOWED_HOSTS`. Captures and deliveries follow the [outbound policy](#what-a-capture-and-a-delivery-may-reach).
+A capture can still open an internal dashboard.
 
 Behind an HTTP proxy (`HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY`), the proxy resolves the host names. Anaphora then leaves
 a name that does not resolve in the container to the proxy, and it does not check the address that a response comes
 from. Configure the proxy to refuse internal addresses.
+
+### Time limits
+
+Four variables set how long a step, a page, a run and a mail may take. Each default is the value that Anaphora used
+before, so an install that sets nothing sees no change.
+
+| Variable                        | Default | Allowed               | What it limits                                         | At the limit                                         |
+|---------------------------------|---------|-----------------------|--------------------------------------------------------|------------------------------------------------------|
+| `CAPTURE_STEP_TIMEOUT_SECONDS`  | 60 s    | 10 to 600 seconds     | One step of a capture: a wait for an element, a click  | The step fails, and so does the run                  |
+| `NAVIGATION_TIMEOUT_SECONDS`    | 2 min   | 30 to 600 seconds     | Opening a page                                         | A warning: the capture goes on with the page it has  |
+| `RUN_DEADLINE_SECONDS`          | 30 min  | 900 to 21600 seconds  | A whole run: capture, report and delivery              | The run stops, and its deliveries stop               |
+| `SMTP_DELIVERY_TIMEOUT_SECONDS` | 5 min   | 60 to 600 seconds     | One SMTP mail                                          | The delivery of that mail fails                      |
+
+- Write whole seconds. Text that is not a whole number (`abc`, `1.5`, `90s`) is ignored, and the default stays. A
+  number outside the range becomes the nearest allowed value. The start log has one warning that gives the value that
+  you asked for and the value in force. Each process logs a `Time limits in force` line.
+- Set them in the environment of the container (`environment:` in the compose file), or in `.env.local`.
+- A run that fails at a limit says which one: its value, its variable and its range, in the error of the run and in the
+  log.
+- A wait or a delivery that succeeds but takes more than 80% of its limit adds a warning to the run. See
+  [Run warnings](../data-retention/runs.md#run-warnings). Raise the variable before the next slow day makes the run fail.
+- When the step limit and the navigation limit together are longer than the run limit, the start log has a
+  `Time limit advice` line. It is advice, not an error.
+- A slow Grafana dashboard whose loading bars outlast the step limit fails the step, in every language of the Grafana
+  interface. Raise `CAPTURE_STEP_TIMEOUT_SECONDS` for such a dashboard.
+
+The SMTP limit also sets the silence timer of a mail connection: a fifth of the limit, and at least 60 seconds. A relay
+that stays silent after the message data for longer than that needs a higher value.
+
+These limits are fixed. No variable changes them:
+
+| Limit           | Value  | What it stops                                                                   |
+|-----------------|--------|---------------------------------------------------------------------------------|
+| Report build    | 30 s   | The build of the report: the page load and the PDF                              |
+| Webhook call    | 60 s   | One webhook call                                                                |
+| Mailgun message | 5 min  | One Mailgun message                                                             |
+| S3 upload       | 10 min | One S3 upload                                                                   |
+| Operator alerts | 45 s   | One whole alert: licence, health report, AI budget, run warnings, Test button   |
+
+A delivery that does not finish within its limit ends with "The delivery did not finish within … and was stopped." and
+frees its worker. A Mailgun request that Anaphora gave up on can still run for up to 5 minutes. If Mailgun accepts it
+late, the retry of the run can send the same message twice.
+
+### What a capture and a delivery may reach
+
+Two variables say which addresses a capture and a delivery may reach.
+
+| Variable                 | Values                                  | Meaning                                                                          |
+|--------------------------|-----------------------------------------|----------------------------------------------------------------------------------|
+| `OUTBOUND_POLICY`        | `metadata` (default) or `strict`        | `metadata` refuses cloud metadata addresses, link-local addresses and special ranges. `strict` also refuses loopback and private addresses |
+| `OUTBOUND_ALLOWED_HOSTS` | `host` or `host:port`, separated by commas | Hosts that a capture and a delivery may reach whatever their address, in both modes. A host with no port means any port. The ports of Anaphora stay refused |
+
+- The default keeps loopback, private networks and internal names open. A capture of an internal Kibana, Grafana or
+  Metabase, an SMTP relay on a private address, MinIO and an intranet webhook work as before.
+- **The ports of Anaphora itself** (`SERVER_PORT` and the port of the application behind it) are refused in every mode,
+  on loopback and on every address of the host. No setting allows them.
+- The policy covers the pages that a capture opens (also frames, scripts and images of the page), webhooks, S3
+  endpoints, SMTP hosts and custom AI endpoints. A refused capture or delivery fails with one sentence that names the
+  rule and the variables, never the address. A run does not retry a refusal that repeats. A refused frame, image or
+  script of a page does not fail the capture: the run stores a warning.
+- A webhook never sends a forwarding header (`X-Forwarded-For`, `Forwarded`, `X-Real-IP` and the like). Anaphora drops
+  the header and the delivery goes on without it. The next save of that webhook interface is refused until you remove
+  the header.
+- An unknown value of `OUTBOUND_POLICY`, or a bad entry of `OUTBOUND_ALLOWED_HOSTS`, stops the start. The log has one
+  `Outbound policy in force` line for each process.
+- The default mode protects less than `strict`. For full protection, use `strict` and a network rule in your cloud.
+
+The [Upgrade notes](./upgrading.md#the-upgrade-notes-page) page lists the stored jobs and interfaces that the policy
+refuses.
 
 ### Behind a reverse proxy
 

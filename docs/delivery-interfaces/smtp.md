@@ -65,8 +65,13 @@ Connection security: STARTTLS
 ## Sending behavior
 
 Anaphora sends the emails of a run one at a time, over one connection. So a server that allows few connections accepts
-every recipient. Every SMTP timeout is at most one minute. After a server failure, Anaphora marks the other recipients
-as failed at once.
+every recipient. After a server failure, Anaphora marks the other recipients as failed at once.
+
+One mail may take at most 5 minutes. `SMTP_DELIVERY_TIMEOUT_SECONDS` changes this limit (60 to 600 seconds): see
+[Time limits](../getting-started/installation.md#time-limits). A mail that does not finish in time fails with "The
+delivery did not finish within … and was stopped." A relay that stays silent for a fifth of the limit (at least
+60 seconds) ends the connection. The [outbound policy](../getting-started/installation.md#what-a-capture-and-a-delivery-may-reach)
+refuses an SMTP host on a cloud metadata or link-local address, and on a port of Anaphora itself.
 
 ## Troubleshooting
 

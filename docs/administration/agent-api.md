@@ -83,7 +83,18 @@ and the agent binds a job to them by their ID.
 | 404    | No such object in this space                                                                                                                                                                                                                     |
 | 409    | The `id` you chose on create is already in use; an AI step has no values to try on (run a Test capture); or a `PUT` sent an `updatedAt` older than the stored job or template: someone saved it since, and nothing was written                   |
 | 413    | The body is too long: over 8 MB for an AI step preview, trial or assistant call, over 1 MB for any other call                                                                                                                                    |
+| 503    | The server is busy: too many template or equation checks wait. The answer has a `Retry-After` header. Send the call again after that time |
 | 504    | An AI step preview (60 s), trial (10 min) or assistant answer (5 min) did not finish in time: try again                                                                                                                                          |
+
+Points to check in a script:
+
+- The `issues` of a 400 answer use the codes `invalid_value` (for an unknown value) and `invalid_format` (for a text that
+  has the wrong form). An issue has no `received` field. Read the `path` of an issue, not its position or its text.
+- `/llms/schema/{Name}.json` is JSON Schema 2020-12. A validator that reads only draft-07 refuses it. Use a validator for
+  2020-12, for example `ajv/dist/2020`.
+- A date and time needs the seconds on a write: `2024-01-01T00:00:00Z`, not `2024-01-01T00:00Z`.
+- `links.report` and `links.pdf` of a run are `null` when the run made no report (a throttled run, an error, a Break).
+  `isSent` is true when the report reached at least one delivery.
 
 A call to `/api/spaces/…` from another origin is refused (403), whatever its method, even with the session cookie.
 `GET /api/agent/context` answers every caller: with no session, it answers 401 and names the login page.

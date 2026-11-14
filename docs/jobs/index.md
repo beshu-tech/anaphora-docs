@@ -92,7 +92,7 @@ Capture pages and values -> AI step fills variables -> Conditional block, report
 - The AI decides; the flow acts. A **Conditional block** and a **Break** act on what the AI fills.
 - **Try it** runs the step on the values of the last run, and saves and sends nothing. An assistant can write the step
   from your words.
-- Guardrails stop a step that makes too many model calls, spends too many tokens or runs too long, on top of the
+- Limits stop a step that makes too many model calls, spends too many tokens or runs too long, on top of the
   token budget of the provider.
 - Works with any AI provider that uses the OpenAI API format.
 

@@ -41,6 +41,36 @@ Turn on the **Advanced** switch to type a CRON expression in the **Cron** field:
 Anaphora refuses to save a CRON expression that the scheduler cannot run, for example `0 */25 * * *`. A stored job with
 such an expression shows **Never runs** on the Jobs list.
 
+A CRON expression can have at most 1024 characters. A longer one is refused when you save. A longer one that is
+already stored stays in the job, but it does not run: the Jobs list shows **Never runs**. **Run now** still works. Write
+a shorter expression. No real schedule needs that length.
+
+### How runs are scheduled
+
+- **One run at a time for each job.** A scheduled time that comes while the job still runs is skipped, and the job runs
+  once more when the first run ends. A run that hangs holds its job until the container restarts. **Run now** does not
+  wait for this lock.
+- **A save during a run does not start a second run.** A save, a bulk switch or a database import during a run leaves
+  the run alone.
+- **A job in a removed space does not run.** A job whose space is not in the space list of the settings has no
+  scheduled run, retry or catch-up run. Nothing is deleted. When you add the space again with the same id, its jobs run
+  again. The log has one `[spaces]` line for each missing space.
+
+### Clock changes
+
+A job runs in the time zone of the server. If the server is in UTC, the default of the image, no firing time changes.
+In a zone with a clock change (for example `Europe/Luxembourg`), the two days of the year when the clock moves are
+different:
+
+- A job at fixed times has no `*` or `?` at the start of its second, minute or hour field, for example `30 2 * * *` or
+  `0 0-6/2 * * *`. In spring it runs once, at the first valid time after the gap (03:00). In autumn it runs once, in the
+  first pass of the repeated hour.
+- Any other job is an interval job, for example `0 * * * *` or `*/10 2 * * *`. In spring it skips the missing hour. In
+  autumn it runs in both passes of the repeated hour.
+
+If the clock of the host steps back over a firing (a time sync, a restored virtual machine), the job does not run again
+for that firing. The log has a warning for each firing that it skipped.
+
 If Anaphora is down when a job should run, it does not run the job late. The job runs at its next scheduled time. At
 startup, the log names the runs that were missed.
 
@@ -94,6 +124,10 @@ flowchart TD
 | Every hour       | 6 hours    | Max 4 notifications/day  |
 | Daily            | None       | 1 notification/day       |
 
+The time between two reports counts from the moment the schedule fired each run, not from the start of the capture. So
+the time that a run waits in the queue, or takes to capture, does not move the window. Two runs that fired exactly one
+throttle time apart both send.
+
 :::tip Alerting pattern
 High-frequency sampling with throttling gives an alerting-style workflow:
 
@@ -108,11 +142,21 @@ Select the **Retry on failure** checkbox to retry a failed run automatically. Th
 to 10. New jobs use 3 retries.
 
 Anaphora retries in increasing intervals: 5 minutes, 15 minutes, 30 minutes, 1 hour, 2 hours, 4 hours, 12 hours,
-1 day, 2 days, and 3 days after the initial failure.
+1 day, 2 days, and 3 days. The first delay counts from the end of the failed capture, and each later delay counts from
+the end of the capture before it.
 
 - A run is retried when its capture fails, or when its report reached no destination. A report that reached some
   destinations is not sent again.
-- A capture that runs longer than 30 minutes is stopped, stored as failed, and retried.
+- The number of retries is the number that you set. The first run is not a retry.
+- A retry never starts before 1 minute has passed. A job whose attempts take longer retries more often, and the load on
+  a slow source can grow.
+- A retry that would start at or after the next scheduled run is not planned: the next scheduled run tries anyway. A
+  scheduled time that comes during a retry gets no extra run.
+- A run is not retried when the [outbound policy](../getting-started/installation.md#what-a-capture-and-a-delivery-may-reach)
+  refused its capture, or when every failed delivery was refused by the policy or got a redirect from a webhook. The
+  retry would fail in the same way.
+- A capture that runs longer than the [run limit](../getting-started/installation.md#time-limits) (30 minutes by
+  default) is stopped, stored as failed, and retried.
 - Retries are listed under the run that failed first, in its **Attempts**.
 - If you start a manual run after a scheduled run failed, the pending retries of the scheduled run still happen.
 

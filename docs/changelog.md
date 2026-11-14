@@ -17,22 +17,108 @@ All notable changes to Anaphora are documented here.
 
 ---
 
-## [Unreleased]: Prometheus metrics, previous-run values, and a condition on each delivery
+## [Unreleased]: Time limits, an address policy, run warnings, and a simpler Data page
 
 These changes are on the pre-release documentation. They come in the next release after 0.18.0. That release changes
-the database: a rollback needs the backup from before the upgrade. See
+the database: a rollback needs the backup from before the upgrade. Before you upgrade, run
+`bash anaphora-upgrade.sh check <version>` and read its `NOTE` lines. See
 [After the upgrade from 0.18.0](./getting-started/upgrading.md#after-the-upgrade-from-0180).
 
 ### What you need to do
 
-- **Most installations: nothing.**
+The list starts with the changes that can stop a job or a delivery.
+
+- **A custom AI provider has no endpoint?** Set its endpoint, or change its provider to OpenAI. A provider of the type
+  "Custom (OpenAI API compatible)" with no endpoint now fails its AI actions. See
+  [Adding a provider](./administration/ai-providers.md#adding-a-provider).
+- **You removed a space, and its jobs still ran?** They stop at the upgrade. A job whose space is not in the space list
+  of the settings has no run, retry or catch-up run. Nothing is deleted. Look at the `[spaces]` lines of the check. See
+  [How runs are scheduled](./jobs/general.md#how-runs-are-scheduled).
+- **A webhook answers with a redirect?** The delivery fails now. Press **Test** on each webhook interface, and enter
+  the final URL where it names a host. See [Webhook](./delivery-interfaces/webhook.md#response-handling).
+- **A capture or a delivery aims at a cloud metadata address, a link-local address, or a port of Anaphora?** It is
+  refused now. See
+  [What a capture and a delivery may reach](./getting-started/installation.md#what-a-capture-and-a-delivery-may-reach).
+- **A webhook sets a header such as `X-Forwarded-For`?** Anaphora does not send it now. Remove it from the interface,
+  or the next save is refused. See [Webhook](./delivery-interfaces/webhook.md#custom-headers).
+- **Your pages or your mail relay are slow?** Set the [time limits](./getting-started/installation.md#time-limits)
+  before the first slow day. A delivery that does not finish is stopped now. See
+  [Time limits](./getting-started/installation.md#time-limits).
+- **A cron has more than 1024 characters?** It does not run, and a save refuses it. Write a shorter one. See
+  [Scheduling](./jobs/general.md#advanced-cron).
+- **A text replacement uses a lookahead, a lookbehind or a backreference?** It is skipped now, and the text stays as it
+  was. Rewrite it. See
+  [Process text and regular expressions](./jobs/capture.md#process-text-and-regular-expressions).
+- **A text block or a delivery template has more than 1,000,000 characters?** A save refuses it. A template that is
+  already saved still renders. The check lists templates that fail.
+- **Your server is in a time zone with a clock change?** Some firings move on the two days of the change. See
+  [Clock changes](./jobs/general.md#clock-changes). A server in UTC is not affected.
+- **A tool reads reports from an S3 bucket by their path?** New reports have a new key: the last folder holds the run
+  ID. Change the tool. See [Object names](./delivery-interfaces/s3.md#object-names).
+- **A script calls the JSON API, or posts to `/guest/api/import`?** Read the points under
+  [API for AI agents](./administration/agent-api.md#errors). An import with no `Content-Length` gets `411`: send the
+  file with `curl -X POST -T file`.
+- **A script unzips the `.ana` export?** It breaks. The export is now the database file itself. No earlier version can
+  import it. **Make the export that you keep for a rollback before the upgrade, with the old version.** See
+  [Backup](./administration/backup.md).
+- **Users that you do not fully trust had access to your instance?** Rotate the `AI_API_KEY` of the environment. See
+  [AI providers](./administration/ai-providers.md#adding-a-provider).
+- **You run Anaphora under an orchestrator that restarts a container that reports unhealthy, and your history is
+  large?** Set a long start period before you upgrade. See
+  [A large history](./getting-started/upgrading.md#a-large-history-the-first-start-waits).
 - **A monitor must not see captured values?** Revoke its observer key. Each observer key, also an existing one, now
   reads the Prometheus metrics too.
-- **A tool reads reports from an S3 bucket by their path?** New reports have a new key: the last folder now holds the
-  run ID. See [Object names](./delivery-interfaces/s3.md#object-names).
+- **You copy files out of `storage/backups/`, or an import was interrupted?** `anaphora-upgrade.sh` does not copy
+  `storage/backups/`. Copy a `restore-*` folder out before you upgrade. See
+  [The copy from before an import](./administration/backup.md#the-copy-from-before-an-import).
+
+Also expect these changes. They need no action, but you can see them:
+
+- Some retries, and the throttle, run at other times. A job whose attempts take long retries more often, and the load on
+  a slow source can grow. A run inside the throttle time says **Throttled**, and the
+  counts of the Reports page and the Overview fall. See [Retry policy](./jobs/general.md#retry-policy) and
+  [Run statuses](./data-retention/runs.md#run-statuses).
+- A run that comes close to a limit, or that has another note, shows a warning. The health monitoring can mail you
+  about it once.
+
+### 🚨 Security
+
+- **Captures and deliveries refuse addresses that a server should not call.** The default refuses the cloud metadata
+  addresses, link-local addresses, special ranges and the ports of Anaphora itself. It keeps loopback, private networks
+  and internal names open. `OUTBOUND_POLICY=strict` also refuses loopback and private addresses. In both modes,
+  `OUTBOUND_ALLOWED_HOSTS` lists hosts that a capture and a delivery may reach whatever their address. The ports of
+  Anaphora stay refused. The policy covers the pages of a capture,
+  webhooks, S3 endpoints, SMTP hosts and custom AI endpoints. An unknown value stops the start. See
+  [What a capture and a delivery may reach](./getting-started/installation.md#what-a-capture-and-a-delivery-may-reach).
+- **A webhook never sends a forwarding header** (`X-Forwarded-For`, `Forwarded`, `X-Real-IP` and the like). See
+  [Webhook](./delivery-interfaces/webhook.md#custom-headers).
+- **A stored AI key goes only to the endpoint that it was saved with.** When you change the provider or the endpoint,
+  enter the key again. A custom AI provider needs an endpoint. See
+  [AI providers](./administration/ai-providers.md#adding-a-provider).
+- **Each space has its own background images.** The picker lists the images of the space. A job or a template that
+  names the image of another space is refused on save. An image that you uploaded before the upgrade stays shared:
+  every space can use it, and only the System role deletes it.
+- **Snooze and unsubscribe links are safer.** Each installation now signs them with its own secret. Links in emails
+  sent before the upgrade keep working for 90 days.
+- **A capture that ends sends no more requests.** The browser stops at once when the capture ends.
 
 ### 🚀 New
 
+- **Time limits you can set.** Four variables raise the limits that were fixed: `CAPTURE_STEP_TIMEOUT_SECONDS`,
+  `NAVIGATION_TIMEOUT_SECONDS`, `RUN_DEADLINE_SECONDS` and `SMTP_DELIVERY_TIMEOUT_SECONDS`. Each default is the old
+  value. A run that fails at a limit says which one. See
+  [Time limits](./getting-started/installation.md#time-limits).
+- **Run warnings.** A run stores what it noted and did not fail on, for example a wait that took more than 80% of its
+  limit, a page that did not finish loading, Grafana panels that had not drawn, or a regular expression that was
+  skipped. The **Runs** page has a **Warnings** column and a **With warnings** filter. The Jobs list marks a job whose
+  last run has warnings. See [Run warnings](./data-retention/runs.md#run-warnings).
+- **A mail for a new run warning.** The health monitoring mails one message when the last run of a job gets a warning
+  that you were not told about, once for each job and kind. Nothing is mailed at the upgrade for a warning that is
+  already there. See [Run warning mail](./administration/self-monitoring.md#run-warning-mail).
+- **Upgrade notes.** The check script, the start log and a new **Upgrade notes** page in the app list what the new
+  version refuses or changes in your stored jobs, with what to do. The page is in the side menu for the System role and
+  for the admin of a space. See
+  [The Upgrade notes page](./getting-started/upgrading.md#the-upgrade-notes-page).
 - **Prometheus metrics.** `GET /guest/api/metrics` gives the last run of each job, in all spaces, in the Prometheus
   text format: the number variables, the start time, the duration and the health of the run. Send an observer key as
   a Bearer token. **Settings** > **Application** > **API Keys** shows the URL. See
@@ -43,17 +129,111 @@ the database: a rollback needs the backup from before the upgrade. See
 - **A condition on each delivery.** **Send through this delivery only if…** sends the report through one delivery
   only when a captured value passes a test. When every delivery skips the report, the run shows **Skipped**. A test
   send ignores the conditions. See [Send through a delivery only if…](./jobs/delivery.md#send-through-a-delivery-only-if).
+- **A warning for a regular expression that Anaphora does not support.** The editor warns under the field of a
+  replacement with the regex button. See
+  [Process text and regular expressions](./jobs/capture.md#process-text-and-regular-expressions).
 
-### 🚨 Security
+### 🧐 Enhancements
 
-- **Snooze and unsubscribe links are safer.** Each installation now signs them with its own secret. Links in emails
-  sent before the upgrade keep working for 90 days.
+- **Settings > Data shows one topic at a time.** It has five tabs: **Export**, **Import**, **Move the files**, **API**
+  and **Legacy (JSON)**. The import has three steps: choose a file, check it, replace the database. After you pick a
+  file, the page shows the disk that the import needs against the free space. A failed import shows one next step.
+  Every export and import works as before. See [Backup](./administration/backup.md#ui-backup).
+- **The export has no size limit.** The `.ana` file is the database itself, made from a copy while Anaphora keeps
+  running. A download that reads at least about 10 KB/s, with no pause longer than 5 minutes, is not cut. See
+  [UI export](./administration/backup.md#ui-export).
+- **The import has no size limit, and the login page keeps answering while it checks a large file.** The file goes to
+  disk, and Anaphora checks it while the database runs. The database stops only for the last step. The upload must end
+  within 5 minutes, and the disk needs room for the file. A file that is no good is refused before anything changes.
+  See [UI import](./administration/backup.md#ui-import).
+- **An import never deletes the last good copy of your database.** Anaphora replaces the database with an older copy
+  only when the file in `storage/` is proven bad and the copy belongs to an import that was running. Otherwise it
+  refuses to start, moves nothing, and prints the steps. After the first good start, a missing database is a stop, not
+  a new install. See [The copy from before an import](./administration/backup.md#the-copy-from-before-an-import).
+- **The AI step editor reads top to bottom.** The step is a card of numbered sections: **Instructions**, **Variables**,
+  **Rows it can see**, **Tools** and **Try it**. Each number has a mark that shows what is complete and what needs
+  attention. The trial and the assistant share one card with two tabs, **Trial** and **Assistant**. The editor fits
+  a narrow screen. See [The editor](./jobs/ai-step.md#the-editor).
+- **The AI step editor uses plainer words.** The sections are named **Variables** (was "Fills in"), **Rows it can see**
+  (was "Can see"), **Tools** (was "Can do"), **Memory between runs** (was "Remembers") and **Limits** (was
+  "Guardrails"). The editor says "limit", not "cap". **Who answers** names the provider. **Try it** is off with one
+  reason beside it until the step has a provider, instructions and a variable name. The cost shows once, next to
+  **Try it**. No setting, stored step or run changes. The names in a job's JSON do not change.
+- **A capture of a Metabase dashboard waits for the queries of its cards.** A card with a slow query is no longer
+  captured while it still shows its loading spinner. A card that is still loading when the capture reads the page adds a
+  warning to the run. A capture with a slow card takes as long as the card, up to the limit of the wait. Every
+  navigation now starts after Anaphora listens to the network, so a page that fires requests at once is waited for, up
+  to about 5 seconds more. See [Metabase dashboards](./jobs/capture.md#metabase-dashboards).
+- **Every wait of a capture warns when it comes close to its limit**, also a value read as text, an element screenshot,
+  a login and the Kibana page load. A Kibana page that did not finish loading stores a warning too. See
+  [Run warnings](./data-retention/runs.md#run-warnings).
+- **A page whose network never goes quiet is a warning, not a success.** The run stores that the page did not finish
+  loading and goes on with the page it has. A ReadonlyREST or Grafana login on such a page no longer fails. See
+  [Run warnings](./data-retention/runs.md#run-warnings).
+- **A Grafana capture waits for slow panels, up to the step limit.** A dashboard whose loading bars outlast the step limit
+  fails the step in every language of the Grafana interface. Grafana panels that had not drawn show as a warning. See
+  [Run warnings](./data-retention/runs.md#run-warnings).
+- **Runs, Home and Reports open fast on a large history.** The Runs page opens in about 3 ms at 1,000,000 runs. The
+  first start of this version builds a table for these pages and waits for it. See
+  [A large history](./getting-started/upgrading.md#a-large-history-the-first-start-waits).
+- **A run inside the throttle time says Throttled, and a run whose recipients all snoozed says Skipped.** The Runs
+  **Status** filter has an option for each. See [Run statuses](./data-retention/runs.md#run-statuses).
+- **The throttle counts the time between two firings.** The time that a run waits in the queue, or takes to capture,
+  does not move the window. A report that reached nobody does not start it, so its retry sends. See
+  [Notification throttling](./jobs/general.md#notification-throttling).
+- **Retries count attempts.** The number of retries is the number that you set, and each delay counts from the end of
+  the attempt before it. See [Retry policy](./jobs/general.md#retry-policy).
+- **One run at a time for each job.** A save, a bulk switch or a database import during a run no longer starts a second
+  run. See [How runs are scheduled](./jobs/general.md#how-runs-are-scheduled).
+- **A delivery that does not finish is stopped, and frees its worker.** A webhook stops after 60 seconds, a Mailgun
+  message after 5 minutes, one SMTP mail after 5 minutes and an S3 upload after 10 minutes. Mailgun sends 3 messages at
+  once. A delivery error names the network cause, for example that the connection was refused. See
+  [Time limits](./getting-started/installation.md#time-limits).
+- **A webhook that answers with a redirect says so in plain words.** The text names the host of the new address and
+  tells you to enter the final URL. The run is not retried. See
+  [Webhook](./delivery-interfaces/webhook.md#response-handling).
+- **A manual run says how it ended.** The message names the state of the run and takes its colour. **Run** on several
+  jobs ends with one line that counts the states.
+- **Runs: Today and This week follow your time zone.**
+- **The job editor asks before you leave with unsaved changes**, after any edit.
+- **An AI provider that you add in another tab shows in the job editor at once.**
+- **A failed AI budget alert is sent again.** The alert counts as sent only after the mail server took it, and a relay
+  that is down is tried again after 10 minutes, then 20, 40 and so on, up to every 6 hours. See
+  [Budget alerts](./administration/ai-providers.md#budget-alerts).
+- **A cron has a length limit, and a clock change is handled.** A save refuses a cron over 1024 characters. A job at
+  fixed times runs once in a clock change. See [Scheduling](./jobs/general.md#advanced-cron) and
+  [Clock changes](./jobs/general.md#clock-changes).
+- **The health answer without credentials, or with an observer key, can be about 10 seconds old.** Its delivery summary
+  covers the last 24 hours. See [Health API](./administration/self-monitoring.md#health-api).
+- **A failed health alert is sent again at the next check.** The health monitoring marks a new colour of a job as
+  reported only after the alert is delivered. Until then, each check tries again, and the log says why it failed. See
+  [Self-monitoring](./administration/self-monitoring.md#set-up-health-alerts).
+- **`SKIP_NOTIFIER=true` shows Skipped.** Each delivery is recorded as skipped, not as a success. A skipped delivery does
+  not start the throttle time, and `prev` and `delta` stay empty. See
+  [Installation](./getting-started/installation.md#environment-variables).
+- **An AI answer longer than 1,000,000 characters fails the step.** See [The AI step](./jobs/ai-step.md#costs-and-limits).
+- **The AI provider form and the Free limit banners say more.** **Test** asks for a missing API key instead of failing
+  with a generic error. When the model list is empty, the form says why: the API key or the endpoint is missing, or the
+  request failed with its own error. A banner on the Free edition says that a limit is reached when you are exactly at it,
+  and gives the count and the limit when you are over it. A job with too many capture actions says how many to remove.
+  See [Adding a provider](./administration/ai-providers.md#adding-a-provider).
+- **A killed Anaphora process leaves nothing behind**, also outside Docker. The browser of a capture and its profile
+  folder end with it, and a template in an endless loop stops by its own clock.
+- **A delete that fails halfway no longer leaves a run without its report.** A run and its retries stay or go together,
+  and a large delete does not stop the application.
+- **The health check of the image waits 30 seconds before it counts a failure** (it was 5).
+- **A second save of the same copy is refused.** When two tabs, or a tab and a script, save the same copy of a job or a
+  template, the second save gets "Someone saved this job after you opened it" (a 409 in the JSON API) and writes
+  nothing.
 
 ### 🐞 Fixes
 
 - **S3 reports no longer replace each other.** The key of an object now ends with the run ID, in the form
-  `<job name>/<date>/<time>-<run ID>/report.pdf`, with date and time in UTC. Objects already in the bucket stay as
-  they are. See [Object names](./delivery-interfaces/s3.md#object-names).
+  `<job name>/<date>/<time>-<run ID>/report.pdf` (`report.html` for an HTML copy), with date and time in UTC. Objects
+  already in the bucket stay as they are. See [Object names](./delivery-interfaces/s3.md#object-names).
+- **`{% if flag != prev.flag %}` works for a yes/no value.**
+- **A restore notice that cannot be read no longer hides the ones that can.**
+- **The jobs of a removed space stop running**, and run again when the space comes back. The data stays.
 
 ---
 

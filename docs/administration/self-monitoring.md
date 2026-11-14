@@ -190,6 +190,26 @@ job yellow, not red: one address that refuses the mail keeps the job yellow.
 The delivery interface of the health alerts also carries the [AI token budget](./ai-providers.md#budget-alerts) alerts.
 You can set it without switching health monitoring on.
 
+### Run warning mail
+
+The health monitoring also mails one message when the last run of a job has a [warning](../data-retention/runs.md#run-warnings)
+that you were not told about. It uses the delivery interface and the recipients of the health alerts. It goes to those
+recipients only, never to a member of a space.
+
+- **Once for each job and kind of warning.** A warning that you were told about stays silent while it keeps showing up.
+  It counts as news again after a week without it. Two jobs that get a warning between two checks are one mail.
+- **Nothing is mailed at the upgrade** for a warning that is already there. The first check records it.
+- **A new warning is looked for at each health check**, so the first mail can wait as long as the check frequency.
+- **The mail needs** an SMTP or Mailgun interface with recipients, or a webhook that has no body of its own. With none,
+  Anaphora sends nothing and the log says so once.
+- **A mail server that is down** is tried again after 10 minutes, then after 20, 40, 80, 160 and 320 minutes, then every
+  6 hours, until it takes the mail.
+- **A mail server that answers late** (after more than 45 seconds) may have taken the mail. After two such attempts,
+  Anaphora stops and the log says that the mail may have arrived. A recipient gets at most two mails for one alert.
+- The mail holds the job name, the space, when the last run started, its state, the sentences of the Runs page and,
+  when `PUBLIC_URL` is set, a link to the runs of that job with warnings. Without `PUBLIC_URL`, the mail has no link and
+  says where to look. It holds no address, pattern, template, header or password.
+
 ## Prometheus metrics
 
 Prometheus can read the last run of each job, in all spaces:
