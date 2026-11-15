@@ -17,11 +17,11 @@ All notable changes to Anaphora are documented here.
 
 ---
 
-## [Unreleased]: Time limits, an address policy, run warnings, and a simpler Data page
+## [0.19.1] - 2026-11-15: Time limits, an address policy, run warnings, and a simpler Data page
 
-These changes are on the pre-release documentation. They come in the next release after 0.18.0. That release changes
-the database: a rollback needs the backup from before the upgrade. Before you upgrade, run
-`bash anaphora-upgrade.sh check <version>` and read its `NOTE` lines. See
+These changes come in 0.19.1, the release after 0.18.0. The image 0.19.0 is on Docker Hub, but it has no release
+notes: use 0.19.1. This release changes the database: a rollback needs the backup from before the upgrade. Before you
+upgrade, run `bash anaphora-upgrade.sh check 0.19.1` and read its `NOTE` lines. See
 [After the upgrade from 0.18.0](./getting-started/upgrading.md#after-the-upgrade-from-0180).
 
 ### What you need to do

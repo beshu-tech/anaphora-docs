@@ -18,13 +18,13 @@ public **Demo Wind Farm** dashboard at `play.grafana.org`.
 ### 1. Create the job
 
 1. Open **Jobs** in the sidebar.
-2. Click **Create Job**, then **Create New**.
+2. Click **Create job**, then **Create New**.
 
 ### 2. General
 
-- **Frequency**: every **day** at **7:00**.
+- **Run**: every **day** at **7:00**.
 
-![The General tab: a daily frequency at 7:00](images/grafana-dashboard-report-general.png)
+![The General tab: a daily run at 7:00](images/grafana-dashboard-report-general.png)
 
 ### 3. Capture
 
@@ -34,9 +34,9 @@ public **Demo Wind Farm** dashboard at `play.grafana.org`.
    https://grafana.example.com/d/your-dashboard-uid?orgId=1&from=now-24h&to=now
    ```
    Add `var-…` parameters to set the dashboard variables.
-3. **Authentication**: **Grafana** fills the Grafana login form with the credentials you give. **Basic** sends HTTP
+3. **Sign-in type**: **Grafana** fills the Grafana login form with the credentials you give. **Basic** sends HTTP
    Basic credentials, for a Grafana behind a proxy. The public demo needs **None**.
-4. **Snapshot template**: **Full page** takes the whole dashboard, with every panel. **Visualizations** takes one
+4. **Capture snapshot template**: **Full page** takes the whole dashboard, with every panel. **Visualizations** takes one
    image per panel, to place each panel on its own in the report.
 
 ![The Capture tab: the Grafana connector, the dashboard URL with its time range, and the snapshot template](images/grafana-dashboard-report-capture.png)

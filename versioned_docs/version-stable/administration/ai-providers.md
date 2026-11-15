@@ -38,7 +38,7 @@ flowchart LR
 ### Adding a provider
 
 1. In the sidebar, click **AI Providers**
-2. Click **Create AI Provider**
+2. Click **Create AI provider**
 3. Configure the connection:
 
 | Field        | Description                                           | Example                        |
@@ -47,10 +47,78 @@ flowchart LR
 | **Provider** | Type of AI provider                                   | `OpenAI`, `DeepSeek`, `Custom (OpenAI API compatible)` |
 | **Endpoint** | OpenAI-compatible base URL (only for a custom provider) | `https://api.openai.com/v1`    |
 | **API key**  | Authentication token                                  | `sk-...` (stored encrypted)    |
-| **Model**    | Model to use. Suggestions need the API key.           | `gpt-5.2`                      |
+| **Model**    | Model to use: one of the list, or a name you type. The list needs the API key. | `gpt-5.2`     |
 
-4. Click **Test**
+4. Click **Test the provider**
 5. Click **Save**
+
+A custom provider needs an endpoint. The form refuses to save one without it, and a custom provider saved without one
+fails its AI actions. Set its endpoint, or change its provider to OpenAI.
+
+A stored API key goes only to the endpoint that it was saved with. When you change the provider or the endpoint, enter
+the key again ("Enter the API key again: the endpoint changed"). A change of the model, the name or the budget keeps the
+key. **Test the provider** asks for a missing key instead of failing with a generic error. When the model list is empty, the field says
+why: the API key or the endpoint is missing, or the request failed with its own error.
+
+A provider from the [environment](#provider-from-the-environment) uses `AI_API_KEY`. Rotate it if users that you do not
+fully trust had access to your instance.
+
+The **Model** field is a list that you can search. The note under it says "Pick a model of the list, or type the name
+the vendor gives it. The list shows only models that chat." Embedding, rerank, speech, image and moderation models are
+not in the list. A name that the list does not have shows as `Use "<name>"`: click it to use that name. A saved name
+stays in the field, also when the list does not have it. The first model of the list goes in only when you change the
+**Provider**, or, for a new provider, while the field still holds the default model.
+
+![The Model field with deepseek/deepseek-v4-flash, and the note "Pick a model of the list, or type the name the vendor gives it. The list shows only models that chat."](images/ai-provider-model-field.png)
+
+### What this model can do
+
+**Test the provider** opens the **Test the AI provider** window. Its prompt starts as "Say hello in five words or fewer." **Send test
+prompt** sends your prompt and three small checks: a tool call, a JSON answer and an image. Under the prompt, the
+window says "The Test makes four or five model calls: your prompt, a check of tools, one or two checks of JSON answers
+and a check of images. Their tokens count on the budget of the provider." The JSON check first sends a JSON schema of
+the answer (`json_schema`, strict), as an AI step with **Variables** rows sends it. When that does not prove the schema
+(the endpoint refuses it, the answer does not fit it, or the call fails), the check asks for a JSON object with no
+schema: the fifth model call. The Test uses the key, the endpoint and the model of the form. The window shows the
+answer, then **What this model can do**:
+
+- **Answers a prompt**.
+- **Uses tools**. An AI step with tools needs it: **Look at earlier runs**, **Do exact math**, **Remember between
+  runs**, and **The AI chooses** mode.
+- **Gives structured answers (JSON)**. When the answer is **No**, an AI step with several variables asks for JSON in its
+  instructions, and reads the text. An AI step sends its JSON schema to the provider only when the Test proved the
+  schema. A provider tested before this check must be tested again to get it. Until then, its AI steps send what they
+  sent before. **What the model gets** of a step says how its request asks for the answer: see
+  [Try it](../jobs/ai-step.md#try-it).
+- **Reads images**. When the answer is **No**, **Send the snapshots as images** is off in the AI steps of this provider.
+
+Under a **No**, a short line says why, for example "The endpoint refused an image."
+
+When JSON answers work but the Test did not prove the schema, a line under **Gives structured answers (JSON)** says
+why, for example "The call with the answer schema failed, so a step asks for a JSON object without it. The error is
+under Details." The other reasons are "The endpoint refused the answer schema, …" and "The answer did not fit the answer
+schema, …". Right after a Test, the line shows in the window and on the card under the form. After a reload, the card shows
+"Steps ask for a JSON object without a schema: the answer schema check of the last Test failed." The API gives the
+reason as `reasons.jsonSchema`. When the call with the schema fails, its error also goes
+to the log of Anaphora.
+
+The Test also records whether the model writes hidden reasoning. The window does not list it. Unless the Test saw
+none, the token limit and the time limit that Anaphora sets for an AI step make room for it: see
+[Limits](../jobs/ai-step.md#limits).
+
+![The Test the AI provider window after a Test: the note "The Test makes four or five model calls", the answer "Hello!", then Answers a prompt, Uses tools, Gives structured answers (JSON) and Reads images: all Yes; under Gives structured answers (JSON), "The call with the answer schema failed, so a step asks for a JSON object without it. The error is under Details."; Details, closed; and "Saved with the provider."](images/ai-provider-test.png)
+
+When the Test runs on the saved settings of the provider, it keeps the result: the window says "Saved with the
+provider." Otherwise, it says "Save the provider to keep this result.": click **Save** to keep it. The card **What this
+model can do** on the provider form shows the result and when the test ran. AI steps read it. A change of the provider
+type, the model or the endpoint clears the result: click **Test the provider** again after the change.
+
+When the model does not answer the prompt, the Test fails. The window shows one sentence that says what to correct,
+for example "The model did not answer. Correct the model or the endpoint, then send the test again." or "The provider
+refused the API key. Correct the key, then send the test again." **Details** shows the error of the endpoint. A failed
+Test lists no ability and keeps nothing: **Save** stores nothing from it.
+
+![The card What this model can do after a reload: "Tested Today at 01:24.", the four abilities Yes, and under Gives structured answers (JSON) the line "Steps ask for a JSON object without a schema: the answer schema check of the last Test failed."](images/ai-provider-abilities.png)
 
 :::note Free edition
 The Free edition allows one AI provider per space.
@@ -75,91 +143,24 @@ To copy or clone an AI provider into another space, you need admin access to the
 
 ## Using AI in jobs
 
-### Job capture integration
-
-To add an AI action to a job:
-
-1. Edit or create a job
-2. Go to the **Capture** tab
-3. Turn on the **Advanced** switch to use actions
-4. Add an **AI** action
-5. Configure:
-
-| Field                        | Description                                                                    |
-|------------------------------|--------------------------------------------------------------------------------|
-| Variable name                | Name of the variable that stores the AI output                                 |
-| Provider                     | Select the AI provider to use                                                  |
-| Prompt                       | Define the prompt with instructions                                            |
-| Output type                  | `text`, `number`, `html`                                                       |
-| Answer length cap            | Maximum tokens in the answer. Empty leaves it to the provider                  |
-| Context                      | **Everything so far** or **Only ticked rows**                                  |
-| Send the snapshots as images | Send the snapshots to the model as images (only for providers that read images) |
-
-### What an AI action sends
-
-The **Context** section of an AI action decides which earlier snapshots and variables go to the model. Each snapshot
-goes as its accessibility tree (the text structure of the page). The header of the table counts the rows that are sent.
-The section has two modes:
-
-| Mode                  | What is sent                                                                                                   |
-|-----------------------|----------------------------------------------------------------------------------------------------------------|
-| **Everything so far** | Every earlier snapshot and variable, minus the rows you untick. Anything you add to the job later is sent too. This is the default. |
-| **Only ticked rows**  | Only the rows you tick. Anything you add to the job later stays out until you tick it.                          |
-
-Switching modes does not change which rows are ticked.
-
-![The AI action drawer in "Everything so far" mode](images/ai-context-everything.png)
-
-![The AI action drawer in "Only ticked rows" mode](images/ai-context-only-ticked.png)
-
-Under the table, **Send the snapshots as images** also sends the ticked snapshots as pictures. Only a provider whose
-vendor reads images can take them: OpenAI does, DeepSeek and custom providers do not. For those, the box is disabled
-and its tooltip says why. Each image costs tokens on every run.
-
-**Answer length cap** limits the reply, in tokens. A number needs a few tokens; a report section may need a few hundred.
-
-:::tip Send less, pay less
-On a dashboard with many panels, "Everything so far" sends every panel to answer a question about one of them. Use
-"Only ticked rows" to send only what the prompt needs.
-:::
-
-### Example: dashboard summary
-
-```
-Context: Dashboard snapshot showing system performance metrics
-Type: Text
-Prompt: "Summarize the key metrics from this dashboard,
-        highlighting any values that exceed normal ranges."
-
-Output: "System performance remains stable with 99.8% uptime.
-        CPU utilization averaged 45% with a peak of 78% at 14:30 UTC.
-        Memory usage is trending upward (+12% week-over-week) and
-        may require attention if the trend continues."
-```
-
-### Example: anomaly detection
-
-```
-Context: Error rate visualization captured from Kibana
-Type: Number
-Prompt: "Identify any anomalies in the error rate data. Respond with 0 if none found. Return 1 if anomalies are detected."
-
-Output: 0
-```
-
-Use the output to add a condition in your job workflow for alerting.
+A job uses its AI provider through the **AI step** of an advanced capture flow. One answer can fill several typed
+variables, look at earlier runs, do exact math, and keep a notebook between runs. See
+[The AI step](../jobs/ai-step.md): every setting, **Try it**, the assistant, and the traces on the Runs page.
 
 ### A number in a condition
 
-A **Conditional block** can test the variable of an AI action with the output type `number`. The answer of the model
+A **Conditional block** can test a **number** variable of an AI step. With one variable, the answer of the model
 must be a bare number, or hold exactly one number, for example `Severity: 7` or `7/10`. Any other answer fails the run
 with the error `The AI answer is not a number`. This way, the job never takes a branch on an answer that nobody can
-read. Ask the model for one number only, and set a small **Answer length cap**.
+read. Ask the model for one number only, and set a small **Answer length limit**. With several variables, the model answers
+one JSON object, and Anaphora checks each variable: a wrong value fails the step and names the variable. An answer that
+is not valid JSON gets one more model call to correct it: see [Variables](../jobs/ai-step.md#variables). A **yes/no**
+variable holds `1` or `0`. A **Conditional block** on it offers **is Yes** and **is No**.
 
 ### The Kibana AI Triage template
 
 The **Kibana AI Triage** template builds a job that asks an AI provider whether a human must look at the errors now.
-Pick it under **Jobs → Create Job**. It needs an AI provider in the space. It is an advanced template, so the Free
+Pick it under **Jobs → Create job**. It needs an AI provider in the space. It is an advanced template, so the Free
 edition does not have it. Every 15 minutes, the job:
 
 1. Counts the HTTP 5xx errors of the last hour and of the hour before, in Kibana Discover.
@@ -172,21 +173,27 @@ edition does not have it. Every 15 minutes, the job:
    dashboard.
 
 The job sends the report at most once every 3 hours. When the space has exactly one AI provider, the new job uses it.
-With more than one, select the **Provider** in each AI action. With none, add an AI provider to the space first. The
+With more than one, select **Who answers** in each AI step. With none, add an AI provider to the space first. The
 template uses the public Kibana demo: change the URLs to your own Kibana.
+
+The [AI Triage](../advanced-examples/ai-triage.md) example builds the same job with one AI step. It looks at the earlier
+runs instead of capturing the hour before, and its notebook replaces the throttle.
 
 ## Token budgets
 
 Every AI provider shows the tokens it spent in the last 24 hours and in the last 7 days (the **Tokens 24h** and
 **Tokens 7d** columns). You can give each window a budget. The windows roll: "the last 24 hours" is not "since midnight".
 
-![AI providers list with the two token columns](images/ai-budget-providers-list.png)
+![The AI Providers list with one provider, Deepseek (Beshu): Tokens 24h 1.2M, 79% of a budget of 1.5M, with a yellow bar; and Tokens 7d 2.2M, 44% of 5M, with a green bar](images/ai-budget-providers-list.png)
 
-Usage counts every call: scheduled runs, manual runs, retries, tests, previews and the **Test** button on the provider
-form. Some OpenAI-compatible services answer without usage data. Those calls count as zero, and the tooltip of the
-column says that the total is a lower bound.
+Usage counts every model call: scheduled and manual runs (a retry counts as a scheduled run), test runs, Test captures,
+trials of AI steps (**Try it**), the AI step assistant and the **Test the provider** button on the provider form. The tooltip of each
+column splits the tokens and the calls by these kinds. Trials made before this split count as Test captures: the
+tooltip names that line "Test captures and earlier trials". Some
+OpenAI-compatible services answer without usage data. Those calls count as zero, and the tooltip of the column says
+that the total is a lower bound.
 
-![Tooltip on a usage column](images/ai-budget-usage-tooltip.png)
+![The tooltip of the Tokens 24h column: 1,103,713 tokens in the last 24 hours and 143 AI calls, split in five lines: Scheduled and manual runs, Test captures and earlier trials, Trials, AI step assistant, and Provider Test](images/ai-budget-usage-tooltip.png)
 
 ### Setting a budget
 
@@ -211,17 +218,22 @@ up. The card then says what will happen.
 - The job that made the call is paused.
 - Every further AI call on that provider is refused until the window rolls over or you raise the budget.
 - A job that runs into a budget that another job used up is paused the same way.
+- A test run, a Test capture, a trial, the assistant or the provider **Test** pauses no job: the budget refuses its
+  next call. The assistant says so in
+  its panel, and the changes it made before stay.
 - The token columns turn green, yellow and red as the budget fills. A provider that reached its budget shows
   **Budget reached**.
 - On the Jobs list, a paused job shows that an AI budget paused it, so you can tell it apart from a job that someone
   switched off.
 
-![Jobs list with a job paused by a budget](images/ai-budget-jobs-paused.png)
+![A row of the Jobs list: the last run failed, the Active switch is off, and the tag says "AI budget 1k"](images/ai-budget-jobs-paused.png)
 
 ### Resuming paused jobs
 
 Raising the budget does not switch the paused jobs back on. On the AI Providers list, the **Paused jobs** column counts
-the jobs that the budget paused. Click **Resume** to switch those jobs back on, and only those.
+the jobs that the budget paused. The column shows only when a budget paused a job. Click **Resume** to switch those jobs back on, and only those. The question names the
+count, for example "Resume 1 job? It runs on its schedule again.", and the message after it says how many resumed:
+"1 job resumed." When the budget is still reached, the next AI call pauses the job again.
 
 ![Resuming the jobs a budget paused](images/ai-budget-resume.png)
 
@@ -229,16 +241,23 @@ the jobs that the budget paused. Click **Resume** to switch those jobs back on, 
 
 Tick **Notify the operator when a budget is reached** to send an alert over the channel of the health alerts. Tick
 **Also warn early, at** to send a warning at a percentage of the budget too (80% by default). Each pause of a job sends
-an alert that names the job. The early warning, and a "reached" alert with no job to pause (a test or a preview), go out
+an alert that names the job. The early warning, and a "reached" alert with no job to pause (for example a Test capture), go out
 at most once per window.
 
 Choose the channel under **Settings** > **Application** > **Health Monitoring**. You can set it without switching
 health monitoring on. Without a channel, jobs are still paused, but nothing is sent.
+
+An alert is tried again until a mail server takes it. A mail server that is down is tried again after 10 minutes, then
+after 20, 40, 80, 160 and 320 minutes, then every 6 hours. A mail server that answers late (after more than 45 seconds)
+may have taken the mail: after two such attempts, Anaphora stops, the log says that the alert may have arrived, and a
+recipient gets at most two mails for one alert. A failed attempt writes one line to the log. A later attempt does not
+name a job: it says that jobs of the provider are paused when they next call it.
 
 ![The operator channel, editable with health monitoring off](images/ai-budget-operator-channel.png)
 
 ## Next steps
 
 - [Spaces](./spaces): configure Space-level AI providers
+- [The AI step](../jobs/ai-step.md): use the provider in a capture flow
 - [Composer](../jobs/composer): add AI blocks to reports
 - [Self-monitoring](./self-monitoring): monitor AI provider health
