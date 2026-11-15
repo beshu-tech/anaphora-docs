@@ -26,16 +26,16 @@ In Anaphora, an alert is a report with a condition:
 ### 1. Create the job
 
 1. Open **Jobs** in the sidebar.
-2. Click **Create Job**, then **Create New**.
+2. Click **Create job**, then **Create New**.
 
 ### 2. General
 
-- **Frequency**: switch on **Advanced** and type `0 * * * *` (every hour).
-- **Max Notify Freq**: tick it and set **12 hours**.
+- **Run**: switch on **Advanced** and type `0 * * * *` (every hour).
+- **Send at most**: choose **Once every** and set **12 hours**.
 
-![The General tab: an hourly cron and a maximum notification frequency of 12 hours](images/kibana-alert-general.png)
+![The General tab: an hourly cron and Send at most once every 12 hours](images/kibana-alert-general.png)
 
-:::tip Why a maximum notification frequency?
+:::tip Why limit how often it sends?
 The job still runs every hour. When the errors continue, you get one alert in 12 hours, not one every hour.
 :::
 
@@ -47,9 +47,9 @@ The job still runs every hour. When the errors continue, you get one alert in 12
    ```
    https://kibana.example.com/app/discover#/?_a=(query:(language:kuery,query:'response >= 500'))
    ```
-3. **Authentication**: the method your Kibana needs, for example **ReadonlyREST**, with its credentials.
-4. **Time select**: from **1 day ago** to **Now**.
-5. Tick **Deliver report only when condition is met**, then set **Hits are** **greater than** `5`.
+3. **Sign-in type**: the method your Kibana needs, for example **ReadonlyREST**, with its credentials.
+4. **Time range**: from **1 day ago** to **Now**.
+5. Tick **Send the report only if hits are**, then choose **greater than** and `5`.
 
 ![The Capture tab: a Kibana Discover URL, the last 24 hours, and the condition "Hits are greater than 5"](images/kibana-alert-capture.png)
 
@@ -79,7 +79,7 @@ Alert: {{ hits }} server errors in the last 24 hours. <a href="{{ metaData.repor
 ### 6. Run and save
 
 Click **Run** to try the job once. If the condition does not hold now, the run stops without a message and the Runs page
-shows it as **Cancelled**. Click **Save**.
+shows it as **Stopped at Break**. Click **Save**.
 
 ## Result
 

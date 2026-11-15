@@ -49,7 +49,7 @@ flowchart TB
 The main configuration unit. A job runs periodically, and captures, composes, and delivers reports. You configure it in
 four tabs: General, Capture, Compose and Deliver.
 
-![Job configuration showing the General tab with name, description, and timing settings](images/capture-tab.png)
+![Job configuration showing the General tab with the sections Name, Schedule, If a run fails and Storage](images/capture-tab.png)
 
 ### Run
 One execution of a job. Anaphora logs each run with timestamps, success or failure status, error details, and the
@@ -58,7 +58,7 @@ artifacts it produced.
 ### Snapshot
 A capture of a web view. It is the whole page, or one visualization (for Kibana dashboards).
 
-![Basic Capture tab showing connector, URL, authentication, and snapshot settings](images/advanced-capture-panel.png)
+![The Capture tab in Basic mode with the sections Page, Sign-in and Snapshot: connector, URL, sign-in type and snapshot template](images/advanced-capture-panel.png)
 
 ### Report
 A rendered PDF assembled from snapshots, text blocks, layout elements, and branding.
@@ -85,6 +85,20 @@ deployments.
 2. [Configure](./getting-started/configuration) your connections and settings
 3. Follow the [Basic Examples](./basic-examples/) to create your first job
 
+### The Get started card
+
+A space with no job opens on the **Overview** page with a **Get started** card, in place of the three cards. It lists
+the steps of a first report:
+
+1. **Add a delivery interface**: "Where reports go: email, a webhook or S3." Only an admin of the space sees this step,
+   with the button **Add a delivery interface**. The step shows as done when the space has an interface.
+2. **Create a job**: "Pick a page, a schedule and who gets the report." The step has the button **Create job**.
+3. **Run it**: "Open the job and click Run. The report shows under Reports."
+
+A member who can only read sees "No job yet" and a line about what a job is, with no card.
+
+![The Get started card of a space with a delivery interface and no job: the first step is done, then Create a job with its button, and Run it](images/get-started.png)
+
 ## Use cases
 
 ### Scheduled reports
@@ -103,7 +117,7 @@ deployments.
 - Advanced capture workflows for complex navigation paths
 - Multi-step browser automation for authenticated applications
 
-![Advanced capture mode with available browser actions](images/actions-dropdown.png)
+![Advanced capture mode: the menu of the + between two actions, with Navigate, Click, Type text, Capture snapshot, Capture value, AI step, Wait for visible and Reload, each with a line that says what it does](images/actions-dropdown.png)
 
 *Advanced mode has a full set of browser automation actions for complex workflows.*
 

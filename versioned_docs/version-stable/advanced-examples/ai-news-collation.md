@@ -22,7 +22,7 @@ the pages themselves below it.
 
 ## Before you start
 
-The **AI** action needs an AI provider. Add one under **AI Providers** in the sidebar, with the API key of your
+The **AI step** needs an AI provider. Add one under **AI Providers** in the sidebar, with the API key of your
 provider.
 
 ## Steps
@@ -30,38 +30,41 @@ provider.
 ### 1. Create the job
 
 1. Open **Jobs** in the sidebar.
-2. Click **Create Job**, then **Create New**.
+2. Click **Create job**, then **Create New**.
 
 ### 2. General
 
-- **Frequency**: every **day** at **8:00**.
+- **Run**: every **day** at **8:00**.
 
-![The General tab: a daily frequency at 8:00](images/ai-news-collation-general.png)
+![The General tab: a daily run at 8:00](images/ai-news-collation-general.png)
 
 ### 3. Capture
 
-Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI** action below them:
+In **Capture mode**, choose **Advanced**. Add a **Navigate** action for each source, then an **AI step** below them:
 
-![The capture flow: two Navigate actions, for Hacker News and Lobsters, then an AI action that writes the summary variable](images/ai-news-collation-capture.png)
+![The capture flow, shown here for a job with other sources: two Navigate actions, Open the NPR headlines and Open the CNN headlines, then the AI step "Summarize the news", which fills summary](images/ai-news-collation-capture.png)
 
 1. **Navigate**, one for each source:
    - **Connector**: **Web**.
    - **URL**: the page, for example `https://news.ycombinator.com`.
    - Tick **Take snapshot**.
-2. **AI**:
-   - **Variable name**: `summary`. The answer goes into this variable.
-   - **Provider**: your AI provider.
-   - **Prompt**: what to do with the pages, for example:
+2. **AI step**: the step opens in its own page. Click **Set it up by hand instead**, then fill in the simple view:
+   - **Who answers**: your AI provider.
+   - **Instructions**: what to do with the pages, for example:
      ```
      Summarize the following articles into an executive summary, highlighting key trends and actionable insights.
      ```
-   - **Output type**: **text**.
-   - **Context**: **Everything so far** sends every earlier snapshot and variable, minus the rows you untick.
-     **Only ticked rows** sends only the rows you tick. Each snapshot row has **Show aria snapshot**, to see the
-     page text that the AI gets.
-   - **Answer length cap**: a limit in tokens, or empty for the default of the provider.
+   - **Variables**: click **Name the variable**, enter the **Name** `summary`, and choose the **Type** **text**. The answer goes into
+     this variable. One variable is enough for this job.
+   - **Rows it can see**: leave it on "Everything so far". The step then sees both snapshots, which is what this job
+     needs.
+   - Click **Done** to go back to the flow.
 
-   ![The AI action: the variable summary, the provider, the prompt, the output type, and the context with the two snapshots ticked](images/ai-news-collation-action-ai.png)
+   The screenshot shows an earlier version of this screen; the sections are now named Variables and Rows it can see.
+
+   ![An earlier version of the AI step "Summarize the news" in the simple view, shown here for a job with other sources: the provider, the Instructions, Fills in (now Variables) with one text variable, summary, It can see (now Rows it can see) the NPR headlines and CNN headlines snapshots, and "Stops after 1 model call or 20,000 tokens."](images/ai-news-collation-ai-step.png)
+
+   [The AI step](../jobs/ai-step.md) describes every setting, and how to try the step before you save the job.
 
 ### 4. Compose
 
@@ -82,4 +85,6 @@ Choose a delivery interface and the recipients.
 
 ## Next steps
 
+- [AI Triage](./ai-triage): one AI step that rates the errors, looks at earlier runs and remembers the open
+  incidents.
 - [Mixed Sources Report](./mixed-sources-report): put Kibana, Grafana and other pages in one report.

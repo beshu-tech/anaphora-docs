@@ -15,8 +15,8 @@ Every job has four main components:
 
 | Component | Description |
 |-----------|-------------|
-| [General](./jobs/general) | Name, description, scheduling, and throttling |
-| [Capture](./jobs/capture) | What to capture and how |
+| [General](./jobs/general) | Name, description, scheduling, how often it sends, retries and storage |
+| [Capture](./jobs/capture) | What to capture and how, with [the AI step](./jobs/ai-step) |
 | [Composer](./jobs/composer) | How to arrange content into a report |
 | [Delivery](./jobs/delivery) | Where and how to send the report |
 
@@ -28,9 +28,9 @@ Jobs can do complex interactions with web applications:
 
 - Click elements: buttons, links, menu items
 - **Type text**: search boxes, form fields, filters
-- **Enter**: press Enter in a form field
+- **Press Enter**: press Enter in a form field
 - **Navigate**: follow links, handle redirects, manage authentication
-- Wait conditions: wait for elements to appear (**Wait for visible**) or for a number of seconds (**Wait before continue**)
+- Wait conditions: wait for elements to appear (**Wait for visible**) or for a number of seconds (**Wait**)
 
 ### Capture data
 
@@ -48,8 +48,8 @@ Extract information in several formats:
 Build the automation logic with:
 
 - Conditional execution: **Conditional block** actions based on extracted values
-- Wait conditions: **Wait for visible**, **Wait before continue**
-- Reload and retry: **Reload** the page. **Retry on failure** retries a failed run.
+- Wait conditions: **Wait for visible**, **Wait**
+- Reload and retry: **Reload** the page. The **Retry** setting of the General tab retries a failed run.
 - Variables: store extracted values and use them again anywhere in the workflow
 - Break conditions: stop execution if criteria are not met (useful for alerts)
 
@@ -74,20 +74,29 @@ Conditional reports that send only when criteria are met:
 :::tip
 In Anaphora, an alert is a conditional report. To create an alert, add conditions to your capture workflow. The
 conditions decide whether the report is sent. Use the **Break** action to skip delivery when conditions are not met.
+To send to some destinations only, give a delivery its own
+[condition](./delivery.md#send-through-a-delivery-only-if).
 :::
 
 ## AI-powered analysis
 
-Jobs can use AI to analyze captured data:
+The **AI step** of a capture flow asks an AI provider about what the flow captured:
 
 ```
-Capture Dashboard -> Send to AI -> Receive Analysis -> Include in Report
+Capture pages and values -> AI step fills variables -> Conditional block, report, delivery
 ```
 
-- Visual analysis: pass screenshots to AI models to evaluate dashboard content
-- Text summaries: AI generates human-readable summaries of complex data
-- Anomaly detection: AI identifies unusual patterns or concerning trends
-- OpenAI compatible: works with any AI provider that uses the OpenAI API format
+- One answer fills several variables, each with a type: text, number, yes/no or HTML.
+- The AI can look at earlier runs of the job, do exact math, read the captured pages when it needs them, and keep a
+  notebook between runs.
+- The AI decides; the flow acts. A **Conditional block** and a **Break** act on what the AI fills.
+- **Try it** runs the step on the values of the last run, and saves and sends nothing. An assistant can write the step
+  from your words.
+- Limits stop a step that makes too many model calls, spends too many tokens or runs too long, on top of the
+  token budget of the provider.
+- Works with any AI provider that uses the OpenAI API format.
+
+See [The AI step](./jobs/ai-step).
 
 ## Visual composer
 
@@ -106,7 +115,7 @@ You can combine visual snapshots with AI-generated summaries in one report.
 ## Creating a job
 
 1. Go to **Jobs** in the sidebar
-2. Click **Create Job**, then select **Create New** (or a template)
+2. Click **Create job**, then select **Create New** (or a template)
 3. Configure each tab:
    - **General**: set the name, schedule, and basic settings
    - **Capture**: define what to capture and the extraction logic
@@ -115,9 +124,14 @@ You can combine visual snapshots with AI-generated summaries in one report.
 4. Test the job: click **Test capture** in the **Capture** tab, or a test run button in the **Deliver** tab
 5. Click **Save**. A new job is active by default. Use the **Active** switch in the job list to suspend it or activate it again
 
+When someone else saved the job (or the template) after you opened it, **Save** is refused, and nothing is written:
+"The job was not saved. Someone saved this job after you opened it. Reload to see their changes, then make yours
+again." **Reload** opens the
+saved job and drops your changes. **Cancel** keeps your page, so you can copy what you need first.
+
 ### Built-in templates
 
-**Create Job** offers these templates next to **Create New**. Each one uses the public Kibana demo at
+**Create job** offers these templates next to **Create New**. Each one uses the public Kibana demo at
 `demo.elastic.co`: change the URLs to your own Kibana.
 
 | Template                                  | What the job does                                                                 | See                                                                        |
@@ -129,9 +143,14 @@ You can combine visual snapshots with AI-generated summaries in one report.
 
 All the templates except **Kibana Dashboard Snapshot** are advanced templates: the Free edition does not have them.
 
+A space admin can change a template with **Edit template**. The first **Save** of a built-in template stores a copy for
+the space, and later saves update that copy. From then on, the page of the built-in template opens the copy, and the
+list shows the copy in place of the built-in template.
+
 ## Next steps
 
 - [General settings](./jobs/general): scheduling and throttling
 - [Capture configuration](./jobs/capture): data extraction workflows
+- [The AI step](./jobs/ai-step): AI that fills variables, looks at earlier runs and remembers
 - [Composer](./jobs/composer): report design and branding
 - [Delivery](./jobs/delivery): output channels and formats

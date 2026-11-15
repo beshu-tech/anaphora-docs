@@ -32,7 +32,7 @@ Anaphora has a light theme and a dark theme. To choose one, open **Theme** at th
 | **System** | Follows your operating system, and switches when the OS does.   |
 
 Anaphora stores the choice in a cookie, so it applies per browser. The login page and the authentication settings use
-the same theme.
+the same theme. In the dark theme, text and links keep a contrast of at least 4.5:1 with their background.
 
 Reports always stay on white paper. The template page, the text editor and the preview show what your recipients see,
 in both themes.

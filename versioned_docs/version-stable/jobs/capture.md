@@ -11,14 +11,20 @@ authenticate, and capture any web application.
 
 ## Capture modes
 
+The **Capture mode** control at the top of the tab has two choices: **Basic** ("One page, one snapshot.") and
+**Advanced** ("A flow of actions: click, type, read values, decide."). The tab saves nothing when you switch.
+
 ### Basic mode
 
 Simple single-URL capture:
 
-1. Select a **Connector** (**Web**, **Kibana**, **Grafana**)
-2. Enter the URL
-3. Set **Authentication** (if needed)
-4. Select a **Snapshot template**
+The Basic form has three sections:
+
+1. **Page**: select a **Connector** (**Web**, **Kibana**, **Grafana**) and enter the **URL**. A line under the
+   **Connector** says what the connector waits for, for example "Waits until the dashboard has loaded." If the URL looks
+   like a Kibana or Grafana page and the connector is **Web**, Anaphora asks "Use the Kibana connector?"
+2. **Sign-in**: set the **Sign-in type** (if the page needs one)
+3. **Snapshot**: select a **Capture snapshot template**, the part of the page to capture
 
 Best for quick dashboard snapshots and simple reports.
 
@@ -31,7 +37,9 @@ Multi-step browser automation:
 3. Evaluate conditions
 4. Build complex workflows
 
-Turn on the **Advanced** switch to change modes.
+Choose **Advanced** in the **Capture mode** control to use this mode. To go back, choose **Basic**. Anaphora asks "Go
+back to Basic?" and says that Basic keeps one page and that saving removes the other actions. Choose **Go back to
+Basic**, or **Stay in Advanced**.
 
 ## Connectors
 
@@ -49,17 +57,18 @@ To authenticate, log in to Kibana with the ReadonlyREST login form. Select **Rea
 select a **Tenancy**.
 
 To configure the time range, either set it in the Kibana UI before you copy the URL, or set it in Anaphora with the
-**Time select** field, which uses a syntax similar to Kibana's time picker. **Time select** applies to dashboards and Discover views.
+**Time range** field, which uses a syntax similar to Kibana's time picker. **Time range** applies to dashboards and Discover views.
 For a Canvas workpad, set the **Page** number.
 
 Capture options:
-| Snapshot template  | Description                        |
-|--------------------|------------------------------------|
-| **Full page**      | One snapshot of the full dashboard |
-| **Visualizations** | Separate snapshot for each panel   |
+| Capture snapshot template | Description                        |
+|---------------------------|------------------------------------|
+| **Full page**             | One snapshot of the full dashboard |
+| **Visualizations**        | Separate snapshot for each panel   |
 
-For a Discover view, the templates are **Logs** and **Histogram**. Select **Deliver report only when condition is met**
-to send the report only when the hit count meets a condition (**Hits are** greater than, less than, or equal to a value).
+For a Discover view, the templates are **Logs** and **Histogram**. Select **Send the report only if hits are**
+to send the report only when the hit count meets a condition: choose **greater than**, **less than** or **equal**, and
+a number of hits.
 
 :::tip Per-visualization capture
 When you capture each visualization separately, you get more control in the **Compose** tab. You can arrange panels in
@@ -77,6 +86,25 @@ Capture options:
 
 - **Full page**: full dashboard capture
 - **Visualizations**: panel-level capture (similar to Kibana)
+
+### Metabase dashboards
+
+A capture of a Metabase dashboard waits for the queries of its cards. Anaphora counts a card query as running until it
+ends, for as long as the wait allows: the wait for a page (`NAVIGATION_TIMEOUT_SECONDS`) or, after a step such as a
+click, half of `CAPTURE_STEP_TIMEOUT_SECONDS`. It reads only the address of each request, never the page. It sees the
+queries of a question, of a dashboard card and of a pivot table, signed in, public or embedded. Every other slow request
+keeps the 5-second rule: a request that runs longer than 5 seconds counts as finished.
+
+- A card query that is still running when the capture reads the page, after a wait that ended at its limit, adds a
+  [warning](../data-retention/runs.md#run-warnings) to the run. The report is still sent.
+- A capture of a dashboard with a slow card takes as long as the card, up to the limit of the wait. Only
+  `RUN_DEADLINE_SECONDS` limits the sum of the waits of a run.
+- Anaphora sees only a query that has started. On a loaded host, the Metabase page can run for more than half a second
+  between its files and its first request to the Metabase API. The wait then ends first, waits for nothing and stores no
+  warning. So keep a **Wait for visible** step on an element of a card that shows only when the data is loaded.
+
+Every navigation now starts after Anaphora listens to the network. A page that fires requests at once is waited for, up
+to about 5 seconds more.
 
 ### Generic web connector
 
@@ -112,19 +140,42 @@ flowchart LR
 | **Navigate**             | Go to a URL                             | Open dashboard             |
 | **Click**                | Click an element                        | Expand menu, select filter |
 | **Type text**            | Enter text                              | Search box, form field     |
-| **Enter**                | Press Enter in an element               | Submit a search or form    |
+| **Press Enter**          | Press Enter in an element               | Submit a search or form    |
 | **Wait for visible**     | Wait for element                        | Dashboard loading complete |
-| **Wait before continue** | Pause execution for a number of seconds | Allow animations to finish |
+| **Wait**                 | Pause execution for a number of seconds | Allow animations to finish |
 | **Reload**               | Refresh page                            | Clear cached state         |
+
+Each action in the menu has a line under its name that says what it does, for example "Press the Enter key in a field".
+A new action list starts with "No action yet" and a hint: "Start with Navigate: it opens the page." The list ends with
+the **Build Report** marker. If the flow has no **Capture snapshot** action, the list says "No Capture snapshot action:
+the report has no picture."  The button **Done** closes the settings of an action. **Delete** and **Keep** are the
+buttons of its confirm window.
 
 ### Data extraction actions
 
-| Action               | Description                    | Example                  |
-|----------------------|--------------------------------|--------------------------|
-| **Capture value**    | Extract text into variable     | Error count, status text |
-| **Capture snapshot** | Screenshot element to variable | Chart, panel, full page  |
-| **Calculate**        | Arithmetic on variables        | `errors / total * 100`   |
-| **AI**               | Process captured data with AI  | Summarize a dashboard    |
+| Action               | Description                                    | Example                  |
+|----------------------|------------------------------------------------|--------------------------|
+| **Capture value**    | Extract text into variable                     | Error count, status text |
+| **Capture snapshot** | Screenshot element to variable                 | Chart, panel, full page  |
+| **Calculate**        | Arithmetic on variables                        | `errors / total * 100`   |
+| **AI step**          | A model reads the captures and fills variables | Summarize a dashboard    |
+
+The **AI step** opens in its own page: see [The AI step](./ai-step.md).
+
+#### Process text and regular expressions
+
+A **Capture value** action can process the text that it reads. A replacement with the regex button (**.\***, "Enable
+regex matching.") uses RE2 syntax. RE2 always ends fast, so a pattern cannot stop the server.
+
+- RE2 does not support a backreference (`\1`, `\k<name>`), a lookahead (`(?=...)`, `(?!...)`) or a lookbehind
+  (`(?<=...)`). It refuses `[^]`, `\e` and `\8` too.
+- A saved pattern that RE2 refuses is skipped. The text goes on as it was and the report is sent. The run stores a
+  [warning](../data-retention/runs.md#run-warnings).
+- The editor warns under the field when you stop typing and RE2 does not accept the pattern. The warning does not block
+  the save and never shows your pattern. A very long pattern, or one that is slow to compile, shows no warning. No
+  warning is not a promise that RE2 accepts the pattern.
+- `\s` and `\S` match the same characters as in JavaScript. `.` and a character class read a whole character, not half
+  of an emoji. `\p{L}` and `\u{1F600}` work with no flag.
 
 :::note Equation limits
 An equation in a **Calculate** action runs in a separate process, with 256 MB of memory and 5 seconds of time. It
@@ -137,10 +188,11 @@ action fails. The job editor checks equations when you save the job.
 | Action                | Description                                                        | Example                          |
 |-----------------------|--------------------------------------------------------------------|----------------------------------|
 | **Conditional block** | Run nested actions when a variable meets a condition (or does not) | Only notify if errors > 0        |
-| **Break**             | Stop without sending                                               | Skip report if threshold not met |
+| **Break**             | Stop the run here, without sending                                 | Skip report if threshold not met |
 
-A **Conditional block** can also test the number that an **AI** action returns. See
-[A number in a condition](../administration/ai-providers.md#a-number-in-a-condition).
+A **Conditional block** can also test a variable that an **AI step** fills. See
+[A number in a condition](../administration/ai-providers.md#a-number-in-a-condition). On a **yes/no** variable, the
+block offers **is Yes** and **is No**: see [Variables](./ai-step.md#variables).
 
 ### Example: multi-source report
 
@@ -200,7 +252,7 @@ For reliable automation:
 
 ### Handling failures
 
-- Set **Retry on failure** in the General tab
+- Set **Retry** in the **If a run fails** section of the General tab
 - Test captures manually before scheduling
 
 Anaphora stops a capture in these cases:

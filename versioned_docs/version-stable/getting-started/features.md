@@ -27,6 +27,7 @@ For evaluation and personal projects.
 - Local user authentication
 - Self-Monitoring API: health endpoints for external systems
 - AI Analysis: summaries and anomaly detection by an LLM
+- [AI step](../jobs/ai-step.md): one model answer fills several variables, looks at earlier runs, and remembers between runs
   :::
 
 Best for: trying Anaphora, personal dashboards, small-scale reporting.
@@ -36,7 +37,7 @@ In the Free edition, every account is a system user, and Spaces are not availabl
 Enterprise is an exception: when its licence ends, only its administrators can sign in.
 When you reach a limit, the interface asks you to upgrade before you add another job, delivery interface or AI provider.
 A job with more than three capture actions cannot be saved until you upgrade.
-The server checks these limits for every write, also through the [API](../administration/agent-api.md) and for imports.
+The server checks these limits for every write, also through the [API](../administration/agent-api.md).
 :::
 
 ## PRO edition
