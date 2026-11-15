@@ -29,16 +29,18 @@ flowchart LR
 ## Delivery interfaces
 
 Delivery interfaces are reusable destination configurations. Configure them once under **Delivery Interfaces** in the
-sidebar, then select them in any job. You can also select **Create new** in the job's **Delivery Interface** menu.
+sidebar, then add them to any job with **Add a delivery**. You can also select **Create a delivery interface** in the
+job's **Deliver** tab. It creates the interface for the space and adds it to the job. A job with no delivery shows "No
+delivery yet. The job runs and makes reports. Nobody gets them.".
 
 ### Available types
 
 | Interface             | Best for             | Features                       |
 |-----------------------|----------------------|--------------------------------|
-| **SMTP**              | Corporate email      | SSL/TLS, attachments           |
-| **Mailgun**           | Transactional email  | High volume, tracking          |
+| **Email (SMTP)**      | Corporate email      | SSL/TLS, attachments           |
+| **Email (Mailgun)**   | Transactional email  | High volume, tracking          |
 | **Webhook**           | Integrations         | Custom payloads, any endpoint  |
-| **S3 Object Storage** | Archival, compliance | Historical records, versioning |
+| **S3 storage**        | Archival, compliance | Historical records, versioning |
 
 ### Reusability
 
@@ -52,7 +54,7 @@ You can configure multiple interfaces of each type:
 
 S3 is useful for historical archives and compliance workflows.
 
-In the job, set **File type** to **PDF Report**, **HTML Report**, or **PDF & HTML Report**.
+In the delivery, set **File type** to **PDF Report**, **HTML Report**, or **PDF & HTML Report**.
 
 ### Use cases
 
@@ -60,7 +62,7 @@ In the job, set **File type** to **PDF Report**, **HTML Report**, or **PDF & HTM
 |------------------------------|------------------------------------------------|
 | Historical reference         | "What did this dashboard look like on date X?" |
 | Compliance evidence          | Immutable records for audit requirements       |
-| Long-term retention          | Store reports beyond housekeeping limits       |
+| Long-term retention          | Store reports beyond the retention time of runs       |
 | Cross-system integration     | Other tools can access archived reports        |
 
 ## Email delivery
@@ -69,20 +71,38 @@ Anaphora sends reports by email through SMTP or Mailgun.
 
 ### Email options
 
-| Field            | Description                                                     |
-|------------------|-----------------------------------------------------------------|
-| Attachments      | Select **Report as PDF** to attach the PDF report to the email. |
-| Message template | Customizable email body with variables, `prev` and `delta` included. |
-| Recipients       | List of email addresses to send the report to.                  |
+| Section    | Description                                                                              |
+|------------|------------------------------------------------------------------------------------------|
+| Message    | Customizable email body with variables, `prev` and `delta` included.                     |
+| Recipients | List of email addresses to send the report to. Type an address, then press Enter.        |
+| Attachment | Select **Attach the report as a PDF** to attach the PDF report to the email.             |
 
 :::tip Recipients
 Mark each recipient address as an **Individual mailbox** or a **Group address**. Click a recipient to change its type.
-Emails sent to individual mailboxes include a snooze and unsubscribe link in the footer. Group addresses do not include
-these links.
+Under the list, a legend says "Individual mailbox: gets Snooze and Unsubscribe links." and "Group address: gets none.
+Click an address to switch." Emails sent to individual mailboxes include a snooze and unsubscribe link in the footer.
+Group addresses do not include these links.
 :::
 
 A snooze pauses the job's emails to that recipient for 5 minutes to 8 days. The recipient must pick a duration. The
 unsubscribe link stops the emails.
+
+### The snooze and unsubscribe pages
+
+The recipient opens the link in the email and sees one question at a time. These pages are for people who do not use
+Anaphora, so the words are short.
+
+- The **Snooze this report** page asks **Snooze for** and offers the choices **1 hour**, **1 day** (chosen at first),
+  **1 week** and **Other…** ("From 5 minutes to 8 days."). The button **Snooze** starts the snooze. After a snooze, the
+  page says "Snoozed until" and the date, and "The reports start again after that." The button **End the snooze now**
+  replaces **Snooze** and ends the snooze early. The link **Stop this report for good** opens the unsubscribe page.
+  For an address that is unsubscribed, the button **Manage subscription** opens the unsubscribe page.
+- The **Unsubscribe from this report** page has the button **Unsubscribe**. After that, the button **Subscribe again**
+  gives the report back. The page says "You can subscribe again with the same link."
+- A link that does not work shows a notice that says why, for example "This link has expired". A link in an email
+  works for one year.
+
+![The snooze page of a report: the line that names the recipient and the job, the choices 1 hour, 1 day, 1 week and Other, the Snooze button, and the link Stop this report for good](images/snooze-page.png)
 
 Each installation signs these links with its own secret, which Anaphora keeps in the database. Links in emails sent
 before the upgrade to this version keep working for 90 days. A snooze or an unsubscribe made from such an older link
@@ -98,7 +118,7 @@ Webhooks connect Anaphora to any HTTP endpoint for custom integrations.
 | Field              | Description                                                                                                                                             |
 |--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Message template   | Customizable message body with variables.                                                                                                               |
-| JSON body template | Define the JSON payload with variables. Shown instead of **Message template** when **Define body in job instead** is selected in the Webhook interface. |
+| JSON body template | Define the JSON payload with variables. Shown instead of **Message template** when **Each job writes its own body** is selected in the Webhook interface. |
 
 ### Webhook use cases
 
@@ -115,8 +135,8 @@ Send the same report to multiple destinations:
 
 ### Configuration
 
-1. Click **Delivery Interface**
-2. Select an existing interface, or **Create new**
+1. Click **Add a delivery**
+2. Select an existing interface, or **Create a delivery interface**
 3. Configure the destination
 4. Repeat for additional channels
 
@@ -187,9 +207,9 @@ With the S3 file type **PDF & HTML Report**, nothing is uploaded when the HTML c
 
 A test send ignores the condition of each delivery, and sends through every delivery.
 
-Every delivery config includes a test button: **Run with test email** for SMTP and Mailgun, **Test run** for Webhook
-and S3 Object Storage. Use it to verify the configuration before you save the job. **Test run without delivery** runs the job
-and shows the output without notifying any recipients. A test withholds a report with a broken text block in the same
+Every delivery config includes a test button: **Send a test** for email (SMTP and Mailgun), **Test this delivery** for
+Webhook and S3 storage. Use it to verify the configuration before you save the job. **Test run, send nothing** runs
+the job and shows the report in the page without notifying any recipients. A test withholds a report with a broken text block in the same
 way, and says so. Anaphora logs all steps of the capture and delivery process for troubleshooting. Each AI step adds
 one line, for example `AI step "Rate the errors" answered after 2 model calls: 1,234 tokens, 4.1 s.` When the
 token budget of the provider refused the step, the line is `AI step "Rate the errors" failed: the provider's token

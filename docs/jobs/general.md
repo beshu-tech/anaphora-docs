@@ -1,29 +1,29 @@
 ---
 sidebar_position: 1
 description: Configure job scheduling, notification throttling, retry policies, and data retention settings in Anaphora.
-keywords: [ job scheduling, CRON, notification throttling, retry policy, housekeeping, data retention ]
+keywords: [ job scheduling, CRON, notification throttling, send at most, retry policy, delete old runs, data retention ]
 ---
 
 # General settings
 
-The General tab defines how often a job runs, how noisy it is allowed to be, and how it behaves on failures.
+The General tab has four sections: **Name**, **Schedule**, **If a run fails** and **Storage**. They define how often a job runs, how many reports it may send, and what happens when a run fails.
 
 ## Configuration fields
 
-| Field            | Description                                                       | Required |
-|------------------|-------------------------------------------------------------------|----------|
-| Name             | Job identifier shown in lists and reports                         | Yes      |
-| Description      | Notes about the job's purpose                                     | No       |
-| Frequency        | How often to run (simple or CRON)                                 | Yes      |
-| Max Notify Freq  | Minimum time between notifications                                | No       |
-| Retry on failure | Number of retries after a failed run (default: 3)                 | No       |
-| Run Expire Time  | Age at which old runs and reports are deleted (default: 6 months) | No       |
+| Section         | Field            | Description                                                             | Required |
+|-----------------|------------------|-------------------------------------------------------------------------|----------|
+| Name            | Name             | Job identifier shown in lists and reports                               | Yes      |
+| Name            | Description      | Notes about the job's purpose                                           | No       |
+| Schedule        | Run              | How often to run (simple or CRON)                                       | Yes      |
+| Schedule        | Send at most     | **Every run**, or **Once every** a time you set                         | No       |
+| If a run fails  | Retry            | Number of retries after a failed run, from 0 to 10 (default: 3)         | No       |
+| Storage         | Delete old runs  | A switch. When it is on, the age at which old runs and reports are deleted (default: 6 months) | No       |
 
 ## Scheduling
 
 ### Simple frequency
 
-Set how often the job runs, in natural intervals.
+Set how often the job runs, in natural intervals, in the **Run** field.
 
 ### Advanced (CRON)
 
@@ -76,8 +76,9 @@ startup, the log names the runs that were missed.
 
 ## Notification throttling
 
-**Max Notify Freq** sets the minimum time between two delivered reports, whatever the job frequency. A run inside this
-time still runs, but sends nothing. Use it for high-frequency alerting jobs.
+**Send at most** sets the minimum time between two delivered reports, whatever the job frequency. Choose **Every run**
+to send a report at each run, or **Once every** and a time to limit how often the job sends. A run inside this time
+still runs, but sends no report. Use it for high-frequency alerting jobs.
 
 A report counts as delivered when it reached at least one delivery. A run whose every delivery failed (for example, a
 mail server that refused every address), was skipped, or was withheld does not start the time, so its retry, or the
@@ -85,8 +86,9 @@ next run, still sends. A run that an older version stored with every delivery fa
 retry that was waiting at the upgrade sends. A test run (the Test button) belongs to no job, so it never starts the
 time.
 
-Select the checkbox to turn on throttling. The default is 3 hours. If the job runs more often than once a day and
-throttling is off, the General tab shows a **Throttle Frequency** button that sets the default.
+A new job sends at every run. The default time for **Once every** is 3 hours. If the job runs more often than once a day
+and **Send at most** is on **Every run**, the General tab asks "This job runs more than once a day. Limit how often it
+sends?" and shows the button **Limit to once every 3 hours**. The button sets that default.
 
 ### Why throttling matters
 
@@ -138,8 +140,10 @@ High-frequency sampling with throttling gives an alerting-style workflow:
 
 ## Retry policy
 
-Select the **Retry on failure** checkbox to retry a failed run automatically. Then set the number of retries, from 1
-to 10. New jobs use 3 retries.
+In the **If a run fails** section, the **Retry** field reads "Retry [number] times". Set the number of retries, from 1
+to 10, to retry a failed run automatically. New jobs use 3 retries. With 0, the tab says "A failed run is not tried
+again." Under the field, a line lists the waits for the number you set. **More about retries** opens the rules below in
+short form.
 
 Anaphora retries in increasing intervals: 5 minutes, 15 minutes, 30 minutes, 1 hour, 2 hours, 4 hours, 12 hours,
 1 day, 2 days, and 3 days. The first delay counts from the end of the failed capture, and each later delay counts from
@@ -160,14 +164,15 @@ the end of the capture before it.
 - Retries are listed under the run that failed first, in its **Attempts**.
 - If you start a manual run after a scheduled run failed, the pending retries of the scheduled run still happen.
 
-## Housekeeping (data retention)
+## Storage (data retention)
 
-Select the **Run Expire Time** checkbox to delete old runs and their reports automatically after the time you set
-(months, days, and hours). New jobs use 6 months. Clear the checkbox to keep runs forever (**Never expire**).
-An hourly clean-up deletes the expired runs and their report files.
+Turn on the **Delete old runs** switch in the **Storage** section to delete old runs and their reports automatically
+after the time you set (months, days, and hours). New jobs use 6 months. The line under the switch says "Deletes the
+runs and their reports." Turn the switch off to keep runs until you delete them yourself: the line then says "Runs and
+reports are kept until you delete them." An hourly clean-up deletes the expired runs and their report files.
 
 :::warning Storage impact
-High-frequency jobs make more data. Without housekeeping:
+High-frequency jobs make more data. Without a time limit for old runs:
 
 - 10-minute job = 144 runs/day = 4,320 runs/month
 - Each run may include snapshots and reports
@@ -180,27 +185,27 @@ High-frequency jobs make more data. Without housekeeping:
 
 ```yaml
 Frequency: Daily at 9 AM (0 9 * * *)
-Throttling: None (reports always deliver)
-Retry: 3 attempts
-Housekeeping: 90 days
+Send at most: Every run (reports always deliver)
+Retry: 3 times
+Delete old runs: after 90 days
 ```
 
 ### For alerting jobs
 
 ```yaml
 Frequency: Every 5-10 minutes
-Throttling: 1-3 hours (balance speed vs. noise)
+Send at most: once every 1-3 hours (balance speed vs. noise)
 Retry: Job runs often enough; retries usually not needed
-Housekeeping: 14 days (less storage needed)
+Delete old runs: after 14 days (less storage needed)
 ```
 
 ### For compliance/archival
 
 ```yaml
 Frequency: Weekly or monthly
-Throttling: None
-Retry: 5 attempts (make sure it succeeds)
-Housekeeping: Never
+Send at most: Every run
+Retry: 5 times (make sure it succeeds)
+Delete old runs: off
 ```
 
 ## Next steps

@@ -19,15 +19,15 @@ Send reports to custom HTTP endpoints for integration with any system.
 
 ## Configuration
 
-| Field     | Description                                         | Required |
-|-----------|-----------------------------------------------------|----------|
-| Name      | Interface identifier                                | Yes      |
-| URL       | Endpoint URL. Can contain `$MESSAGE`                | Yes      |
-| Method    | HTTP method (`GET` or `POST`, default `POST`)       | Yes      |
-| Headers   | Custom headers (**Header name**, **Header value**)  | No       |
-| Body type | `json` or `form`. Shown only for `POST`             | Yes      |
-| JSON body | Custom payload template (body type `json`)          | No       |
-| Form body | Key-value pairs (body type `form`)                  | No       |
+| Field     | Description                                                          | Required |
+|-----------|----------------------------------------------------------------------|----------|
+| Name      | Interface identifier                                                 | Yes      |
+| URL       | Endpoint URL. Can contain `$MESSAGE`                                 | Yes      |
+| Method    | HTTP method (`GET` or `POST`, default `POST`)                        | Yes      |
+| Headers   | Custom headers (**Header name**, **Value**)                          | No       |
+| Body type | `json` or `form`. Shown only for `POST`                              | Yes      |
+| JSON body | Custom payload template (body type `json`)                           | No       |
+| Form body | Key-value pairs (**Field name**, **Value**) (body type `form`)       | No       |
 
 ## Payload format
 
@@ -35,7 +35,7 @@ Send reports to custom HTTP endpoints for integration with any system.
 
 Define a JSON structure that works with your endpoint in **JSON body**. Use the ```$MESSAGE``` variable as a placeholder
 for the report content. Anaphora replaces this variable with the text that you define in the job's delivery settings.
-Click **Pretty print** to format the JSON.
+Click **Indent the JSON** to format the JSON. A body that is not JSON shows "This is not valid JSON."
 
 Example:
 
@@ -48,7 +48,7 @@ Example:
 
 ### Form body
 
-Send key-value pairs (**Form name**, **Form value**) as form data. Use the ```$MESSAGE``` variable for the report content.
+Send key-value pairs (**Field name**, **Value**) as form data. Use the ```$MESSAGE``` variable for the report content.
 
 Example:
 
@@ -59,7 +59,7 @@ report_content=$MESSAGE
 
 ### JSON in job delivery
 
-Select **Define body in job instead**. Each job then defines the entire JSON body in its delivery settings.
+Select **Each job writes its own body**. Each job then defines the entire JSON body in its delivery settings. A health alert cannot use such a webhook.
 
 ## Custom headers
 
@@ -80,18 +80,18 @@ connection.
 
 ## Testing
 
-Click **Test**, enter an optional **Test message**, then click **Send to webhook**.
+Click **Send a test request**, enter an optional **Message**, then click **Send**. Anaphora says "Test request sent."
 
 ## Response handling
 
 A delivery succeeds only when the webhook answers with a 2xx status. Any other answer fails the delivery, and the run
-shows the status and the answer of the webhook. The **Test** button, the health monitor, the license alert and the AI
+shows the status and the answer of the webhook. The test button, the health monitor, the license alert and the AI
 budget alert use the same check.
 
 A webhook call stops after 60 seconds. This limit is fixed.
 
 Anaphora does not follow a redirect. An answer with a 3xx status and a `Location` header fails the delivery. The status
-of the run and the **Test** button say, for example, "Webhook answered 301, a redirect to hooks.example. Anaphora does
+of the run and the test button say, for example, "Webhook answered 301, a redirect to hooks.example. Anaphora does
 not follow redirects: enter the final URL in the webhook interface." The text names the host only, never the path. Enter
 the final URL in the interface. A run is not retried when every failed delivery got a redirect, because a retry fails in
 the same way. A 3xx answer with no `Location` header (a 304, for example) is not a redirect and keeps its plain text.

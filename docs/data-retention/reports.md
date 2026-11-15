@@ -26,7 +26,7 @@ You can open reports from two places:
 
 Anaphora delivers reports to the configured destinations (email, Slack, S3, webhooks).
 It also stores copies of the generated reports for reference.
-In the job's **General** tab, **Housekeeping** > **Run Expire Time** sets how long Anaphora keeps them.
+In the job's **General** tab, **Storage** > **Delete old runs** sets how long Anaphora keeps them.
 
 ## Private report links
 

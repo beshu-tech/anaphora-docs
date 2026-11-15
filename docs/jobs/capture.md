@@ -11,14 +11,20 @@ authenticate, and capture any web application.
 
 ## Capture modes
 
+The **Capture mode** control at the top of the tab has two choices: **Basic** ("One page, one snapshot.") and
+**Advanced** ("A flow of actions: click, type, read values, decide."). The tab saves nothing when you switch.
+
 ### Basic mode
 
 Simple single-URL capture:
 
-1. Select a **Connector** (**Web**, **Kibana**, **Grafana**)
-2. Enter the URL
-3. Set **Authentication** (if needed)
-4. Select a **Snapshot template**
+The Basic form has three sections:
+
+1. **Page**: select a **Connector** (**Web**, **Kibana**, **Grafana**) and enter the **URL**. A line under the
+   **Connector** says what the connector waits for, for example "Waits until the dashboard has loaded." If the URL looks
+   like a Kibana or Grafana page and the connector is **Web**, Anaphora asks "Use the Kibana connector?"
+2. **Sign-in**: set the **Sign-in type** (if the page needs one)
+3. **Snapshot**: select a **Capture snapshot template**, the part of the page to capture
 
 Best for quick dashboard snapshots and simple reports.
 
@@ -31,7 +37,9 @@ Multi-step browser automation:
 3. Evaluate conditions
 4. Build complex workflows
 
-Turn on the **Advanced** switch to change modes.
+Choose **Advanced** in the **Capture mode** control to use this mode. To go back, choose **Basic**. Anaphora asks "Go
+back to Basic?" and says that Basic keeps one page and that saving removes the other actions. Choose **Go back to
+Basic**, or **Stay in Advanced**.
 
 ## Connectors
 
@@ -49,17 +57,18 @@ To authenticate, log in to Kibana with the ReadonlyREST login form. Select **Rea
 select a **Tenancy**.
 
 To configure the time range, either set it in the Kibana UI before you copy the URL, or set it in Anaphora with the
-**Time select** field, which uses a syntax similar to Kibana's time picker. **Time select** applies to dashboards and Discover views.
+**Time range** field, which uses a syntax similar to Kibana's time picker. **Time range** applies to dashboards and Discover views.
 For a Canvas workpad, set the **Page** number.
 
 Capture options:
-| Snapshot template  | Description                        |
-|--------------------|------------------------------------|
-| **Full page**      | One snapshot of the full dashboard |
-| **Visualizations** | Separate snapshot for each panel   |
+| Capture snapshot template | Description                        |
+|---------------------------|------------------------------------|
+| **Full page**             | One snapshot of the full dashboard |
+| **Visualizations**        | Separate snapshot for each panel   |
 
-For a Discover view, the templates are **Logs** and **Histogram**. Select **Deliver report only when condition is met**
-to send the report only when the hit count meets a condition (**Hits are** greater than, less than, or equal to a value).
+For a Discover view, the templates are **Logs** and **Histogram**. Select **Send the report only if hits are**
+to send the report only when the hit count meets a condition: choose **greater than**, **less than** or **equal**, and
+a number of hits.
 
 :::tip Per-visualization capture
 When you capture each visualization separately, you get more control in the **Compose** tab. You can arrange panels in
@@ -131,10 +140,16 @@ flowchart LR
 | **Navigate**             | Go to a URL                             | Open dashboard             |
 | **Click**                | Click an element                        | Expand menu, select filter |
 | **Type text**            | Enter text                              | Search box, form field     |
-| **Enter**                | Press Enter in an element               | Submit a search or form    |
+| **Press Enter**          | Press Enter in an element               | Submit a search or form    |
 | **Wait for visible**     | Wait for element                        | Dashboard loading complete |
-| **Wait before continue** | Pause execution for a number of seconds | Allow animations to finish |
+| **Wait**                 | Pause execution for a number of seconds | Allow animations to finish |
 | **Reload**               | Refresh page                            | Clear cached state         |
+
+Each action in the menu has a line under its name that says what it does, for example "Press the Enter key in a field".
+A new action list starts with "No action yet" and a hint: "Start with Navigate: it opens the page." The list ends with
+the **Build Report** marker. If the flow has no **Capture snapshot** action, the list says "No Capture snapshot action:
+the report has no picture."  The button **Done** closes the settings of an action. **Delete** and **Keep** are the
+buttons of its confirm window.
 
 ### Data extraction actions
 
@@ -237,7 +252,7 @@ For reliable automation:
 
 ### Handling failures
 
-- Set **Retry on failure** in the General tab
+- Set **Retry** in the **If a run fails** section of the General tab
 - Test captures manually before scheduling
 
 Anaphora stops a capture in these cases:

@@ -27,17 +27,17 @@ Every Monday at 8:00, send leadership one weekly summary with:
 ### 1. Create the job
 
 1. Open **Jobs** in the sidebar.
-2. Click **Create Job**, then **Create New**.
+2. Click **Create job**, then **Create New**.
 
 ### 2. General
 
-- **Frequency**: every **week** on **Monday** at **8:00** (**Advanced**: `0 8 * * 1`).
+- **Run**: every **week** on **Monday** at **8:00** (**Advanced**: `0 8 * * 1`).
 
-![The General tab: a weekly frequency on Monday at 8:00](images/mixed-sources-report-general.png)
+![The General tab: a weekly run on Monday at 8:00](images/mixed-sources-report-general.png)
 
 ### 3. Capture
 
-Switch on **Advanced**. Each source is a **Navigate** action with **Take snapshot** ticked. Give each snapshot a name,
+In **Capture mode**, choose **Advanced**. Each source is a **Navigate** action with **Take snapshot** ticked. Give each snapshot a name,
 so you can tell them apart in Compose:
 
 ![The capture flow: three Navigate actions, for Kibana, Grafana and a status page, each with its snapshot](images/mixed-sources-report-capture.png)

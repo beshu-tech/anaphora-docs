@@ -116,7 +116,10 @@ that folder. It stays only when an import did not end well, and Anaphora never d
 Anaphora never replaces the database with an older copy unless the file in `storage/` is proven bad by its own bytes
 and the copy belongs to an import that was running. In every other case, it refuses to start, moves nothing, and
 prints the steps. If it does restore the old database by itself, a banner shows to users with the System role, and the
-log says so at each start until someone confirms it.
+log says so at each start until someone confirms it. The banner has a headline, for example "An import did not finish.
+The database from before it is back.", and five rows: **What happened**, **Now running**, **Missing**, **Do not
+delete** and **Next**. Two lists of steps, **How to look at those files** and **How to go back to those files**, open
+with one click each. The button **I have read this** confirms the banner.
 
 After the first good start of this version, a missing or empty `storage/authfish.sqlite` is a stop, not a new empty
 install. To start a new empty install, delete `storage/DATABASE-EXPECTED`. A container whose `storage/` is not a mounted

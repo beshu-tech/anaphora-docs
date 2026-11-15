@@ -34,16 +34,16 @@ This version needs one AI step:
 ### 1. Create the job
 
 1. Open **Jobs** in the sidebar.
-2. Click **Create Job**, then **Create New**.
+2. Click **Create job**, then **Create New**.
 
 ### 2. General
 
-- **Frequency**: every 15 minutes (**Advanced**: `*/15 * * * *`).
-- **Max Notify Freq**: leave it off. The notebook decides when to page.
+- **Run**: every 15 minutes (**Advanced**: `*/15 * * * *`).
+- **Send at most**: leave it on **Every run**. The notebook decides when to page.
 
 ### 3. Capture
 
-Switch on **Advanced**, and build this flow:
+In **Capture mode**, choose **Advanced**, and build this flow:
 
 1. **Navigate**: the errors of the last hour in Kibana Discover. **Connector** **Kibana**, the URL of a search such as
    `response >= 500`, and the last hour as time range.

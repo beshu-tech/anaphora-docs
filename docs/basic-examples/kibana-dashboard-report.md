@@ -10,7 +10,7 @@ Capture a Kibana dashboard on a schedule and send it by email as a PDF report.
 
 :::tip Kibana Dashboard Snapshot template
 The **Kibana Dashboard Snapshot** template builds this job for the public Kibana demo at `demo.elastic.co`. Pick it
-under **Jobs → Create Job** and change the URL to your own dashboard.
+under **Jobs → Create job** and change the URL to your own dashboard.
 :::
 
 ## Goal
@@ -22,16 +22,16 @@ Every morning at 9:00, send the team a PDF of the web traffic dashboard for the 
 ### 1. Create the job
 
 1. Open **Jobs** in the sidebar.
-2. Click **Create Job**, then **Create New**.
+2. Click **Create job**, then **Create New**.
 
 ### 2. General
 
 - **Name**: `Web traffic, every morning`
-- **Frequency**: every **day** at **9:00**. Switch on **Advanced** to type a cron expression instead, for example
+- **Run**: every **day** at **9:00**. Switch on **Advanced** to type a cron expression instead, for example
   `0 9 * * *`.
-- **Run Expire Time** keeps the runs and their reports for six months. Shorten it if disk space is tight.
+- **Delete old runs** keeps the runs and their reports for six months. Shorten the time if disk space is tight.
 
-![The General tab: name, description, a daily frequency at 9:00, retries and the run expiry](images/kibana-dashboard-report-general.png)
+![The General tab: name, description, a daily run at 9:00, retries and Delete old runs](images/kibana-dashboard-report-general.png)
 
 ### 3. Capture
 
@@ -40,14 +40,14 @@ Every morning at 9:00, send the team a PDF of the web traffic dashboard for the 
    ```
    https://kibana.example.com/app/dashboards#/view/your-dashboard-id
    ```
-3. **Authentication**: the method your Kibana needs, for example **ReadonlyREST**, with its credentials. The public
+3. **Sign-in type**: the method your Kibana needs, for example **ReadonlyREST**, with its credentials. The public
    demo needs none.
-4. **Snapshot template**: **Full page** takes the whole dashboard. Choose the tiles template to get one image per
+4. **Capture snapshot template**: **Full page** takes the whole dashboard. Choose the tiles template to get one image per
    visualisation.
-5. **Time select**: from **1 day ago** to **Now**. Anaphora sets this range on the dashboard at each run.
+5. **Time range**: from **1 day ago** to **Now**. Anaphora sets this range on the dashboard at each run.
 6. Click **Test capture** to see the snapshot before you save.
 
-![The Capture tab in Basic mode: the Kibana connector, the dashboard URL, the authentication, the snapshot template and the time range](images/kibana-dashboard-report-capture.png)
+![The Capture tab in Basic mode: the Kibana connector, the dashboard URL, the sign-in type, the snapshot template and the time range](images/kibana-dashboard-report-capture.png)
 
 ### 4. Compose
 
