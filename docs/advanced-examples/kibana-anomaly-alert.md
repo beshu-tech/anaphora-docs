@@ -10,7 +10,7 @@ Compare the current data with an earlier period, and send an alert when the chan
 
 :::tip Kibana Anomaly Detection template
 The **Kibana Anomaly Detection** template builds this flow for the public Kibana demo. Pick it under
-**Jobs → Create Job** and change the URLs and the threshold.
+**Jobs → Create job** and change the URLs and the threshold.
 :::
 
 ## Goal
@@ -29,24 +29,24 @@ or more, up or down, send an alert with both counts and the logs histogram. Send
 ### 1. Create the job
 
 1. Open **Jobs** in the sidebar.
-2. Click **Create Job**, then **Create New**.
+2. Click **Create job**, then **Create New**.
 
 ### 2. General
 
-- **Frequency**: every 15 minutes (**Advanced**: `*/15 * * * *`).
-- **Max Notify Freq**: **3 hours**.
+- **Run**: every 15 minutes (**Advanced**: `*/15 * * * *`).
+- **Send at most**: **Once every** **3 hours**.
 
-![The General tab: a frequency of every 15 minutes and a maximum notification frequency of 3 hours](images/kibana-anomaly-alert-general.png)
+![The General tab: a run every 15 minutes and Send at most once every 3 hours](images/kibana-anomaly-alert-general.png)
 
 ### 3. Capture
 
-Switch on **Advanced**. The flow reads two counts, computes the change, and stops when the change is small:
+In **Capture mode**, choose **Advanced**. The flow reads two counts, computes the change, and stops when the change is small:
 
 ![The capture flow: two Discover searches with their hit counts, a Calculate action, a conditional block with a Break, and the snapshot](images/kibana-anomaly-alert-capture.png)
 
 1. **Navigate**: the Discover search of the earlier period.
    - **Connector**: **Kibana**, with the **Auth type** your Kibana needs.
-   - **Time select**: from **2 hours ago** to **1 hour ago**.
+   - **Time range**: from **2 hours ago** to **1 hour ago**.
 2. **Capture value**: the earlier count.
    - **Variable name**: `previous_value`.
    - **Capture template**: **Kibana discover hits**.

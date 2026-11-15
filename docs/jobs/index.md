@@ -15,7 +15,7 @@ Every job has four main components:
 
 | Component | Description |
 |-----------|-------------|
-| [General](./jobs/general) | Name, description, scheduling, and throttling |
+| [General](./jobs/general) | Name, description, scheduling, how often it sends, retries and storage |
 | [Capture](./jobs/capture) | What to capture and how, with [the AI step](./jobs/ai-step) |
 | [Composer](./jobs/composer) | How to arrange content into a report |
 | [Delivery](./jobs/delivery) | Where and how to send the report |
@@ -28,9 +28,9 @@ Jobs can do complex interactions with web applications:
 
 - Click elements: buttons, links, menu items
 - **Type text**: search boxes, form fields, filters
-- **Enter**: press Enter in a form field
+- **Press Enter**: press Enter in a form field
 - **Navigate**: follow links, handle redirects, manage authentication
-- Wait conditions: wait for elements to appear (**Wait for visible**) or for a number of seconds (**Wait before continue**)
+- Wait conditions: wait for elements to appear (**Wait for visible**) or for a number of seconds (**Wait**)
 
 ### Capture data
 
@@ -48,8 +48,8 @@ Extract information in several formats:
 Build the automation logic with:
 
 - Conditional execution: **Conditional block** actions based on extracted values
-- Wait conditions: **Wait for visible**, **Wait before continue**
-- Reload and retry: **Reload** the page. **Retry on failure** retries a failed run.
+- Wait conditions: **Wait for visible**, **Wait**
+- Reload and retry: **Reload** the page. The **Retry** setting of the General tab retries a failed run.
 - Variables: store extracted values and use them again anywhere in the workflow
 - Break conditions: stop execution if criteria are not met (useful for alerts)
 
@@ -115,7 +115,7 @@ You can combine visual snapshots with AI-generated summaries in one report.
 ## Creating a job
 
 1. Go to **Jobs** in the sidebar
-2. Click **Create Job**, then select **Create New** (or a template)
+2. Click **Create job**, then select **Create New** (or a template)
 3. Configure each tab:
    - **General**: set the name, schedule, and basic settings
    - **Capture**: define what to capture and the extraction logic
@@ -131,7 +131,7 @@ saved job and drops your changes. **Cancel** keeps your page, so you can copy wh
 
 ### Built-in templates
 
-**Create Job** offers these templates next to **Create New**. Each one uses the public Kibana demo at
+**Create job** offers these templates next to **Create New**. Each one uses the public Kibana demo at
 `demo.elastic.co`: change the URLs to your own Kibana.
 
 | Template                                  | What the job does                                                                 | See                                                                        |

@@ -6,7 +6,7 @@ keywords: [ job runs, execution history, run status, debugging, job monitoring, 
 
 # Runs
 
-![The Runs page with two filters on, the job Checkout errors and the statuses Success and Stopped at Break: Clear next to Delete ALL, and the columns Job name, Time, Duration, Status, AI and Report](images/runs.png)
+![The Runs page with two filters on, the job Uptime check (every 10 minutes) and the statuses Success and Delivery issue: Clear next to Delete all runs, and the columns Job, Time, Duration, Status, Attempts, AI and Report](images/runs.png)
 
 The Runs section shows the execution history of your jobs, including successful captures, failures, and delivery status.
 
@@ -38,7 +38,14 @@ The Reports page and the Overview count a throttled run as no report, because it
 Click an **Error** or **Delivery issue** tag to see the details. There, a delivery that its condition skipped shows
 "Skipped: its condition did not hold, so nothing was sent."
 
-When a filter or a sort is on, **Clear**, at the top of the page next to **Delete ALL**, removes them.
+When a filter or a sort is on, **Clear**, at the top of the page next to **Delete all runs**, removes them.
+
+**Delete all runs** deletes every run of the space. The filters do not limit it. A confirm window shows the number of
+runs, for example "Delete all 120 runs of this space?", and says that their reports are deleted too and that you cannot
+undo it. The buttons are **Delete all 120 runs** and **Keep**. The page then shows "All runs deleted."
+
+The filters of the table include **With retries** and **Without retries** (the **Attempts** column), and **With a
+report** and **Without a report** (the **Report** column).
 
 The **AI** column says what the AI steps of each run cost: see [Runs](../jobs/ai-step.md#runs).
 

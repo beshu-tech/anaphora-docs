@@ -17,12 +17,18 @@ Access the monitoring settings at **Settings** > **Application** > **Health Moni
 
 Get alerts when Anaphora detects changes in job success rates.
 
-1. Under **Operator notifications** > **Delivery**, select a **Delivery Interface**. For an SMTP or Mailgun interface,
-   also add the **Recipients**. A webhook with **Define body in job instead** is not available.
-2. Select **Job Health Alerts**.
-3. Set **Health Check Frequency**: how often to check job health.
-4. Set **Maximum Notification Frequency**: minimum time between alerts (optional).
-5. Optionally, click **Test** to send the current health status.
+The Health Monitoring page has three sections: **Health API**, **Operator notifications** and **Job health alerts**.
+
+1. Under **Operator notifications**, choose a delivery interface in **Send alerts through**. For an SMTP or Mailgun
+   interface, also add the **Recipients**: type an address, then press Enter. A webhook with **Each job writes its own
+   body** is not available: the list shows it as "cannot be used: each job writes its body". With no interface, the
+   page says "No delivery interface yet." and offers **Create one**.
+2. Under **Job health alerts**, turn on the switch.
+3. Set **Check every**: how often to check job health.
+4. Set **Send at most**: **Every alert**, or **At most once every** a time you set (optional). It is the minimum time
+   between alerts.
+5. Optionally, click **Send a test alert** to send the current health status. The button is off until you choose a
+   delivery interface.
 6. Click **Save**.
 
 :::info

@@ -8,7 +8,7 @@ keywords: [ Mailgun integration, email API, transactional email, Anaphora Mailgu
 
 Send reports via the Mailgun email API.
 
-![Mailgun delivery interface configuration showing sender email, sender name, and API key fields](images/mailgun.png)
+![Mailgun delivery interface configuration showing from address, from name, and API key fields](images/mailgun.png)
 
 ## Why Mailgun?
 
@@ -19,12 +19,14 @@ Send reports via the Mailgun email API.
 
 ## Configuration
 
-| Field           | Description                                                             | Required |
-|-----------------|-------------------------------------------------------------------------|----------|
-| Name            | Interface identifier                                                    | Yes      |
-| Sender email    | Your Mailgun domain with any name, for example myname@my-mailgun-domain.com | Yes      |
-| Sender name     | The name to show as the sender                                          | Yes      |
-| Mailgun Api Key | Mailgun API key (at least 10 characters)                                | Yes      |
+Choose **Email (Mailgun)** as the **Type**.
+
+| Field        | Description                                                                     | Required |
+|--------------|---------------------------------------------------------------------------------|----------|
+| Name         | Interface identifier                                                            | Yes      |
+| From address | Your Mailgun domain with any name, for example myname@my-mailgun-domain.com     | Yes      |
+| From name    | The name to show as the sender                                                  | Yes      |
+| API key      | The private API key of your Mailgun account (at least 10 characters). It shows as dots | Yes      |
 
 ## Setup steps
 
@@ -33,7 +35,7 @@ Send reports via the Mailgun email API.
 1. Log in to Mailgun
 2. Navigate to **Settings** > **API Keys**
 3. Copy your Private API Key
-4. Note your Mailgun sender domain (to use in sender email)
+4. Note your Mailgun sender domain (to use in **From address**)
 
 ## Domain verification
 
@@ -54,5 +56,5 @@ the run can send the same message twice.
 
 ## Testing
 
-Click **Test**, enter a **Test email** address (and optionally a **Test subject** and **Test body**), then click
-**Send test email**. Do this before you use the interface in jobs.
+Click **Send a test email**, enter a **Send to** address (and optionally a **Subject** and a **Message**), then click
+**Send**. Do this before you use the interface in jobs.

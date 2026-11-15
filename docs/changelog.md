@@ -84,6 +84,10 @@ Also expect these changes. They need no action, but you can see them:
   [Run statuses](./data-retention/runs.md#run-statuses).
 - A run that comes close to a limit, or that has another note, shows a warning. The health monitoring can mail you
   about it once.
+- Many labels of the screens have new, plainer names. For example, **Max Notify Freq** is **Send at most**, **Run
+  Expire Time** is **Delete old runs**, **Retry on failure** is **Retry**, **Time select** is **Time range**, **Wait
+  before continue** is **Wait**, and **Delete ALL** is **Delete all runs**. Nothing that you stored changes. See
+  [General settings](./jobs/general.md) and [Capture](./jobs/capture.md).
 
 ### 🚨 Security
 
@@ -139,6 +143,15 @@ Also expect these changes. They need no action, but you can see them:
 
 ### 🧐 Enhancements
 
+- **The screens use plain words, and each control says what it does.** The job editor has four sections on the General
+  tab: **Name**, **Schedule**, **If a run fails** and **Storage**. **Send at most** has the choices **Every run** and
+  **Once every**. **Delete old runs** is a switch. The Capture tab has a **Basic** or **Advanced** control, and a line
+  under each field. The delivery interface forms go in the order of the work, and a password or an API key shows as
+  dots. Every list that has no row says what to do first, and an empty space shows a **Get started** card. The Runs
+  page has **Delete all runs** with a confirm that shows the number of runs. The snooze and unsubscribe pages ask one
+  question each. The app fits a narrow window. Stored jobs, runs and delivery interfaces work as before. See
+  [General settings](./jobs/general.md), [Capture](./jobs/capture.md), [Delivery](./jobs/delivery.md#the-snooze-and-unsubscribe-pages)
+  and [Delivery interfaces](./delivery-interfaces/index.md).
 - **Settings > Data shows one topic at a time.** It has five tabs: **Export**, **Import**, **Move the files**, **API**
   and **Legacy (JSON)**. The import has three steps: choose a file, check it, replace the database. After you pick a
   file, the page shows the disk that the import needs against the free space. A failed import shows one next step.

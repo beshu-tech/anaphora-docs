@@ -10,7 +10,7 @@ Check a Kibana search first, and capture and send a dashboard only when the resu
 
 :::tip Conditional Kibana Dashboard Snapshot template
 The **Conditional Kibana Dashboard Snapshot** template builds this flow for the public Kibana demo. Pick it under
-**Jobs → Create Job** and change the URLs and the threshold.
+**Jobs → Create job** and change the URLs and the threshold.
 :::
 
 ## Goal
@@ -23,18 +23,18 @@ and send it, at most once every 12 hours.
 ### 1. Create the job
 
 1. Open **Jobs** in the sidebar.
-2. Click **Create Job**, then **Create New**.
+2. Click **Create job**, then **Create New**.
 
 ### 2. General
 
-- **Frequency**: every hour (**Advanced**: `0 * * * *`).
-- **Max Notify Freq**: **12 hours**.
+- **Run**: every hour (**Advanced**: `0 * * * *`).
+- **Send at most**: **Once every** **12 hours**.
 
-![The General tab: an hourly frequency and a maximum notification frequency of 12 hours](images/kibana-conditional-report-general.png)
+![The General tab: an hourly run and Send at most once every 12 hours](images/kibana-conditional-report-general.png)
 
 ### 3. Capture
 
-Switch on **Advanced**. The capture becomes a flow of actions, run from top to bottom. Click an action to edit it, and
+In **Capture mode**, choose **Advanced**. The capture becomes a flow of actions, run from top to bottom. Click an action to edit it, and
 the **+** between two actions to add one.
 
 ![The capture flow: go to Discover, capture the hits, stop when there are fewer than 5, go to the dashboard and take a snapshot](images/kibana-conditional-report-capture.png)
@@ -44,7 +44,7 @@ the **+** between two actions to add one.
    - **URL**: the search, for example `response >= 500` on your web logs.
    - **Auth type**: the method your Kibana needs, for example **ReadonlyREST**.
 
-   ![The Navigate action: the Kibana connector, the Discover URL and the authentication](images/kibana-conditional-report-action-navigate.png)
+   ![The Navigate action: the Kibana connector, the Discover URL and the sign-in type](images/kibana-conditional-report-action-navigate.png)
 
 2. **Capture value**: reads the hit count into a variable.
    - **Variable name**: `error_count`.

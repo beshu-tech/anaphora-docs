@@ -38,7 +38,7 @@ flowchart LR
 ### Adding a provider
 
 1. In the sidebar, click **AI Providers**
-2. Click **Create AI Provider**
+2. Click **Create AI provider**
 3. Configure the connection:
 
 | Field        | Description                                           | Example                        |
@@ -49,7 +49,7 @@ flowchart LR
 | **API key**  | Authentication token                                  | `sk-...` (stored encrypted)    |
 | **Model**    | Model to use: one of the list, or a name you type. The list needs the API key. | `gpt-5.2`     |
 
-4. Click **Test**
+4. Click **Test the provider**
 5. Click **Save**
 
 A custom provider needs an endpoint. The form refuses to save one without it, and a custom provider saved without one
@@ -57,7 +57,7 @@ fails its AI actions. Set its endpoint, or change its provider to OpenAI.
 
 A stored API key goes only to the endpoint that it was saved with. When you change the provider or the endpoint, enter
 the key again ("Enter the API key again: the endpoint changed"). A change of the model, the name or the budget keeps the
-key. **Test** asks for a missing key instead of failing with a generic error. When the model list is empty, the field says
+key. **Test the provider** asks for a missing key instead of failing with a generic error. When the model list is empty, the field says
 why: the API key or the endpoint is missing, or the request failed with its own error.
 
 A provider from the [environment](#provider-from-the-environment) uses `AI_API_KEY`. Rotate it if users that you do not
@@ -73,7 +73,7 @@ stays in the field, also when the list does not have it. The first model of the 
 
 ### What this model can do
 
-**Test** opens the **Test the AI provider** window. Its prompt starts as "Say hello in five words or fewer." **Send test
+**Test the provider** opens the **Test the AI provider** window. Its prompt starts as "Say hello in five words or fewer." **Send test
 prompt** sends your prompt and three small checks: a tool call, a JSON answer and an image. Under the prompt, the
 window says "The Test makes four or five model calls: your prompt, a check of tools, one or two checks of JSON answers
 and a check of images. Their tokens count on the budget of the provider." The JSON check first sends a JSON schema of
@@ -111,7 +111,7 @@ none, the token limit and the time limit that Anaphora sets for an AI step make 
 When the Test runs on the saved settings of the provider, it keeps the result: the window says "Saved with the
 provider." Otherwise, it says "Save the provider to keep this result.": click **Save** to keep it. The card **What this
 model can do** on the provider form shows the result and when the test ran. AI steps read it. A change of the provider
-type, the model or the endpoint clears the result: click **Test** again after the change.
+type, the model or the endpoint clears the result: click **Test the provider** again after the change.
 
 When the model does not answer the prompt, the Test fails. The window shows one sentence that says what to correct,
 for example "The model did not answer. Correct the model or the endpoint, then send the test again." or "The provider
@@ -160,7 +160,7 @@ variable holds `1` or `0`. A **Conditional block** on it offers **is Yes** and *
 ### The Kibana AI Triage template
 
 The **Kibana AI Triage** template builds a job that asks an AI provider whether a human must look at the errors now.
-Pick it under **Jobs → Create Job**. It needs an AI provider in the space. It is an advanced template, so the Free
+Pick it under **Jobs → Create job**. It needs an AI provider in the space. It is an advanced template, so the Free
 edition does not have it. Every 15 minutes, the job:
 
 1. Counts the HTTP 5xx errors of the last hour and of the hour before, in Kibana Discover.
@@ -187,7 +187,7 @@ Every AI provider shows the tokens it spent in the last 24 hours and in the last
 ![The AI Providers list with one provider, Deepseek (Beshu): Tokens 24h 1.2M, 79% of a budget of 1.5M, with a yellow bar; and Tokens 7d 2.2M, 44% of 5M, with a green bar](images/ai-budget-providers-list.png)
 
 Usage counts every model call: scheduled and manual runs (a retry counts as a scheduled run), test runs, Test captures,
-trials of AI steps (**Try it**), the AI step assistant and the **Test** button on the provider form. The tooltip of each
+trials of AI steps (**Try it**), the AI step assistant and the **Test the provider** button on the provider form. The tooltip of each
 column splits the tokens and the calls by these kinds. Trials made before this split count as Test captures: the
 tooltip names that line "Test captures and earlier trials". Some
 OpenAI-compatible services answer without usage data. Those calls count as zero, and the tooltip of the column says

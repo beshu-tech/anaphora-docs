@@ -30,17 +30,17 @@ provider.
 ### 1. Create the job
 
 1. Open **Jobs** in the sidebar.
-2. Click **Create Job**, then **Create New**.
+2. Click **Create job**, then **Create New**.
 
 ### 2. General
 
-- **Frequency**: every **day** at **8:00**.
+- **Run**: every **day** at **8:00**.
 
-![The General tab: a daily frequency at 8:00](images/ai-news-collation-general.png)
+![The General tab: a daily run at 8:00](images/ai-news-collation-general.png)
 
 ### 3. Capture
 
-Switch on **Advanced**. Add a **Navigate** action for each source, then an **AI step** below them:
+In **Capture mode**, choose **Advanced**. Add a **Navigate** action for each source, then an **AI step** below them:
 
 ![The capture flow, shown here for a job with other sources: two Navigate actions, Open the NPR headlines and Open the CNN headlines, then the AI step "Summarize the news", which fills summary](images/ai-news-collation-capture.png)
 
