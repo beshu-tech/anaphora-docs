@@ -36,6 +36,7 @@ Go to **Settings** > **System** > **Auth** > **LDAP** to configure. To activate 
 | Key                 | Client private key             | PEM file contents                      | No       |
 | Certificate         | Client certificate             | PEM file contents                      | No       |
 | Passphrase          | Passphrase for the client key  |                                        | No       |
+| usernameAttribute   | Attribute that gives the user name. See [User names](#user-names). | `cn` | No |
 
 ### Group to role mapping
 
@@ -47,6 +48,17 @@ Give these roles access to spaces in **Settings** > **System** > **Permissions**
 
 A group whose name attribute has more than one value (`cn: [ops, operations]`) gives one role per value. A group
 without that attribute gives no role.
+
+### User names
+
+The user name comes from one unique attribute: `uid`, `sAMAccountName` or `userPrincipalName`. A search filter on a
+unique attribute, such as `(uid={{username}})`, changes nothing.
+
+If your search filter matches the e-mail address, or another value that is not unique, the user name can change at
+the first sign-in after you upgrade to 0.20.1. The start log shows the old and the new name of each user once. Then:
+
+- Change your role and space mappings to the new names, or
+- Set **usernameAttribute** to keep the old names. For example, `cn` keeps names that come from `cn`.
 
 ### System role
 
