@@ -17,6 +17,97 @@ All notable changes to Anaphora are documented here.
 
 ---
 
+## [0.20.1] - 2026-11-27: Safer sign-in
+
+This release has Authfish 1.0.225, the sign-in service inside Anaphora, and makes sign-in safer. It changes the
+database: a rollback needs the backup from before the upgrade. Before you upgrade, run
+`bash anaphora-upgrade.sh check 0.20.1` and read its `NOTE` lines. If you come from 0.19.1, read 0.20.0 below too. See
+[After the upgrade from 0.20.0](./getting-started/upgrading.md#after-the-upgrade-from-0200).
+
+### What you need to do
+
+- **Tell your users that they sign in once more.** Sessions from before the upgrade end. A session now also ends at its
+  maximum age, even while the user works in it.
+- **Do you show Anaphora in a frame on another site?** Set `FRAME_ANCESTORS` to the allowed sources, and restart.
+  Sign-in in the frame works only when both sites share one domain. See
+  [Embedding Anaphora in another site](./getting-started/installation.md#embedding-anaphora-in-another-site).
+- **Does your LDAP search filter match the e-mail address?** User names can change. Change your role and space mappings,
+  or set `usernameAttribute` to keep the old names. See
+  [User names](./administration/authentication/ldap.md#user-names).
+- **Does a sign-in setting still hold a sample value from the documentation?** That method stays off now, and the start
+  log names it. Put your own values in.
+- **Does a space permission use the name of a local account?** It now gives the space only to that local account. The
+  start log names each such permission. Check each one.
+
+### 🚨 Security
+
+- **Another site cannot show Anaphora in a frame.** Every page allows only Anaphora itself, unless you set
+  `FRAME_ANCESTORS`.
+- **LDAP user names come from one unique attribute.** See the list above.
+- **A sign-in method with a published sample value stays off.**
+- **A space permission for a local account's name gives the space only to that account.**
+- **The first-time setup page closes when an administrator exists.**
+- **SAML sign-in requests are stricter.** A user who starts a sign-in in one browser and ends it in another starts again.
+- **A secret that you type in the sign-in settings is always stored encrypted.**
+- **Failed LDAP sign-ins count against the real directory account.** The sign-in limits protect that account.
+- **The image has an updated `libpam`** for CVE-2025-6020.
+
+---
+
+## [0.20.0] - 2026-11-26: Stored secrets
+
+This release adds stored secrets. It changes the database: a rollback needs the backup from before the upgrade. Before
+you upgrade, run `bash anaphora-upgrade.sh check 0.20.0` and read its `NOTE` lines. See
+[After the upgrade from 0.19.1](./getting-started/upgrading.md#after-the-upgrade-from-0191).
+
+### What you need to do
+
+- **Set `SECRETS_KEY` or `SECRETS_KEY_FILE` before you store secrets.** Use a key of 32 bytes (hex or base64). Keep it
+  with your backups: a restored database cannot read its secrets without it. See
+  [Stored secrets](./getting-started/installation.md#stored-secrets) and
+  [Backup](./administration/backup.md#keep-the-secrets-key).
+- **Run the upgrade check.** It lists each typed credential as a warning, and each broken reference to a stored secret
+  as an error. Fix the errors first. A typed credential still runs.
+- **Does a script run `nix` or `nix-env` with `docker exec`?** It stops working. The image has no Nix package manager.
+  Chromium and the captures are the same.
+- **Do you export the login settings as YAML?** The file holds no secret or password. Type the secrets again after you
+  import it into another install. When you change the LDAP URL or the OIDC issuer, type the secret again in the same
+  save.
+
+### 🚀 New
+
+- **A Secrets page.** A secret has a name, a type (login, token, key pair or certificate), the hosts that may receive
+  it and the uses it may serve. A capture login, a typed text step, a delivery interface field and the key of an AI
+  provider can name a secret. The value is never shown again. Each picker has an **Add secret** button, and **Move to a
+  stored secret** next to a typed field makes a secret from it. See
+  [Stored secrets](./getting-started/installation.md#stored-secrets).
+- **A stored value goes only over TLS.** With "Allow http and unchecked certificates" off, a stored value goes only to
+  https pages, and over https or verified SMTP.
+- **A secret pauses after failed logins, and can expire.** The health monitoring mails once for each pause and each
+  expiry.
+- **A run does not keep a revealed value.** Runs from before the upgrade are not changed: delete them if that matters.
+- **A job with an admins-only secret is locked for writers.** An admin clones it.
+- **A secret that is in use cannot be deleted.**
+- **Enterprise: shared secrets, a change log, and secrets from outside.** A secret can take its value from a variable, a
+  file, Vault, OpenBao, or AWS Secrets Manager or SSM Parameter Store.
+
+### 🚨 Security
+
+- **The login settings page keeps its secrets on the server.** It shows a fixed mask for each password, client secret
+  and key, with **Replace** to type a new value.
+
+### 🧐 Enhancements
+
+- **The image is smaller.** It drops packages that Chromium never loaded. Nothing else changes for you.
+
+### 🐞 Fixes
+
+- **A delete of runs or jobs stops when an import replaces the database.** The delete checks the database at each page
+  and stops with a message. Run it again on the restored database if you still want it. This covers **Delete all
+  runs**, a delete of selected runs and a delete of jobs.
+
+---
+
 ## [0.19.1] - 2026-11-15: Time limits, an address policy, run warnings, and a simpler Data page
 
 These changes come in 0.19.1, the release after 0.18.0. The image 0.19.0 is on Docker Hub, but it has no release

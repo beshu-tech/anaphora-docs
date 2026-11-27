@@ -34,6 +34,12 @@ It does not hold the files under `content/`: the reports, the snapshots, and the
 reads from a run. After an import, a trial on a run from before the import gets the variables of that run, but no page
 text. Run a Test capture, or let the job run again.
 
+### Keep the secrets key
+
+An export holds the stored secrets as they are sealed. If you set `SECRETS_KEY` or `SECRETS_KEY_FILE`, keep that key
+with the export. An instance that restores it without the key cannot read its secrets. See
+[Stored secrets](../getting-started/installation.md#stored-secrets).
+
 ## UI backup
 
 **Settings** > **Data** has five tabs. Each tab shows a few short lines. Longer explanations are under **More details**.

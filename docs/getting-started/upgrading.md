@@ -136,6 +136,36 @@ The notes are also in the app, so you can read them after the upgrade. They do n
 
 The start log has the same notes, one line each, marked `[compat-scan]`.
 
+## After the upgrade from 0.20.0
+
+Version 0.20.1 changes the database again. It adds a column for the frame setting of the sign-in service. A rollback
+needs the backup from before the upgrade. Run `anaphora-upgrade.sh check` first, and read its notes.
+
+1. **Every user signs in once.** Sessions from before the upgrade end. A session also ends at its maximum age, even while
+   the user works in it. Tell your users before you upgrade.
+2. **Set `FRAME_ANCESTORS` if you show Anaphora in a frame on another site.** See
+   [Embedding Anaphora in another site](./installation.md#embedding-anaphora-in-another-site).
+3. **LDAP user names can change.** See [User names](../administration/authentication/ldap.md#user-names).
+4. **A sign-in method that holds a published sample value stays off.** This covers the sample SAML certificate, the
+   public test LDAP server and the sample OIDC client. The start log names the method. Put your own values in.
+5. **A space permission for the name of a local account gives the space only to that local account.** The start log
+   names each such permission. Check each one, and make sure the right person has the space.
+
+## After the upgrade from 0.19.1
+
+Version 0.20.0 changes the database. It adds tables and columns for stored secrets and rewrites no row. A rollback needs
+the backup from before the upgrade.
+
+1. **Set a secrets key before you store secrets.** See [Stored secrets](./installation.md#stored-secrets). Keep the key
+   with your backups.
+2. **Typed credentials keep working.** The check lists each one as a warning, and each broken reference to a stored
+   secret as an error. Fix the errors first.
+3. **The image has no `nix` command.** A script that runs `nix` or `nix-env` with `docker exec` stops working. Run that
+   tool outside the container.
+4. **The login settings page shows no stored secret.** It shows a fixed mask. Its YAML export holds no secret or
+   password. After you import the file into another install, type the secrets again. When you change the LDAP URL or the
+   OIDC issuer, type the secret again in the same save.
+
 ## After the upgrade from 0.18.0
 
 The next version after 0.18.0 changes the database. So 0.18.0 refuses to start on the upgraded database, and a rollback

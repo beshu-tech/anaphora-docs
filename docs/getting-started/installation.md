@@ -41,6 +41,9 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser and log
 | `SKIP_NOTIFIER`     | Set to `true` to send no report, mail or webhook. Each delivery is recorded as skipped: the run shows Skipped, not Success, a skipped delivery does not start the job's throttle window, and `prev` and `delta` in templates stay empty because no run counts as sent. | No        | `false`                            |
 | `REPORT_ALLOWED_HOSTS` | Host names, separated by commas, that a report can load an image or a frame from although they have an internal address. See [Report images from internal hosts](#report-images-from-internal-hosts). | No | `intranet.example.com` |
 | `REQUIRE_EXISTING_DATABASE` | Set to `true` to stop the start when the database file is missing. See [Backup](../administration/backup.md#the-copy-from-before-an-import). | No | `true` |
+| `FRAME_ANCESTORS` | Sites that may show Anaphora in a frame. See [Embedding Anaphora in another site](#embedding-anaphora-in-another-site). | No | `'self' https://portal.example.com` |
+| `SECRETS_KEY` | Key of 32 bytes (hex or base64) that seals [stored secrets](#stored-secrets). | Recommended | `0123…` (64 hex characters) |
+| `SECRETS_KEY_FILE` | Path of a file that holds that key. Use it instead of `SECRETS_KEY`. | No | `/run/secrets/anaphora_secrets_key` |
 
 More variables configure [OpenID Connect](../administration/authentication/oidc.md#configure-from-the-environment),
 an [AI provider](#ai-provider-from-the-environment), [failed sign-in limits](#failed-sign-in-limits) and
@@ -187,6 +190,44 @@ start log warns, the limit per address is off, and one guesser can lock a user n
 | `AF_LOGIN_MAX_FAILURES_PER_ADDRESS` | `100`   | Failures from one address, for any user name. `0` turns this limit off.                                        |
 
 List only the proxies themselves, not whole networks: each trusted proxy can name any client address.
+
+### Stored secrets
+
+The **Secrets** page keeps a credential in one place, encrypted. Each secret has a name, a type, the hosts that may
+receive it and the uses it may serve. A capture login, a delivery interface field or an AI provider names the secret and
+never holds the value. A credential that you typed into a job before still works.
+
+Set `SECRETS_KEY` or `SECRETS_KEY_FILE` to a key of 32 bytes (hex or base64) before you store secrets. With neither,
+Anaphora keeps the key in the database. A copy of the database and its `DB_ENCRYPTION_KEY` then opens every stored
+secret. Keep the secrets key with your backups: a restored database cannot read its secrets without it. See
+[Backup](../administration/backup.md#keep-the-secrets-key).
+
+- A secret that was sealed before you set the key stays readable. Setting the key does not seal it again. To move a
+  value to the new key, replace it on the **Secrets** page.
+- A secret that a job, an interface or an AI provider uses cannot be deleted. Remove it from them first.
+- A stored value goes only over TLS with a verified certificate, unless the secret allows plain text.
+- Three refused logins in a row pause a secret. An admin resumes it or replaces its value.
+- To move a typed credential, press **Move to a stored secret** next to the field.
+- Shared secrets, values from a variable, a file, Vault, OpenBao or AWS, and the audit of changes are in the Enterprise
+  edition.
+
+Run `anaphora-upgrade.sh check` to list each typed credential and each broken reference. See
+[After the upgrade from 0.19.1](./upgrading.md#after-the-upgrade-from-0191).
+
+### Embedding Anaphora in another site
+
+By default, no other site can show Anaphora in a frame. To show it in a portal or an intranet page, set
+`FRAME_ANCESTORS` to the allowed sources, as a space-separated list, and restart:
+
+```
+FRAME_ANCESTORS="'self' https://portal.example.com"
+```
+
+Unset or blank keeps `'self'`. A value with a `;` or a `,`, or with a character that is not printable ASCII, is left
+out. The start log warns and names the variable.
+
+Sign-in inside the frame works only when the portal and Anaphora share one domain, for example `portal.example.com` and
+`anaphora.example.com`. A browser does not send the sign-in cookie to a framed page of another domain.
 
 ### AI provider from the environment
 
